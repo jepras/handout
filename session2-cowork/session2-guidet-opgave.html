@@ -161,8 +161,9 @@
     .step p { margin: 6px 0; }
 
     .prompt {
+      position: relative;
       margin: 10px 0;
-      padding: 12px 14px;
+      padding: 12px 60px 12px 14px;
       border: 1px solid var(--border);
       border-radius: 7px;
       background: #1f1b1f;
@@ -172,6 +173,25 @@
       line-height: 1.5;
       white-space: pre-wrap;
     }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 4px 9px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 5px;
+      background: rgba(255, 255, 255, .06);
+      color: #f5d6e3;
+      font-family: inherit;
+      font-size: 10.5px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s ease, color .15s ease;
+    }
+    .copy-btn:hover { background: rgba(255, 255, 255, .14); }
+    .copy-btn.copied { background: rgba(133, 180, 153, .3); color: #d3eee0; border-color: rgba(133, 180, 153, .5); }
     .prompt::before {
       content: "Prompt";
       display: inline-block;
@@ -309,13 +329,13 @@
 
       <div class="step">
         <span class="step-label">1.1 — Åbn Cowork og peg på mappen</span>
-        <div class="action">Åbn Claude Cowork. Tilføj mappen <code>/Users/jere/Developer/forca/handout/session2-cowork/</code> (eller den sti hvor du har kopieret workshop-mappen hen).</div>
+        <div class="action">Åbn Claude Cowork. Tilføj mappen <code>session2-cowork/</code> fra det sted hvor du har kopieret workshop-materialet hen.</div>
         <p class="muted">Mappen indeholder en blanding af synesisk NordPension-materiale: en driftsrapport, sidste kvartals bestyrelsesdeck, to csv-filer, en finansforecast i Excel og en MTU-rapport i PDF.</p>
       </div>
 
       <div class="step">
         <span class="step-label">1.2 — Få Claude til at orientere sig</span>
-        <div class="prompt">List filerne i den mappe jeg har givet dig adgang til. Beskriv kort hvad hver fil ser ud til at handle om, baseret på navnet.</div>
+        <div class="prompt">List filerne i den mappe jeg har givet dig adgang til. Beskriv kort hvad hver fil ser ud til at handle om, baseret på navnet.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude lister filerne i mappen og giver en kort gisning om hvad hver enkelt indeholder — uden at have åbnet dem endnu.</div>
         <div class="insight"><strong>Hvorfor det er pointen:</strong> Cowork har et "spatial" forhold til dit arbejde. Den ved hvor filerne ligger, og kan finde dem igen senere uden du skal uploade noget.</div>
       </div>
@@ -441,5 +461,27 @@
       </div>
     </section>
   </main>
+  <script>
+    document.querySelectorAll('.copy-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const host = btn.parentElement;
+        const text = Array.from(host.childNodes)
+          .filter((n) => n.nodeType === Node.TEXT_NODE || (n.nodeType === Node.ELEMENT_NODE && n !== btn))
+          .map((n) => n.textContent)
+          .join('')
+          .trim();
+        try {
+          await navigator.clipboard.writeText(text);
+          const orig = btn.textContent;
+          btn.textContent = 'Kopieret ✓';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+        } catch (e) {
+          btn.textContent = 'Fejl';
+          setTimeout(() => { btn.textContent = 'Kopier'; }, 1500);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
