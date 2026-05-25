@@ -307,31 +307,33 @@
   <main>
     <div class="eyebrow">💻 Dag 1 · Session 3 · Claude Code</div>
     <h1>Byg en rigtig app — og lad Claude tjekke sit eget arbejde</h1>
-    <p class="lead">Nu skifter vi værktøj. Vi går fra chat-vinduet og dokumentmappen over i <strong>terminalen</strong>, hvor Claude Code bygger en faktisk app: React-frontend, FastAPI-backend, SQLite. Samme NordPension-opgave, men nu som software der kører på din maskine — og hvor Claude selv kan inspicere det den lige har lavet.</p>
-    <p class="muted"><strong>Fase 1-4 gennemgår vi sammen på storskærm</strong> — du følger med i din egen terminal. <strong>Fra fase 5 arbejder du selv</strong>.</p>
+    <p class="lead">Nu skifter vi værktøj. Vi går fra chat-vinduet og dokumentmappen over i <strong>Claude Desktop-appens Code-tab</strong>, hvor Claude bygger en faktisk app: React-frontend, FastAPI-backend, SQLite. Samme NordPension-opgave, men nu som software der kører på din maskine — og hvor Claude selv kan inspicere det den lige har lavet via den indbyggede preview.</p>
+    <p class="muted"><strong>Fase 1-4 gennemgår vi sammen på storskærm</strong> — du følger med i din egen Code-session. <strong>Fra fase 5 arbejder du selv</strong>.</p>
 
     <div class="toc">
       <h3>Sessionens fem faser</h3>
       <ol>
-        <li><b>Start et nyt Claude Code-projekt</b> — terminal, stack, scaffold</li>
+        <li><b>Start en ny Code-session</b> — folder, stack, scaffold</li>
         <li><b>Vælg din dataadgangs-strategi</b> — MCP eller direkte Supabase</li>
         <li><b>Byg "Min medlemsportefølje"-appen</b> — list + detail</li>
-        <li><b>Installer frontend-design skill</b> — og lad Claude redesigne</li>
-        <li><b>Playwright self-validation</b> — den agentiske loop (solo)</li>
+        <li><b>Installer Playwright</b> — og lad den verificere at appen virker</li>
+        <li><b>Solo: frontend-design + før/efter</b> — redesign og dokumentér ændringen</li>
       </ol>
     </div>
 
     <!-- ───────────────────────── PHASE 1 ───────────────────────── -->
     <section class="phase">
       <div class="phase-num">1</div>
-      <h2>Start et nyt Claude Code-projekt</h2>
-      <p>Vi forlader browseren. Claude Code lever i terminalen og kan læse, skrive og køre kode direkte i en mappe på din maskine.</p>
+      <h2>Start en ny Code-session</h2>
+      <p>Vi forlader chat-vinduet og dokumentmappen. I Claude Desktop-appens <strong>Code</strong>-tab er hver session sit eget mini-projekt med en mappe, en chat, en preview og en diff-visning side om side.</p>
 
       <div class="step">
-        <span class="step-label">1.1 — Åbn terminal og start Claude</span>
-        <div class="action">Åbn en terminal og lav en ny, tom mappe — fx <code>mkdir nordpension-portal &amp;&amp; cd nordpension-portal</code>.</div>
-        <div class="action">Start Claude Code med kommandoen <code>claude</code>. Du får et prompt-felt i terminalen.</div>
-        <p class="muted">Claude Code arbejder altid relativt til den mappe du startede den i. Den kan ikke se filer udenfor.</p>
+        <span class="step-label">1.1 — Åbn Code-tab og start en session</span>
+        <div class="action">Åbn Claude Desktop-appen og klik på <b>Code</b>-tabben øverst til venstre.</div>
+        <div class="action">Klik <b>+ New session</b> i sidebaren (eller tryk <code>⌘N</code>).</div>
+        <div class="action">I prompt-området nederst: hold <b>Local</b> som environment. Klik mappe-chip'en og vælg <code>session3-code</code>-mappen fra workshop-materialet.</div>
+        <div class="action">Vælg model i dropdown'en til højre (Opus 4.7 er fint). Sæt permission-mode til <b>Ask permissions</b> så du ser hvad Claude laver i starten.</div>
+        <p class="muted">Hver Code-session er isoleret: sin egen mappe, sin egen chat, sin egen diff-historik. Du kan have flere kørende parallelt i sidebaren.</p>
       </div>
 
       <div class="step">
@@ -350,10 +352,10 @@ Forklar undervejs hvad du laver, og bed mig om lov før du installerer pakker.<b
       </div>
 
       <div class="step">
-        <span class="step-label">1.3 — Få det op at køre</span>
-        <div class="prompt">Start både backend og frontend så jeg kan åbne appen i browseren. Fortæl mig hvilken URL den kører på.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="expect">Claude starter <code>uvicorn</code> (FastAPI) og <code>yarn dev</code> (Vite) i baggrunden og giver dig en localhost-URL. Du åbner den og ser "hello world".</div>
-        <div class="hint">Hvis noget fejler, så sig <em>"Det virker ikke — fejlbeskeden er: …"</em> og lim outputtet ind. Claude læser fejlen, retter og prøver igen.</div>
+        <span class="step-label">1.3 — Få det op at køre i Preview-panelet</span>
+        <div class="prompt">Start både backend og frontend. Brug Preview-panelet i Code-tab'en så jeg kan se appen kørende direkte i Claude.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="expect">Claude starter <code>uvicorn</code> (FastAPI) og <code>yarn dev</code> (Vite), registrerer dev-serveren i <code>.claude/launch.json</code>, og åbner det indbyggede Preview-panel med appen kørende på localhost.</div>
+        <div class="hint">Brug for terminalen alligevel? Tryk <code>Ctrl+`</code> i Code-tab'en for at åbne den integrerede terminal — den lever i samme arbejdsmappe som Claude.</div>
       </div>
     </section>
 
@@ -388,7 +390,7 @@ Argumentér seriøst for begge. Hvad vinder jeg, hvad mister jeg, hvad bliver mi
         <span class="step-label">2.3 — Træf valget og dokumentér det</span>
         <div class="prompt">Jeg vælger [A / B]. Opret en README.md i projektets rod der dokumenterer valget, ræsonnementet og hvilke konsekvenser det har for hvordan vi håndterer data fremover.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Du har nu en README med et eksplicit governance-spor. Når en kollega — eller revisor — kigger om tre måneder, kan de se hvorfor.</div>
-        <div class="hint">Hvis du vælger MCP-vejen, så bed Claude om at tilføje connectoren til <code>.claude/settings.json</code> i projektet, så den er tilgængelig som værktøj i Claude Code.</div>
+        <div class="hint">Vælger du MCP-vejen, så tilføj connectoren via <b>+</b>-knappen ved siden af prompt-feltet → <b>Connectors</b>. Indsæt URL'en <code>https://nordpension-mcp.jeprasher.workers.dev/mcp</code>. Den er så tilgængelig som værktøj resten af sessionen.</div>
       </div>
     </section>
 
@@ -421,74 +423,77 @@ og kigge på output.<button class="copy-btn" type="button" aria-label="Kopier pr
       </div>
 
       <div class="step">
-        <span class="step-label">3.2 — Åbn den i browseren</span>
-        <div class="action">Åbn appen på localhost. Klik dig rundt. Kig på en medlemsdetalje.</div>
+        <span class="step-label">3.2 — Inspicér den i Preview-panelet</span>
+        <div class="action">Åbn Preview-panelet i Code-tab'en (eller tryk <code>⌘⇧P</code>). Klik dig rundt i appen — forside, klik på et medlem, se detail-siden.</div>
         <div class="expect">Det virker — men det ser typisk meget "default" ud. Hvid baggrund, sort tekst, standard browser-fonts. Funktionelt, men kedeligt.</div>
-        <div class="insight"><strong>Det er pointen.</strong> Vi vil mærke kontrasten i næste fase, når Skills træder ind.</div>
+        <div class="insight"><strong>Det er pointen.</strong> Vi vil mærke kontrasten i næste fase, når Skills træder ind. Bemærk også at Claude allerede har auto-verificeret sit eget arbejde med screenshots undervejs — auto-verify er slået til som default.</div>
       </div>
     </section>
 
     <!-- ───────────────────────── PHASE 4 ───────────────────────── -->
     <section class="phase">
       <div class="phase-num">4</div>
-      <h2>Installer frontend-design skill og regenerér UI'en</h2>
-      <p>Samme trick som <code>theme-factory</code> i session 1 — bare i Code-kontekst. Skills lærer Claude konventioner og hæver kvaliteten gratis.</p>
+      <h2>Installer Playwright og verificér at appen virker</h2>
+      <p>Code-tab'en har allerede auto-verify — Claude tager screenshots undervejs. Nu løfter vi det til en <em>eksplicit, reproducerbar</em> test du kan køre igen senere, og vi bruger samme test til at fange et "før"-billede af UI'en inden vi rører ved designet i fase 5.</p>
 
       <div class="step">
-        <span class="step-label">4.1 — Installer skillen</span>
-        <div class="prompt">Installer skillen "frontend-design" fra https://www.skills.sh/anthropics/skills/frontend-design i dette projekt. Bekræft at den er tilgængelig.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="expect">Claude henter skillen, lægger den i <code>.claude/skills/</code> og bekræfter at den nu er aktiv.</div>
-        <p class="muted">Skillen er Anthropics egen samling af principper for "ikke at lave generisk AI-look" — typografi, spacing, hierarki, farvevalg.</p>
+        <span class="step-label">4.1 — Bed Claude installere Playwright og skrive en smoke-test</span>
+        <p>Du laver ikke noget i terminalen selv. Claude står for hele installationen, konfigurationen og første test-kørsel — du gennemlæser og godkender undervejs.</p>
+        <div class="prompt">Installer Playwright i projektet (browser binaries + npm-pakke). Skriv en smoke-test der:
+
+1. Antager at dev-serveren allerede kører (eller starter den hvis nødvendigt)
+2. Åbner forsiden af "Min medlemsportefølje"
+3. Verificerer at der vises en liste af medlemmer (mindst ét element)
+4. Klikker på første medlem og verificerer at detail-siden loader med medlemsdata + sager
+5. Tager screenshots af forsiden og detail-siden og gemmer dem som screenshots/before-forside.png og screenshots/before-detail.png
+
+Kør testen og bekræft at den passerer og at screenshot-filerne findes.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="expect">Claude installerer Playwright, skriver en test-fil, kører <code>npx playwright test</code>, og rapporterer både test-resultatet og at de to PNG'er ligger i <code>./screenshots/</code>.</div>
       </div>
 
       <div class="step">
-        <span class="step-label">4.2 — Tag et "før"-screenshot</span>
-        <div class="action">Inden du redesigner: tag et screenshot af appen som den ser ud nu. Gem det som <code>before.png</code> i projektet.</div>
-        <div class="hint">Du kan også bede Claude om at gøre det med Playwright — så har du allerede første tråd til fase 5.</div>
-      </div>
-
-      <div class="step">
-        <span class="step-label">4.3 — Redesign med skillen aktiv</span>
-        <div class="prompt">Redesign frontend'en til "Min medlemsportefølje" med frontend-design-skillen aktiv. Behold funktionaliteten, men løft kvaliteten af typografi, layout og hierarki. Brug en seriøs, dæmpet visuel tone — det er et internt værktøj, ikke en forbrugerapp.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="expect">Claude opdaterer CSS/komponenter, kører dev-serveren igen, og du ser en mærkbart mere moden UI: konsistent spacing, ordentlig type-skala, gennemtænkte farver.</div>
-        <div class="insight"><strong>Læringen, igen:</strong> Skills er det, der gør hver bruger god uden at hver bruger selv skal være designer. Det er den samme idé som i chat-sessionen — bare i kode.</div>
+        <span class="step-label">4.2 — Lad Claude review sit eget output</span>
+        <div class="prompt">Læs screenshots/before-forside.png og screenshots/before-detail.png. Beskriv konkret hvad du ser. Stemmer det med specifikationen fra fase 3? Er der noget der ser brudt, forkert eller "AI-genereret klodset" ud?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="expect">Claude åbner billederne, beskriver layout, indhold og evt. problemer den selv kan se. Den agentiske loop lukker mellem "jeg skrev kode" og "jeg ved hvordan det ser ud".</div>
+        <div class="insight"><strong>Pointen:</strong> Du har nu en test der gør samme arbejde som auto-verify gør — men eksplicit, gemt i koden, og klar til at køre igen. Det er den slags artefakt der gør forskellen mellem "Claude byggede noget" og "vi har et system".</div>
       </div>
     </section>
 
     <!-- ───────────────────────── PHASE 5 ───────────────────────── -->
     <section class="phase">
       <div class="phase-num">5</div>
-      <h2>Solo: Playwright self-validation</h2>
-      <p>Her bliver det rigtigt agentisk. Du beder Claude bygge en test der åbner appen, tager et screenshot, og <em>kigger på sit eget skærmbillede</em> for at vurdere om det ligner det den troede den havde bygget.</p>
+      <h2>Solo: frontend-design skill + før/efter-sammenligning</h2>
+      <p>Du har en app der virker og en Playwright-test der beviser det. Nu skal du løfte designet — og lade Claude dokumentere ændringen visuelt.</p>
 
       <div class="mission">
         <span class="label">Solo-opgave</span>
-        <h3>Få Claude til at inspicere sit eget arbejde</h3>
-        <p>Vi har bygget en app. Nu skal vi lukke loopet: koden, det visuelle output, og en vurdering af om de matcher. Det er den agentiske loop i miniature — og den du skal øve dig i at have tillid til.</p>
+        <h3>Redesign UI'en og lav en før/efter-side</h3>
+        <p>Du installerer frontend-design-skillen, beder Claude redesigne UI'en, kører Playwright igen for "efter"-screenshots, og samler det hele i en HTML-side der viser forskellen side om side.</p>
       </div>
 
       <div class="step" style="margin-top: 22px;">
-        <span class="step-label">5.1 — Sæt Playwright op</span>
-        <div class="prompt">Installer Playwright i projektet. Skriv en test der:
-
-1. Starter dev-serveren (eller forventer at den allerede kører)
-2. Åbner appen på localhost
-3. Tager et screenshot af forsiden og en detail-side
-4. Gemmer screenshots i mappen ./screenshots/
-
-Kør testen og bekræft at billederne faktisk findes.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="expect">Du har en kørende test, og to PNG-filer i <code>./screenshots/</code>.</div>
+        <span class="step-label">5.1 — Installer frontend-design skillen</span>
+        <div class="action">Klik <b>+</b> ved siden af prompt-feltet → <b>Plugins</b> → <b>Add plugin</b>. Søg efter <code>frontend-design</code> i marketplacen og installer.</div>
+        <div class="action">Alternativt: bed Claude tilføje skillen via prompt — så installerer den den i <code>.claude/skills/</code> i projektet.</div>
+        <div class="expect">Når skillen er aktiv kan du se den under <b>Customize → Skills</b> i sidebaren.</div>
+        <p class="muted">Skillen er Anthropics egen samling af principper for "ikke at lave generisk AI-look" — typografi, spacing, hierarki, farvevalg.</p>
       </div>
 
       <div class="step">
-        <span class="step-label">5.2 — Lad Claude læse sit eget output</span>
-        <div class="prompt">Læs nu screenshots/forside.png og screenshots/detail.png. Beskriv hvad du ser. Stemmer det med det jeg bad dig bygge i fase 3? Er der noget der ser brudt, forkert eller "AI-genereret klodset" ud?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="expect">Claude åbner billedfilerne, beskriver konkret hvad der er på skærmen, sammenligner med specifikationen, og peger på ting den selv synes ser skævt ud.</div>
-        <div class="insight"><strong>Det her er kerneoplevelsen:</strong> Claude lukker selv loopet mellem "jeg skrev kode" og "jeg ved hvordan det ser ud". Det er meget tæt på hvordan en juniorudvikler arbejder — bare hurtigere og uden trætte øjne.</div>
+        <span class="step-label">5.2 — Redesign med skillen aktiv</span>
+        <div class="prompt">Redesign frontend'en til "Min medlemsportefølje" med frontend-design-skillen aktiv. Behold funktionaliteten, men løft kvaliteten af typografi, layout og hierarki. Brug en seriøs, dæmpet visuel tone — det er et internt værktøj, ikke en forbrugerapp.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="expect">Claude opdaterer CSS/komponenter, kører dev-serveren igen, og du ser en mærkbart mere moden UI: konsistent spacing, ordentlig type-skala, gennemtænkte farver.</div>
       </div>
 
       <div class="step">
-        <span class="step-label">5.3 — Stretch: Tilføj en ekstern datakilde</span>
+        <span class="step-label">5.3 — Kør Playwright igen og lav en før/efter-side</span>
+        <div class="prompt">Kør Playwright-testen igen, men gem screenshots som screenshots/after-forside.png og screenshots/after-detail.png. Bagefter: lav en standalone HTML-fil "compare.html" i projektets rod der viser before- og after-billederne side om side i et to-kolonne layout (forside vs forside, detail vs detail), med tydelige overskrifter. Åbn compare.html i Preview-panelet bagefter.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="expect">Du får fire screenshots i alt, en <code>compare.html</code> i projektet, og når du åbner den ser du forskellen mellem default-UI og den frontend-design-skill-genererede UI side om side.</div>
+        <div class="insight"><strong>Læringen:</strong> Skills hæver kvaliteten gratis, og Playwright giver dig et reproducérbart visuelt spor. Sammen har du noget du kan vise til en kollega — eller bruge til at argumentere for at samme skill skal være standard i jeres team.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">5.4 — Stretch: Tilføj en ekstern datakilde</span>
         <p>Hvis du har tid og lyst — udvid appen med data fra en ekstern API. Forslag:</p>
         <ul>
           <li><strong>Danmarks Statistik StatBank API</strong> — fx pensionsformue eller arbejdsmarkedstal som benchmark</li>
@@ -496,17 +501,6 @@ Kør testen og bekræft at billederne faktisk findes.<button class="copy-btn" ty
         </ul>
         <div class="prompt">Find en relevant ekstern API (fx Danmarks Statistik) og tilføj et benchmark-tal til medlems-detailsiden, så jeg kan sammenligne et medlems opsparing mod et landsgennemsnit. Hvis API'et kræver en nøgle, så læg den i en .env-fil og sørg for at den ikke committes.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="hint">Når Claude rører ved <code>.env</code>, hemmeligheder eller eksterne kald, så sig stop og tænk en gang: hvad kan en kombination af "læser data + ekstern netværksadgang + utrusted input" føre til? Den tankerække skal vi tale om bagefter — du skal bare have plantet kimen nu.</div>
-      </div>
-
-      <div class="step">
-        <span class="step-label">5.4 — Hvor langt nåede du?</span>
-        <p>Du vælger selv ambitionsniveau:</p>
-        <ul>
-          <li><strong>Minimum:</strong> Playwright + self-validation kører</li>
-          <li><strong>Mellem:</strong> Også før/efter-sammenligning af UI'en</li>
-          <li><strong>Fuld:</strong> Ekstern API med nøgle i <code>.env</code> + benchmark på detail-siden</li>
-        </ul>
-        <p class="muted">Vi samles op bagefter. Hav gerne en konkret oplevelse med — noget der overraskede dig, noget der gik galt, noget Claude foreslog du ikke selv havde tænkt på.</p>
       </div>
     </section>
   </main>
