@@ -161,8 +161,9 @@
     .step p { margin: 6px 0; }
 
     .prompt {
+      position: relative;
       margin: 10px 0;
-      padding: 12px 14px;
+      padding: 12px 60px 12px 14px;
       border: 1px solid var(--border);
       border-radius: 7px;
       background: #1f1b1f;
@@ -172,6 +173,25 @@
       line-height: 1.5;
       white-space: pre-wrap;
     }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 4px 9px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 5px;
+      background: rgba(255, 255, 255, .06);
+      color: #f5d6e3;
+      font-family: inherit;
+      font-size: 10.5px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s ease, color .15s ease;
+    }
+    .copy-btn:hover { background: rgba(255, 255, 255, .14); }
+    .copy-btn.copied { background: rgba(133, 180, 153, .3); color: #d3eee0; border-color: rgba(133, 180, 153, .5); }
     .prompt::before {
       content: "Prompt";
       display: inline-block;
@@ -324,14 +344,14 @@
 - Database: SQLite lokalt
 
 Lav en simpel "hello world"-version end-to-end så jeg kan se at det hele kører.
-Forklar undervejs hvad du laver, og bed mig om lov før du installerer pakker.</div>
+Forklar undervejs hvad du laver, og bed mig om lov før du installerer pakker.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude opretter en mappestruktur (typisk <code>frontend/</code> og <code>backend/</code>), skriver scaffold-filer, kører <code>yarn</code> og <code>uv</code>-kommandoer og beder om din godkendelse undervejs.</div>
         <div class="insight"><strong>Den agentiske forskel:</strong> I chat fik du forslag. Her gør Claude tingene. Den beder om lov, læser filer, kører kommandoer — og du holder hånden på rattet ved at sige ja eller nej.</div>
       </div>
 
       <div class="step">
         <span class="step-label">1.3 — Få det op at køre</span>
-        <div class="prompt">Start både backend og frontend så jeg kan åbne appen i browseren. Fortæl mig hvilken URL den kører på.</div>
+        <div class="prompt">Start både backend og frontend så jeg kan åbne appen i browseren. Fortæl mig hvilken URL den kører på.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude starter <code>uvicorn</code> (FastAPI) og <code>yarn dev</code> (Vite) i baggrunden og giver dig en localhost-URL. Du åbner den og ser "hello world".</div>
         <div class="hint">Hvis noget fejler, så sig <em>"Det virker ikke — fejlbeskeden er: …"</em> og lim outputtet ind. Claude læser fejlen, retter og prøver igen.</div>
       </div>
@@ -360,13 +380,13 @@ A) NordPension MCP-connector (PII-filtreret, governance indbygget)
 B) Supabase REST direkte (anon key, fuld data inkl. PII)
    Endpoint: https://pruvwgulvquauncykgxy.supabase.co/rest/v1/
 
-Argumentér seriøst for begge. Hvad vinder jeg, hvad mister jeg, hvad bliver mit ansvar i hver?</div>
+Argumentér seriøst for begge. Hvad vinder jeg, hvad mister jeg, hvad bliver mit ansvar i hver?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude giver dig en afvejning: MCP = sikkert default men begrænset; direkte = fuld fleksibilitet men du skal selv tænke på PII, logging, samtykke, lethal trifecta osv.</div>
       </div>
 
       <div class="step">
         <span class="step-label">2.3 — Træf valget og dokumentér det</span>
-        <div class="prompt">Jeg vælger [A / B]. Opret en README.md i projektets rod der dokumenterer valget, ræsonnementet og hvilke konsekvenser det har for hvordan vi håndterer data fremover.</div>
+        <div class="prompt">Jeg vælger [A / B]. Opret en README.md i projektets rod der dokumenterer valget, ræsonnementet og hvilke konsekvenser det har for hvordan vi håndterer data fremover.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Du har nu en README med et eksplicit governance-spor. Når en kollega — eller revisor — kigger om tre måneder, kan de se hvorfor.</div>
         <div class="hint">Hvis du vælger MCP-vejen, så bed Claude om at tilføje connectoren til <code>.claude/settings.json</code> i projektet, så den er tilgængelig som værktøj i Claude Code.</div>
       </div>
@@ -396,7 +416,7 @@ Frontend (React + Vite):
 
 Gør det enkelt. Ingen auth, ingen state-management bibliotek. Bare list + detail.
 Når du er færdig, start serverne og verificér at appen virker ved at hente /api/members
-og kigge på output.</div>
+og kigge på output.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude skriver routes, en frontend, og kører selv en <code>curl</code> mod sit eget endpoint for at tjekke at data kommer ud. Hvis noget fejler, fejlsøger den selv før den giver op.</div>
       </div>
 
@@ -416,7 +436,7 @@ og kigge på output.</div>
 
       <div class="step">
         <span class="step-label">4.1 — Installer skillen</span>
-        <div class="prompt">Installer skillen "frontend-design" fra https://www.skills.sh/anthropics/skills/frontend-design i dette projekt. Bekræft at den er tilgængelig.</div>
+        <div class="prompt">Installer skillen "frontend-design" fra https://www.skills.sh/anthropics/skills/frontend-design i dette projekt. Bekræft at den er tilgængelig.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude henter skillen, lægger den i <code>.claude/skills/</code> og bekræfter at den nu er aktiv.</div>
         <p class="muted">Skillen er Anthropics egen samling af principper for "ikke at lave generisk AI-look" — typografi, spacing, hierarki, farvevalg.</p>
       </div>
@@ -429,7 +449,7 @@ og kigge på output.</div>
 
       <div class="step">
         <span class="step-label">4.3 — Redesign med skillen aktiv</span>
-        <div class="prompt">Redesign frontend'en til "Min medlemsportefølje" med frontend-design-skillen aktiv. Behold funktionaliteten, men løft kvaliteten af typografi, layout og hierarki. Brug en seriøs, dæmpet visuel tone — det er et internt værktøj, ikke en forbrugerapp.</div>
+        <div class="prompt">Redesign frontend'en til "Min medlemsportefølje" med frontend-design-skillen aktiv. Behold funktionaliteten, men løft kvaliteten af typografi, layout og hierarki. Brug en seriøs, dæmpet visuel tone — det er et internt værktøj, ikke en forbrugerapp.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude opdaterer CSS/komponenter, kører dev-serveren igen, og du ser en mærkbart mere moden UI: konsistent spacing, ordentlig type-skala, gennemtænkte farver.</div>
         <div class="insight"><strong>Læringen, igen:</strong> Skills er det, der gør hver bruger god uden at hver bruger selv skal være designer. Det er den samme idé som i chat-sessionen — bare i kode.</div>
       </div>
@@ -456,13 +476,13 @@ og kigge på output.</div>
 3. Tager et screenshot af forsiden og en detail-side
 4. Gemmer screenshots i mappen ./screenshots/
 
-Kør testen og bekræft at billederne faktisk findes.</div>
+Kør testen og bekræft at billederne faktisk findes.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Du har en kørende test, og to PNG-filer i <code>./screenshots/</code>.</div>
       </div>
 
       <div class="step">
         <span class="step-label">5.2 — Lad Claude læse sit eget output</span>
-        <div class="prompt">Læs nu screenshots/forside.png og screenshots/detail.png. Beskriv hvad du ser. Stemmer det med det jeg bad dig bygge i fase 3? Er der noget der ser brudt, forkert eller "AI-genereret klodset" ud?</div>
+        <div class="prompt">Læs nu screenshots/forside.png og screenshots/detail.png. Beskriv hvad du ser. Stemmer det med det jeg bad dig bygge i fase 3? Er der noget der ser brudt, forkert eller "AI-genereret klodset" ud?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude åbner billedfilerne, beskriver konkret hvad der er på skærmen, sammenligner med specifikationen, og peger på ting den selv synes ser skævt ud.</div>
         <div class="insight"><strong>Det her er kerneoplevelsen:</strong> Claude lukker selv loopet mellem "jeg skrev kode" og "jeg ved hvordan det ser ud". Det er meget tæt på hvordan en juniorudvikler arbejder — bare hurtigere og uden trætte øjne.</div>
       </div>
@@ -474,7 +494,7 @@ Kør testen og bekræft at billederne faktisk findes.</div>
           <li><strong>Danmarks Statistik StatBank API</strong> — fx pensionsformue eller arbejdsmarkedstal som benchmark</li>
           <li><strong>Nationalbankens statistik-API</strong> — IP-statistik eller renter</li>
         </ul>
-        <div class="prompt">Find en relevant ekstern API (fx Danmarks Statistik) og tilføj et benchmark-tal til medlems-detailsiden, så jeg kan sammenligne et medlems opsparing mod et landsgennemsnit. Hvis API'et kræver en nøgle, så læg den i en .env-fil og sørg for at den ikke committes.</div>
+        <div class="prompt">Find en relevant ekstern API (fx Danmarks Statistik) og tilføj et benchmark-tal til medlems-detailsiden, så jeg kan sammenligne et medlems opsparing mod et landsgennemsnit. Hvis API'et kræver en nøgle, så læg den i en .env-fil og sørg for at den ikke committes.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="hint">Når Claude rører ved <code>.env</code>, hemmeligheder eller eksterne kald, så sig stop og tænk en gang: hvad kan en kombination af "læser data + ekstern netværksadgang + utrusted input" føre til? Den tankerække skal vi tale om bagefter — du skal bare have plantet kimen nu.</div>
       </div>
 
@@ -490,5 +510,27 @@ Kør testen og bekræft at billederne faktisk findes.</div>
       </div>
     </section>
   </main>
+  <script>
+    document.querySelectorAll('.copy-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const host = btn.parentElement;
+        const text = Array.from(host.childNodes)
+          .filter((n) => n.nodeType === Node.TEXT_NODE || (n.nodeType === Node.ELEMENT_NODE && n !== btn))
+          .map((n) => n.textContent)
+          .join('')
+          .trim();
+        try {
+          await navigator.clipboard.writeText(text);
+          const orig = btn.textContent;
+          btn.textContent = 'Kopieret ✓';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+        } catch (e) {
+          btn.textContent = 'Fejl';
+          setTimeout(() => { btn.textContent = 'Kopier'; }, 1500);
+        }
+      });
+    });
+  </script>
 </body>
 </html>

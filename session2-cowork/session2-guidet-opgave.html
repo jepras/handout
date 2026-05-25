@@ -349,20 +349,20 @@
 
       <div class="step">
         <span class="step-label">2.1 — Opsummér sidste bestyrelsesmøde</span>
-        <div class="prompt">Læs filen Bestyrelsesmoede-2025Q4.pptx og opsummér de vigtigste pointer. Hvad var de største bekymringer på det møde?</div>
+        <div class="prompt">Læs filen Bestyrelsesmoede-2025Q4.pptx og opsummér de vigtigste pointer. Hvad var de største bekymringer på det møde?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude åbner pptx-filen, læser titler og bullets på hver slide, og leverer en kort opsummering — inklusive bekymringerne om digital kommunikation og bidragsanomalier i Sjælland.</div>
       </div>
 
       <div class="step">
         <span class="step-label">2.2 — Træk et tal ud af en csv</span>
-        <div class="prompt">Tjek medlemstilfredshed-2025.csv — hvilken region har lavest NPS henover året, og hvor stor er forskellen til den højeste?</div>
+        <div class="prompt">Tjek medlemstilfredshed-2025.csv — hvilken region har lavest NPS henover året, og hvor stor er forskellen til den højeste?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude læser csv'en, beregner gennemsnit pr. region og fortæller dig at Sjælland ligger markant under de andre regioner.</div>
         <div class="insight"><strong>Læringen:</strong> Cowork kan både læse en fil og <em>regne på den</em> i samme træk. Den behøver ikke en Excel for at gøre simple aggregeringer.</div>
       </div>
 
       <div class="step">
         <span class="step-label">2.3 — Træk en bekymring ud af en docx</span>
-        <div class="prompt">Læs Q1-2026-driftsrapport.docx. Hvad er den vigtigste bekymring Camilla Holm rejser, og hvor mange medlemmer er berørt?</div>
+        <div class="prompt">Læs Q1-2026-driftsrapport.docx. Hvad er den vigtigste bekymring Camilla Holm rejser, og hvor mange medlemmer er berørt?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude finder afsnittet om e-Boks-svartider i februar og rapporterer at 412 medlemmer blev berørt.</div>
       </div>
     </section>
@@ -376,20 +376,20 @@
       <div class="step">
         <span class="step-label">3.1 — Sammenhold NPS med medlemsbase</span>
         <p>Sørg for at NordPension-connectoren stadig er aktiv (den du tilsluttede i session 1).</p>
-        <div class="prompt">Sammenlign antallet af aktive medlemmer pr. region (fra MCP-connectoren) med NPS-tallet pr. region (fra medlemstilfredshed-2025.csv). Er der en sammenhæng — fx mellem størrelse og tilfredshed?</div>
+        <div class="prompt">Sammenlign antallet af aktive medlemmer pr. region (fra MCP-connectoren) med NPS-tallet pr. region (fra medlemstilfredshed-2025.csv). Er der en sammenhæng — fx mellem størrelse og tilfredshed?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude kalder MCP'en for at få medlemsfordeling pr. region, læser csv'en, og leverer en lille tabel der stiller de to op mod hinanden. Den noterer typisk at Sjælland har en moderat medlemsbase men markant lavere NPS — et signal værd at undersøge.</div>
       </div>
 
       <div class="step">
         <span class="step-label">3.2 — Konsistens mellem narrativ og tal</span>
-        <div class="prompt">Læs Q1-2026-driftsrapport.docx og hold tallene i den op mod dwh.report_metrics for samme periode. Hvad ser konsistent ud, hvad ser inkonsistent ud?</div>
+        <div class="prompt">Læs Q1-2026-driftsrapport.docx og hold tallene i den op mod dwh.report_metrics for samme periode. Hvad ser konsistent ud, hvad ser inkonsistent ud?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude trækker driftstal fra MCP'en og sammenligner med Camillas rapport. Den finder typisk at sagsvolumen og SLA-tal stemmer rimeligt overens, men gør opmærksom på at klage-temaerne i docx'en er mere detaljerede end det MCP'en har på sig.</div>
         <div class="insight"><strong>Læringen:</strong> Det interne materiale og MCP-data er <em>komplementære</em>. Tallene siger hvad der skete; narrativet siger hvorfor. Tilsammen får du en historie der kan stå alene.</div>
       </div>
 
       <div class="step">
         <span class="step-label">3.3 — Find trenden i klagestatistikken</span>
-        <div class="prompt">Læs klagestatistik-2025.csv. Hvilken kategori har den klareste trend henover året, og hænger det sammen med noget i de andre filer?</div>
+        <div class="prompt">Læs klagestatistik-2025.csv. Hvilken kategori har den klareste trend henover året, og hænger det sammen med noget i de andre filer?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude finder at <code>digital_kommunikation</code> stiger markant fra Q1 til Q4. Den kobler det selv til e-Boks-bekymringen i driftsrapporten og til bekymrings-sliden i Q4-bestyrelsesdecket.</div>
       </div>
     </section>
@@ -402,14 +402,14 @@
 
       <div class="step">
         <span class="step-label">4.1 — Bed Claude bygge en interaktiv visualisering</span>
-        <div class="prompt">Brug medlemstilfredshed-2025.csv og data fra MCP-connectoren om antal medlemmer pr. region. Lav en Live Artifact som viser sammenhængen mellem medlemsbase og NPS, med en region-vælger så jeg interaktivt kan skifte mellem regioner og se detaljer.</div>
+        <div class="prompt">Brug medlemstilfredshed-2025.csv og data fra MCP-connectoren om antal medlemmer pr. region. Lav en Live Artifact som viser sammenhængen mellem medlemsbase og NPS, med en region-vælger så jeg interaktivt kan skifte mellem regioner og se detaljer.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="action">Sig eksplicit til Claude at det skal være en <strong>Live Artifact</strong>, så artifact'en kan kalde Claude API'en på køretid og reagere på dine valg.</div>
         <div class="expect">Claude bygger en artifact med en region-vælger. Når du vælger en region, opdaterer visningen sig og giver dig en kort vurdering eller anbefaling for netop den region.</div>
       </div>
 
       <div class="step">
         <span class="step-label">4.2 — Prøv at presse den</span>
-        <div class="prompt">Tilføj en sammenligning med klagestatistik-2025.csv i Live Artifact'en, så jeg kan se NPS og klagevolumen samtidig pr. region.</div>
+        <div class="prompt">Tilføj en sammenligning med klagestatistik-2025.csv i Live Artifact'en, så jeg kan se NPS og klagevolumen samtidig pr. region.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Artifact'en udvides — nu har du et lille interaktivt dashboard du kan dele med direktionen, hvor de selv kan klikke sig igennem.</div>
         <div class="insight"><strong>Læringen:</strong> Live Artifacts gør forskellen mellem "her er en graf" og "her er et lille værktøj". Det sidste kan din modtager selv udforske — uden at du skal være på Teams ved siden af.</div>
         <div class="hint">Hvis Live Artifact-flowet føles uvant, så bare bed Claude direkte om at <em>"gøre denne artifact til en Live Artifact så jeg kan ændre input interaktivt"</em>. Den ved selv hvad det betyder.</div>
@@ -431,13 +431,13 @@
       <div class="step" style="margin-top: 22px;">
         <span class="step-label">5.1 — Start med din rolle</span>
         <p>Du har en specifik faglig vinkel. Brug den. Spørg Claude åbent:</p>
-        <div class="prompt">Ud fra min rolle som [aktuar / økonomi-controller / kunderådgiver / dataanalytiker], hvilke filer i mappen er mest relevante for mig at opdatere — og hvilke tabeller i MCP'en skal jeg trække ind?</div>
+        <div class="prompt">Ud fra min rolle som [aktuar / økonomi-controller / kunderådgiver / dataanalytiker], hvilke filer i mappen er mest relevante for mig at opdatere — og hvilke tabeller i MCP'en skal jeg trække ind?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="hint">Bed Claude foreslå hvilke 2-3 nye datapunkter eller pointer din rolle <em>specifikt</em> ville bidrage med til direktionsmødet. Andre i lokalet vil komme med andre svar — det er meningen.</div>
       </div>
 
       <div class="step">
         <span class="step-label">5.2 — Opdatér det gamle bestyrelsesdeck</span>
-        <div class="prompt">Tag Bestyrelsesmoede-2025Q4.pptx som udgangspunkt og lav en ny version, Bestyrelsesmoede-2026Q1.pptx, hvor tal og temaer er opdateret med data fra Q1-2026-driftsrapport.docx, klagestatistik-2025.csv, Forecast-2026.xlsx og MTU-2025-resultater.pdf samt MCP-connectoren. Behold strukturen, men opdater indholdet.</div>
+        <div class="prompt">Tag Bestyrelsesmoede-2025Q4.pptx som udgangspunkt og lav en ny version, Bestyrelsesmoede-2026Q1.pptx, hvor tal og temaer er opdateret med data fra Q1-2026-driftsrapport.docx, klagestatistik-2025.csv, Forecast-2026.xlsx og MTU-2025-resultater.pdf samt MCP-connectoren. Behold strukturen, men opdater indholdet.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude skriver en ny pptx-fil til mappen. Åbn den i PowerPoint og kig den igennem — der vil typisk være ting du selv vil omformulere.</div>
       </div>
 
@@ -450,13 +450,13 @@
           <li>En <strong>Live Artifact</strong> som direktøren selv kan klikke rundt i</li>
           <li>En kombination — fx pptx + 1-pager pdf som bilag</li>
         </ul>
-        <div class="prompt">Skriv en direktionsbrief.docx på maks 1 side, der opsummerer "hvordan har vi det med medlemmerne lige nu?" baseret på filerne i mappen og MCP-data. Citér de konkrete filer og tabeller du bruger.</div>
+        <div class="prompt">Skriv en direktionsbrief.docx på maks 1 side, der opsummerer "hvordan har vi det med medlemmerne lige nu?" baseret på filerne i mappen og MCP-data. Citér de konkrete filer og tabeller du bruger.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
       </div>
 
       <div class="step">
         <span class="step-label">5.4 — Bed om et revisionsspor</span>
         <p>Inden du sender noget videre, så sikr dig at du kan svare på "hvor kommer det tal fra?".</p>
-        <div class="prompt">Lav en lille appendiks-fil (kilder.md) der lister hvert tal og hver påstand i briefen sammen med den fil eller tabel det stammer fra.</div>
+        <div class="prompt">Lav en lille appendiks-fil (kilder.md) der lister hvert tal og hver påstand i briefen sammen med den fil eller tabel det stammer fra.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="hint">Det er den slags efterrationalisering du normalt selv skal sidde og lave. Det er rart at vide at Claude kan det — så længe du beder om det.</div>
       </div>
     </section>
