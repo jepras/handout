@@ -1,0 +1,2077 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>08 · Decision tree — alternativer & EU-veje</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔀</text></svg>">
+  <style>
+    :root {
+      --background: #fbfafb;
+      --foreground: #22131b;
+      --card: #ffffff;
+      --card-foreground: #22131b;
+      --muted: #f5f1f3;
+      --muted-foreground: #6f6369;
+      --border: #d8d4d7;
+      --primary: #92004d;
+      --primary-foreground: #ffffff;
+      --secondary: #f3edf0;
+      --accent: #f7e7ef;
+      --ruby: #ce0060;
+      --bordeaux: #660036;
+      --warm-gray: #aca39a;
+      --mint: #9edfce;
+      --lilac: #c5aed5;
+      --beige: #e88f80;
+      --sky: #6e9baa;
+      --yellow: #efc47c;
+      --leaf: #85b499;
+      --green: var(--leaf);
+      --amber: var(--yellow);
+      --blue: var(--sky);
+      --red: #c0392b;
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 14% 0%, rgba(206, 0, 96, .10), transparent 36%),
+        linear-gradient(180deg, rgba(245, 241, 243, .92), rgba(251, 250, 251, 0) 480px),
+        var(--background);
+      color: var(--foreground);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      max-width: none;
+      margin: 0;
+      padding: 28px 20px 56px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 960px;
+      margin-bottom: 16px;
+      color: var(--bordeaux);
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.04;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      color: var(--bordeaux);
+      font-size: clamp(20px, 2.2vw, 26px);
+      line-height: 1.15;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    p {
+      margin-bottom: 12px;
+      color: var(--muted-foreground);
+    }
+
+    section { margin-top: 32px; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      font-weight: 760;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      background: var(--primary);
+      box-shadow: 0 0 0 4px rgba(146, 0, 77, .12);
+    }
+
+    .lead {
+      max-width: 820px;
+      color: #4f4249;
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+      gap: 22px;
+      align-items: stretch;
+      padding: 10px 0 8px;
+      max-width: 1600px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .97);
+      box-shadow: 0 1px 2px rgba(16, 12, 14, .04);
+    }
+
+    .card-header { padding: 18px 18px 0; }
+    .card-body { padding: 18px; }
+
+    .badge {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: var(--card);
+      color: var(--foreground);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .badge.primary { border-color: rgba(146, 0, 77, .35); background: rgba(146, 0, 77, .08); color: var(--primary); }
+    .badge.green { border-color: rgba(133, 180, 153, .55); background: rgba(133, 180, 153, .18); color: #446e55; }
+    .badge.amber { border-color: rgba(239, 196, 124, .7); background: rgba(239, 196, 124, .22); color: #7b5518; }
+    .badge.red { border-color: rgba(192, 57, 43, .35); background: rgba(192, 57, 43, .10); color: #872117; }
+    .badge.blue { border-color: rgba(110, 155, 170, .38); background: rgba(110, 155, 170, .14); color: #375f6b; }
+
+    /* Page layout — diagrammet er primært, panelet en slank ledsager */
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3.2fr) minmax(300px, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .tree-card {
+      padding: 18px 18px 8px;
+    }
+
+    .tree-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .toolbar-left { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+
+    .reset-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      background: var(--card);
+      color: var(--foreground);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+
+    .reset-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 14px;
+      padding: 10px 12px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: #fffdfe;
+      color: var(--muted-foreground);
+      font-size: 12px;
+    }
+
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend .sw {
+      width: 14px; height: 14px; border-radius: 3px;
+      border: 1px solid var(--border);
+    }
+
+    /* SVG styling */
+    .tree-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin-top: 6px;
+      font-family: inherit;
+      user-select: none;
+    }
+
+    /* Default node look */
+    .node rect {
+      fill: #ffffff;
+      stroke: var(--border);
+      stroke-width: 1.2;
+      transition: fill .2s, stroke .2s, stroke-width .2s;
+    }
+
+    .node text {
+      fill: var(--foreground);
+      font-size: 13px;
+      pointer-events: none;
+      transition: fill .2s;
+    }
+
+    .node .node-title {
+      font-weight: 700;
+      font-size: 13px;
+      fill: var(--bordeaux);
+    }
+
+    .node .node-sub {
+      font-size: 11.5px;
+      fill: var(--muted-foreground);
+    }
+
+    /* Question nodes (always rendered but can be active) */
+    .node.question rect {
+      fill: #f7eef3;
+      stroke: var(--bordeaux);
+      stroke-width: 1.6;
+    }
+
+    /* Spørgsmål er nu én linje med bold lead + normal body */
+    .node.question .node-title {
+      font-size: 14px;
+    }
+    .node.question .node-body {
+      fill: var(--foreground);
+      font-weight: 400;
+    }
+
+    /* Answer pills are clickable */
+    .node.answer {
+      cursor: pointer;
+    }
+
+    .node.answer rect {
+      fill: #ffffff;
+      stroke: var(--border);
+      stroke-width: 1.2;
+    }
+
+    .node.answer:hover rect {
+      stroke: var(--primary);
+      stroke-width: 1.8;
+      fill: #fff5fa;
+    }
+
+    /* Action nodes (required mitigations along the path) */
+    .node.action rect {
+      fill: #fff7e4;
+      stroke: #b58a3a;
+      stroke-width: 1.3;
+      stroke-dasharray: 4 3;
+    }
+
+    .node.action .node-title { fill: #7b5518; }
+    .node.action .node-sub { fill: #8a6a2a; }
+
+    /* Terminal nodes */
+    .node.terminal-go rect {
+      fill: rgba(133, 180, 153, .18);
+      stroke: #446e55;
+      stroke-width: 1.6;
+    }
+    .node.terminal-go .node-title { fill: #355e44; }
+
+    .node.terminal-block rect {
+      fill: rgba(192, 57, 43, .14);
+      stroke: var(--red);
+      stroke-width: 1.6;
+    }
+    .node.terminal-block .node-title { fill: #872117; }
+
+    /* Selected state — node lights up in PKA red */
+    .node.selected rect {
+      fill: rgba(146, 0, 77, .10);
+      stroke: var(--primary);
+      stroke-width: 2.4;
+    }
+    .node.selected .node-title { fill: var(--primary); }
+    .node.selected .node-sub { fill: var(--bordeaux); }
+
+    /* On-path question/action/terminal — same active path, but not "selected answer" */
+    .node.on-path:not(.selected) rect {
+      stroke: var(--ruby);
+      stroke-width: 2;
+    }
+    .node.on-path:not(.selected) .node-title { fill: var(--bordeaux); }
+
+    /* Dimmed nodes — kun fravalgte grene */
+    .node.dimmed {
+      opacity: .28;
+      filter: grayscale(.6);
+    }
+
+    /* Dæmpede svar-pills (søskende til valgt svar) er stadig klikbare,
+       så man kan skifte mening uden først at "unlocke" det valgte svar. */
+    .node.answer.dimmed {
+      cursor: pointer;
+    }
+    .node.answer.dimmed:hover {
+      opacity: .55;
+    }
+
+    /* Gated svar-pills (fx Q4-mitigations leverandøren ikke tillader)
+       kan ikke klikkes — markeres separat. */
+    .node.answer.gated {
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* Anbefalet Q4-pille — subtil PKA-rød markering når den IKKE er valgt endnu */
+    .node.recommended:not(.selected) rect {
+      stroke: var(--primary);
+      stroke-width: 2;
+      stroke-dasharray: 0;
+    }
+
+    .recommend-badge {
+      pointer-events: none;
+    }
+    .recommend-badge rect {
+      fill: var(--primary);
+      stroke: none;
+    }
+    .recommend-badge text {
+      fill: #ffffff;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+
+    .recommend-hint {
+      pointer-events: none;
+    }
+    .recommend-hint rect {
+      fill: #fff5fa;
+      stroke: rgba(146, 0, 77, .35);
+      stroke-width: 1.2;
+    }
+    .recommend-hint text {
+      fill: var(--bordeaux);
+    }
+    .recommend-hint .hint-strong {
+      font-weight: 700;
+      fill: var(--primary);
+    }
+
+    /* Edges */
+    .edge {
+      fill: none;
+      stroke: var(--border);
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      transition: stroke .2s, stroke-width .2s, opacity .2s;
+    }
+
+    .edge.on-path {
+      stroke: var(--primary);
+      stroke-width: 3;
+    }
+
+    .edge.dimmed {
+      opacity: .18;
+    }
+
+    .edge-label {
+      font-size: 11px;
+      fill: var(--muted-foreground);
+      pointer-events: none;
+      transition: fill .2s, opacity .2s;
+    }
+
+    .edge-label.on-path { fill: var(--primary); font-weight: 600; }
+    .edge-label.dimmed { opacity: .25; }
+
+    /* Recommendation panel — slank ledsager til diagrammet */
+    .rec-col {
+      position: sticky;
+      top: 14px;
+      align-self: start;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .rec-panel {
+      font-size: 13px;
+    }
+
+    /* Mini arketype-vælger over anbefalingspanelet */
+    .arche-mini {
+      padding: 11px 13px 12px;
+    }
+    .arche-mini-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+      margin-bottom: 7px;
+    }
+    .arche-select {
+      position: relative;
+    }
+    .arche-select-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 11px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: #fffdfe;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--foreground);
+      cursor: pointer;
+      text-align: left;
+      line-height: 1.3;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .arche-select-trigger:hover { border-color: var(--primary); }
+    .arche-select-trigger:focus-visible {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(146, 0, 77, .15);
+    }
+    .arche-select-trigger .chev {
+      flex: 0 0 auto;
+      width: 14px; height: 14px;
+      color: var(--muted-foreground);
+      transition: transform .15s;
+    }
+    .arche-select.open .arche-select-trigger .chev { transform: rotate(180deg); }
+    .arche-select-trigger .placeholder { color: var(--muted-foreground); font-weight: 500; }
+
+    .arche-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      max-height: 320px;
+      overflow-y: auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 12px 28px -8px rgba(60, 20, 40, .18), 0 4px 10px -4px rgba(60, 20, 40, .12);
+      z-index: 30;
+      padding: 5px;
+    }
+    .arche-select.open .arche-menu { display: block; }
+
+    .arche-menu-group {
+      padding: 8px 9px 4px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+    }
+    .arche-menu-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 7px 9px;
+      border: 0;
+      background: transparent;
+      border-radius: 5px;
+      font-family: inherit;
+      font-size: 12.5px;
+      color: var(--foreground);
+      cursor: pointer;
+      line-height: 1.3;
+    }
+    .arche-menu-item:hover, .arche-menu-item:focus-visible {
+      background: rgba(146, 0, 77, .08);
+      outline: none;
+    }
+    .arche-menu-item.blocked .arche-item-result { color: var(--red); }
+    .arche-item-result {
+      display: block;
+      margin-top: 2px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted-foreground);
+    }
+
+    .rec-head {
+      padding: 14px 15px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .rec-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+    }
+
+    .rec-status .dot {
+      width: 9px; height: 9px;
+      border-radius: 999px;
+      background: var(--warm-gray);
+    }
+
+    .rec-status.ok .dot { background: var(--green); box-shadow: 0 0 0 3.5px rgba(133, 180, 153, .22); }
+    .rec-status.partial .dot { background: var(--amber); box-shadow: 0 0 0 3.5px rgba(239, 196, 124, .25); }
+    .rec-status.block .dot { background: var(--red); box-shadow: 0 0 0 3.5px rgba(192, 57, 43, .22); }
+    .rec-status.ok { color: #355e44; }
+    .rec-status.partial { color: #7b5518; }
+    .rec-status.block { color: #872117; }
+
+    .rec-feature {
+      margin-top: 9px;
+      font-size: 17.5px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -.005em;
+      color: var(--bordeaux);
+    }
+
+    .rec-mode {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 9px;
+      border: 1px solid rgba(146, 0, 77, .3);
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: rgba(146, 0, 77, .07);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .rec-body {
+      padding: 12px 15px 15px;
+    }
+
+    .rec-block {
+      margin-top: 12px;
+    }
+
+    .rec-block h4 {
+      margin: 0 0 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+    }
+
+    .rec-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 5px;
+    }
+
+    .rec-list li {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 6px;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fffdfe;
+      font-size: 13px;
+      line-height: 1.35;
+      color: var(--foreground);
+    }
+
+    .rec-list .ico {
+      font-weight: 800;
+      line-height: 1.3;
+      font-size: 12.5px;
+    }
+
+    .rec-list.required .ico { color: #355e44; }
+    .rec-list.required li { border-color: rgba(133, 180, 153, .45); background: rgba(133, 180, 153, .08); }
+
+    .rec-list.forbidden .ico { color: #872117; }
+    .rec-list.forbidden li { border-color: rgba(192, 57, 43, .32); background: rgba(192, 57, 43, .06); }
+
+    .rec-list.warnings .ico { color: #7b5518; }
+    .rec-list.warnings li { border-color: rgba(239, 196, 124, .55); background: rgba(239, 196, 124, .15); }
+
+    .rec-empty {
+      padding: 12px 13px;
+      border: 1px dashed var(--border);
+      border-radius: 7px;
+      background: #fffdfe;
+      color: var(--muted-foreground);
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+
+    .block-card {
+      margin-top: 4px;
+      padding: 13px 14px;
+      border: 1.4px solid var(--red);
+      border-radius: 8px;
+      background: rgba(192, 57, 43, .08);
+      color: #6a1a13;
+    }
+
+    .block-card h3 {
+      margin: 0 0 6px;
+      color: var(--red);
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .block-card p { margin: 0; color: #6a1a13; font-size: 13px; line-height: 1.35; }
+
+    .progress {
+      display: flex;
+      gap: 5px;
+      margin-top: 11px;
+    }
+
+    .progress .pip {
+      flex: 1;
+      height: 5.5px;
+      border-radius: 999px;
+      background: var(--muted);
+    }
+    .progress .pip.done { background: var(--primary); }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .rec-panel { position: static; }
+      .hero { grid-template-columns: 1fr; }
+    }
+
+    .footer-note {
+      margin-top: 28px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fffdfe;
+      color: var(--muted-foreground);
+      font-size: 13px;
+    }
+    .footer-note strong { color: var(--bordeaux); }
+
+    /* Arketyper — klikbare opgavekort der indlæser et færdigt flow i træet */
+    .archetypes {
+      margin-top: 36px;
+    }
+    .archetypes h2 {
+      margin-bottom: 6px;
+    }
+    .archetypes .lead-text {
+      color: var(--muted-foreground);
+      margin-bottom: 16px;
+      max-width: 760px;
+      font-size: 14px;
+    }
+    .arche-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .arche {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      border: 1px solid var(--border);
+      border-top: 5px solid var(--primary);
+      border-radius: 8px;
+      background: var(--card);
+      padding: 15px 16px 14px;
+      cursor: pointer;
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+      text-align: left;
+      font: inherit;
+      color: inherit;
+    }
+    .arche:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(16, 12, 14, .08);
+      border-top-color: var(--ruby);
+    }
+    .arche.blocked { border-top-color: var(--red); }
+    .arche.blocked:hover { border-top-color: var(--red); }
+    .arche-org {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+    }
+    .arche h3 {
+      margin: 0;
+      color: var(--bordeaux);
+      font-size: 16px;
+      line-height: 1.25;
+    }
+    .arche p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted-foreground);
+    }
+    .arche-result {
+      margin-top: auto;
+      padding-top: 9px;
+      border-top: 1px solid var(--border);
+      font-size: 12.5px;
+      color: var(--bordeaux);
+      font-weight: 600;
+    }
+    .arche.blocked .arche-result { color: #8a2820; }
+    .arche-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(146, 0, 77, .08);
+      color: var(--primary);
+      font-size: 11.5px;
+      margin-right: 5px;
+    }
+    .arche.blocked .arche-pill {
+      background: rgba(192, 57, 43, .10);
+      color: #872117;
+    }
+    @media (max-width: 1000px) {
+      .arche-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      .arche-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Compliance · interaktiv vejviser · alternativer</div>
+        <h1>Feature beslutningstræ — med leverandørvalg</h1>
+        <p class="lead">
+          De første to spørgsmål er objektive vurderinger af opgaven. Derefter indsnævrer
+          du: hvilken leverandør, hvilken persondata-håndtering, og til sidst hvilken feature.
+          Leverandør-valget ændrer hvilke features der er tilgængelige og hvor meget
+          compliance-bagage der kommer med.
+        </p>
+      </div>
+
+      <aside class="card">
+        <div class="card-header">
+          <span class="badge primary">Sådan virker det</span>
+          <h2 style="margin-top: 12px; font-size: 22px;">Fem trin — leverandør i midten</h2>
+          <p>Rækkefølgen er bevidst: <em>handlingsradius</em> og <em>fortrolighed</em> er objektive før alt andet. Så kommer <em>leverandør</em> — og det styrer hvad der gælder for persondata og features længere nede.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section>
+      <div class="layout">
+        <article class="card tree-card">
+          <div class="tree-toolbar">
+            <div class="toolbar-left">
+              <span class="badge primary">Decision tree</span>
+              <span class="badge blue" id="progress-badge">0 / 5 svar</span>
+            </div>
+            <button type="button" class="reset-btn" id="reset-btn">↺ Nulstil</button>
+          </div>
+
+          <!-- SVG tree. ViewBox holder 5 spørgsmål stablet vertikalt. -->
+          <svg class="tree-svg" id="tree" viewBox="0 0 1100 1180" preserveAspectRatio="xMidYMid meet" aria-label="Compliance decision tree">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+              </marker>
+              <marker id="arrow-primary" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#92004D"></path>
+              </marker>
+            </defs>
+
+            <!-- Edges layer rendered first so nodes overlay -->
+            <g id="edges"></g>
+            <g id="edge-labels"></g>
+
+            <!-- Nodes layer -->
+            <g id="nodes"></g>
+
+            <!-- Overlay layer (anbefaling-badge + hint) -->
+            <g id="overlay"></g>
+          </svg>
+
+          <div class="legend">
+            <span><span class="sw" style="background:#f7eef3;border-color:#660036"></span> Spørgsmål</span>
+            <span><span class="sw" style="background:#ffffff"></span> Svar (klikbar)</span>
+            <span><span class="sw" style="background:#fff7e4;border-color:#b58a3a"></span> Krav undervejs</span>
+            <span><span class="sw" style="background:rgba(133,180,153,.18);border-color:#446e55"></span> OK · kør</span>
+            <span><span class="sw" style="background:rgba(192,57,43,.14);border-color:#c0392b"></span> Stop · governance</span>
+            <span><span class="sw" style="background:rgba(146,0,77,.10);border-color:#92004D"></span> Din sti</span>
+          </div>
+        </article>
+
+        <aside class="rec-col">
+        <div class="card arche-mini">
+          <div class="arche-mini-label">Arketype-opgave</div>
+          <div class="arche-select" id="arche-select">
+            <button type="button" class="arche-select-trigger" id="arche-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span id="arche-trigger-label" class="placeholder">Vælg en typisk opgave…</span>
+              <svg class="chev" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 8 10 13 15 8"/></svg>
+            </button>
+            <div class="arche-menu" id="arche-menu" role="listbox"></div>
+          </div>
+        </div>
+        <div class="card rec-panel" id="rec-panel" aria-live="polite">
+          <div class="rec-head">
+            <div class="rec-status" id="rec-status">
+              <span class="dot"></span>
+              <span id="rec-status-label">Vælg svar i træet</span>
+            </div>
+            <div class="rec-feature" id="rec-feature">Anbefaling</div>
+            <div id="rec-mode-wrap"></div>
+            <div class="progress" id="progress">
+              <div class="pip" data-step="1"></div>
+              <div class="pip" data-step="2"></div>
+              <div class="pip" data-step="3"></div>
+              <div class="pip" data-step="4"></div>
+              <div class="pip" data-step="5"></div>
+            </div>
+          </div>
+          <div class="rec-body" id="rec-body">
+            <div class="rec-empty">
+              Når du har klikket dig gennem træet vises her: leverandør-konsekvenser,
+              hvilken feature, hvilken mode, krav, forbudte connectors og
+              trifecta-advarsler for opgaven.
+            </div>
+          </div>
+        </div>
+        </aside>
+      </div>
+
+      <div class="footer-note">
+        <strong>Bemærk:</strong> Baseline-antagelser (ZDR-klausul, logging/audit, DPA) er forudsat
+        og ikke en del af træet. Træet rammer 80% af interne use cases — særlige tilfælde kræver
+        som altid en compliance-vurdering ved siden af.
+      </div>
+
+      <div class="archetypes">
+        <h2>Arketype-opgaver</h2>
+        <p class="lead-text">
+          Klik på en opgave for at indlæse den i træet ovenfor. Hver arketype afspejler en typisk
+          hverdagsopgave i en konkret afdeling — fra medlemsrådgivning til bestyrelsesoplæg.
+        </p>
+        <div class="arche-grid" id="archetypes"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  /* ============================================================
+   * Compliance decision tree — interactive SVG
+   * ============================================================
+   * Strukturen er en deklarativ liste af nodes (spørgsmål, svar,
+   * actions, terminals) + en liste af edges. Vi rendrer alt i SVG
+   * og toggler CSS-klasser på elementerne når state ændrer sig.
+   * Recommendation-funktionen er ren — tager state ind, returnerer
+   * et anbefalings-objekt ud. Let at justere.
+   * ============================================================ */
+
+  // -----------------------------
+  // Node-layout (x,y er topvenstre i SVG-koordinater)
+  // -----------------------------
+  // Træet har 5 niveauer:
+  //   Q1: Handlingsradius (internal/external/auto)
+  //   Q2: Fortrolighed (low/high)
+  //   Q3: Leverandør (claude/bedrock/foundry)   ← styrer Q4-action og Q5-pills
+  //   Q4: Persondata (none/common/art9)         ← action-tekst varierer med Q3
+  //   Q5: Feature                               ← pills varierer med Q3
+
+  const W = 1100;
+  const CX = W / 2;
+
+  // Node-størrelser
+  const Q_W = 540, Q_H = 50;        // spørgsmål, én linje med bold lead + body
+  const A_W = 230, A_H = 58;        // standard svar-pille (3-pill-rækker)
+  const A4_W = 180;                  // Q4 har 5 pills i én række → smallere
+  const A4_H = 64;                   // lidt højere så to-linje-tekst får luft
+  const ACT_W = 260, ACT_H = 62;    // action-kasse
+  const T_W = 280, T_H = 58;        // terminal
+
+  // Y-niveauer for de 5 trin — Q4 har ingen action-bokse nu (mitigations er en del af pillen)
+  const Y_Q1      = 20;
+  const Y_A1      = 95;
+  const Y_ACTION1 = 185;   // external action
+  const Y_Q2      = 285;
+  const Y_A2      = 360;
+  const Y_ACTION2 = 450;   // high action
+  const Y_Q3      = 550;   // Leverandør (ingen action)
+  const Y_A3      = 625;
+  const Y_Q4      = 715;   // Persondata
+  const Y_A4      = 790;   // 5 pills med (kategori + mitigation)
+  const Y_Q5      = 895;   // Feature (rykker op fordi Q4 ingen action har)
+  const Y_A5      = 970;
+  const Y_TERM    = 1060;
+
+  // Hjælper: centrerede x-positioner for n pills
+  function spread(n, totalWidth, itemWidth, centerX) {
+    const gap = (totalWidth - n * itemWidth) / (n + 1);
+    const xs = [];
+    let x = centerX - totalWidth / 2 + gap;
+    for (let i = 0; i < n; i++) {
+      xs.push(x);
+      x += itemWidth + gap;
+    }
+    return xs;
+  }
+
+  // Tre svar-pills bredt fordelt
+  const ANSWER_BAND = 980;
+  const a3xs = spread(3, ANSWER_BAND, A_W, CX);
+  // To svar-pills
+  const a2xs = spread(2, 640, A_W, CX);
+  // Fem svar-pills (Q4 Persondata) — smaller pills, bredere band
+  const a5xs = spread(5, 1020, A4_W, CX);
+
+  // -----------------------------
+  // Nodes
+  // -----------------------------
+  // type: question | answer | action | terminal-go | terminal-block
+  // For svar (answer) gemmer vi q (hvilket spørgsmål) og value
+  // Spørgsmål bruger { lead, body } i stedet for { title, sub } — lead vises bold,
+  // body normal vægt, alt på én linje. Andre nodes bruger stadig title+sub (to linjer).
+  const nodes = [
+    // ============ Q1 Handlingsradius ============
+    { id: 'q1', type: 'question', x: CX - Q_W/2, y: Y_Q1, w: Q_W, h: Q_H,
+      lead: 'Handlingsradius', body: 'Hvor lander outputtet — og hvem læser det?' },
+
+    { id: 'q1.internal', type: 'answer', q: 'q1', value: 'internal',
+      x: a3xs[0], y: Y_A1, w: A_W, h: A_H,
+      title: 'Internt + review', sub: 'Menneske gennemlæser før brug' },
+    { id: 'q1.external', type: 'answer', q: 'q1', value: 'external',
+      x: a3xs[1], y: Y_A1, w: A_W, h: A_H,
+      title: 'Ud til medlem', sub: 'Direkte kommunikation udadtil' },
+    { id: 'q1.auto', type: 'answer', q: 'q1', value: 'auto',
+      x: a3xs[2], y: Y_A1, w: A_W, h: A_H,
+      title: 'Automatiseret afgørelse', sub: '⚠ AI Act annex III — STOP' },
+
+    { id: 'q1.action.external', type: 'action', after: 'q1.external',
+      x: a3xs[1] - (ACT_W - A_W)/2, y: Y_ACTION1, w: ACT_W, h: ACT_H,
+      title: 'AI Act art. 50 + komm.godk.', sub: 'Markér output som AI-genereret' },
+
+    // ============ Q2 Fortrolighed ============
+    { id: 'q2', type: 'question', x: CX - Q_W/2, y: Y_Q2, w: Q_W, h: Q_H,
+      lead: 'Fortrolighed', body: 'Hvor følsomt er indholdet for forretningen?' },
+
+    { id: 'q2.low',  type: 'answer', q: 'q2', value: 'low',
+      x: a2xs[0], y: Y_A2, w: A_W, h: A_H,
+      title: 'Lav / intern', sub: 'Hverdagsmateriale' },
+    { id: 'q2.high', type: 'answer', q: 'q2', value: 'high',
+      x: a2xs[1], y: Y_A2, w: A_W, h: A_H,
+      title: 'Strengt fortroligt', sub: 'Bestyrelse, strategi, modeller' },
+
+    { id: 'q2.action.high', type: 'action', after: 'q2.high',
+      x: a2xs[1] - (ACT_W - A_W)/2, y: Y_ACTION2, w: ACT_W, h: ACT_H,
+      title: 'Luk eksternt input + outgoing', sub: '⚠ Trifecta — fortrolig i kontekst' },
+
+    // ============ Q3 Leverandør ============
+    { id: 'q3', type: 'question', x: CX - Q_W/2, y: Y_Q3, w: Q_W, h: Q_H,
+      lead: 'Leverandør', body: 'Hvilken leverandør?' },
+
+    { id: 'q3.claude',  type: 'answer', q: 'q3', value: 'claude',
+      x: a3xs[0], y: Y_A3, w: A_W, h: A_H,
+      title: 'Claude Enterprise', sub: 'Anthropic direkte' },
+    { id: 'q3.bedrock', type: 'answer', q: 'q3', value: 'bedrock',
+      x: a3xs[1], y: Y_A3, w: A_W, h: A_H,
+      title: 'AWS Bedrock', sub: 'Cowork Desktop + Code' },
+    { id: 'q3.foundry', type: 'answer', q: 'q3', value: 'foundry',
+      x: a3xs[2], y: Y_A3, w: A_W, h: A_H,
+      title: 'Foundry', sub: 'Codex + ChatGPT' },
+
+    // ============ Q4 Persondata ============
+    // 5 pills: hver kombinerer persondata-kategori + mitigation. Leverandør gater hvilke der er aktive.
+    // Art. 9 udløser altid DPIA + lovligt grundlag som baseline (vist i pillens sub-tekst).
+    { id: 'q4', type: 'question', x: CX - Q_W/2, y: Y_Q4, w: Q_W, h: Q_H,
+      lead: 'Persondata', body: 'Vælg kategori + mitigation. Art. 9 udløser altid DPIA + grundlag.' },
+
+    { id: 'q4.none', type: 'answer', q: 'q4', value: 'none',
+      x: a5xs[0], y: Y_A4, w: A4_W, h: A4_H,
+      title: 'Nej', sub: 'Ingen persondata' },
+    { id: 'q4.common-pseudo', type: 'answer', q: 'q4', value: 'common-pseudo',
+      x: a5xs[1], y: Y_A4, w: A4_W, h: A4_H,
+      title: 'Almindelige', sub: 'via pseudo-MCP' },
+    { id: 'q4.common-direct', type: 'answer', q: 'q4', value: 'common-direct',
+      x: a5xs[2], y: Y_A4, w: A4_W, h: A4_H,
+      title: 'Almindelige', sub: 'direkte' },
+    { id: 'q4.art9-pseudo', type: 'answer', q: 'q4', value: 'art9-pseudo',
+      x: a5xs[3], y: Y_A4, w: A4_W, h: A4_H,
+      title: 'Art. 9', sub: 'via pseudo + DPIA' },
+    { id: 'q4.art9-direct', type: 'answer', q: 'q4', value: 'art9-direct',
+      x: a5xs[4], y: Y_A4, w: A4_W, h: A4_H,
+      title: 'Art. 9', sub: 'direkte + DPIA' },
+
+    // ============ Q5 Feature ============
+    { id: 'q5', type: 'question', x: CX - Q_W/2, y: Y_Q5, w: Q_W, h: Q_H,
+      lead: 'Feature', body: 'Først nu vælges featuren' },
+
+    // Q5-pills — alle defineret her, vises kun når Q3 matcher
+    // Claude Enterprise (3 features, 3-pill layout)
+    { id: 'q5.chat', type: 'answer', q: 'q5', value: 'chat', leverandor: 'claude',
+      x: a3xs[0], y: Y_A5, w: A_W, h: A_H,
+      title: 'Claude Chat', sub: 'claude.ai — ingen tools' },
+    { id: 'q5.mcp',  type: 'answer', q: 'q5', value: 'mcp',  leverandor: 'claude',
+      x: a3xs[1], y: Y_A5, w: A_W, h: A_H,
+      title: 'Claude Cowork', sub: 'Godkendte værktøjer' },
+    { id: 'q5.code', type: 'answer', q: 'q5', value: 'code', leverandor: 'claude',
+      x: a3xs[2], y: Y_A5, w: A_W, h: A_H,
+      title: 'Claude Code', sub: '⚠ Agent eksekverer kode' },
+
+    // AWS Bedrock (2 features, 2-pill layout)
+    { id: 'q5.cowork-bedrock', type: 'answer', q: 'q5', value: 'cowork-bedrock', leverandor: 'bedrock',
+      x: a2xs[0], y: Y_A5, w: A_W, h: A_H,
+      title: 'Claude Cowork', sub: 'via Bedrock' },
+    { id: 'q5.code-bedrock', type: 'answer', q: 'q5', value: 'code-bedrock', leverandor: 'bedrock',
+      x: a2xs[1], y: Y_A5, w: A_W, h: A_H,
+      title: 'Claude Code', sub: 'via Bedrock · ⚠ agent eksekverer' },
+
+    // Foundry (2 features, 2-pill layout)
+    { id: 'q5.chatgpt', type: 'answer', q: 'q5', value: 'chatgpt', leverandor: 'foundry',
+      x: a2xs[0], y: Y_A5, w: A_W, h: A_H,
+      title: 'ChatGPT', sub: 'GPT via Foundry' },
+    { id: 'q5.codex',   type: 'answer', q: 'q5', value: 'codex',   leverandor: 'foundry',
+      x: a2xs[1], y: Y_A5, w: A_W, h: A_H,
+      title: 'Codex', sub: 'Cowork & Code-erstatning' },
+
+    // Terminals
+    { id: 'go', type: 'terminal-go', x: CX - T_W/2, y: Y_TERM, w: T_W, h: T_H,
+      title: 'Opgaven kan køres', sub: 'Følg krav i panelet til højre' },
+    // BLOCK ligger til højre, parallelt med Q1-action-rækken (handlingsradius=auto)
+    { id: 'block', type: 'terminal-block', x: a3xs[2] - (T_W - A_W)/2, y: Y_ACTION1, w: T_W, h: T_H,
+      title: 'Stop — formel godkendelse', sub: 'Governance før kode kan startes' },
+  ];
+
+  // -----------------------------
+  // Edges
+  // Vi tegner kun de strukturelle edges (træet). On-path-edges er
+  // afhængig af state og bliver klassificeret når træet rendres.
+  // -----------------------------
+  // from / to er node-ids. label = valgfri kant-label. routeVia = via Y for
+  // smooth bezier. type = 'forward' default.
+
+  const edges = [
+    // Q1 Handlingsradius -> svar
+    { from: 'q1', to: 'q1.internal' },
+    { from: 'q1', to: 'q1.external' },
+    { from: 'q1', to: 'q1.auto' },
+
+    // internal -> q2 (direkte)
+    { from: 'q1.internal', to: 'q2' },
+    // external -> action -> q2
+    { from: 'q1.external', to: 'q1.action.external' },
+    { from: 'q1.action.external', to: 'q2' },
+    // auto -> block (terminal)
+    { from: 'q1.auto', to: 'block' },
+
+    // Q2 Fortrolighed -> svar
+    { from: 'q2', to: 'q2.low' },
+    { from: 'q2', to: 'q2.high' },
+
+    // low -> q3 direkte
+    { from: 'q2.low', to: 'q3' },
+    // high -> action -> q3
+    { from: 'q2.high', to: 'q2.action.high' },
+    { from: 'q2.action.high', to: 'q3' },
+
+    // Q3 Leverandør -> svar
+    { from: 'q3', to: 'q3.claude' },
+    { from: 'q3', to: 'q3.bedrock' },
+    { from: 'q3', to: 'q3.foundry' },
+
+    // alle leverandører -> q4 (persondata)
+    { from: 'q3.claude',  to: 'q4' },
+    { from: 'q3.bedrock', to: 'q4' },
+    { from: 'q3.foundry', to: 'q4' },
+
+    // Q4 Persondata -> 5 svar-pills, alle direkte videre til Q5
+    { from: 'q4', to: 'q4.none' },
+    { from: 'q4', to: 'q4.common-pseudo' },
+    { from: 'q4', to: 'q4.common-direct' },
+    { from: 'q4', to: 'q4.art9-pseudo' },
+    { from: 'q4', to: 'q4.art9-direct' },
+
+    { from: 'q4.none',          to: 'q5' },
+    { from: 'q4.common-pseudo', to: 'q5' },
+    { from: 'q4.common-direct', to: 'q5' },
+    { from: 'q4.art9-pseudo',   to: 'q5' },
+    { from: 'q4.art9-direct',   to: 'q5' },
+
+    // Q5 Feature -> svar (alle 7 pills — kun synlige når leverandør matcher)
+    { from: 'q5', to: 'q5.chat' },
+    { from: 'q5', to: 'q5.mcp' },
+    { from: 'q5', to: 'q5.code' },
+    { from: 'q5', to: 'q5.cowork-bedrock' },
+    { from: 'q5', to: 'q5.code-bedrock' },
+    { from: 'q5', to: 'q5.chatgpt' },
+    { from: 'q5', to: 'q5.codex' },
+
+    // alle Q5-pills -> go
+    { from: 'q5.chat', to: 'go' },
+    { from: 'q5.mcp',  to: 'go' },
+    { from: 'q5.code', to: 'go' },
+    { from: 'q5.cowork-bedrock', to: 'go' },
+    { from: 'q5.code-bedrock',   to: 'go' },
+    { from: 'q5.chatgpt', to: 'go' },
+    { from: 'q5.codex',   to: 'go' },
+  ];
+
+  // -----------------------------
+  // App state — 5 spørgsmål
+  // q1: handlingsradius, q2: fortrolighed, q3: leverandør, q4: persondata, q5: feature
+  // -----------------------------
+  const state = { q1: null, q2: null, q3: null, q4: null, q5: null };
+
+  // -----------------------------
+  // Hjælpere til labels og leverandør-info
+  // -----------------------------
+  const LEVERANDOR_LABEL = {
+    claude:  'Claude Enterprise',
+    bedrock: 'AWS Bedrock',
+    foundry: 'Foundry (Azure OpenAI)',
+  };
+
+  const FEATURE_LABEL = {
+    chat: 'Claude Chat',
+    mcp:  'Claude Cowork',
+    code: 'Claude Code',
+    'cowork-bedrock': 'Claude Cowork via Bedrock',
+    'code-bedrock':   'Claude Code via Bedrock',
+    chatgpt: 'ChatGPT via Foundry',
+    codex:   'Codex',
+  };
+
+  // Persondata-action-tekster afhænger af leverandør (Q3).
+  // Returnerer { title, sub } eller null hvis ingen action skal vises.
+  function persondataAction(persondata, leverandor) {
+    if (!persondata || persondata === 'none') return null;
+    const lev = leverandor || 'claude'; // fallback før Q3 er valgt
+    const map = {
+      claude: {
+        common: { title: 'Hent via pseudo-MCP', sub: 'Ingen direkte fildump' },
+        art9:   { title: 'DPIA + lovligt grundlag', sub: 'Pseudo-MCP påkrævet ⚠ art. 9' },
+      },
+      bedrock: {
+        common: { title: 'Pseudo-MCP eller ny AWS DPA', sub: 'Direkte muligt hvis DPA dækker' },
+        art9:   { title: 'DPIA + ny AWS DPA for art. 9', sub: 'Pseudo-MCP påkrævet ellers' },
+      },
+      foundry: {
+        common: { title: 'Direkte hvis MSFT DPA dækker', sub: 'Pseudo-MCP anbefales — ikke krav' },
+        art9:   { title: 'DPIA + dokumentér grundlag', sub: 'Direkte hvis MSFT DPA dækker art. 9' },
+      },
+    };
+    return map[lev][persondata];
+  }
+
+  // -----------------------------
+  // Render SVG tree (engang ved load)
+  // -----------------------------
+  const nodeIndex = Object.fromEntries(nodes.map(n => [n.id, n]));
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.getElementById('tree');
+  const edgesLayer = document.getElementById('edges');
+  const labelsLayer = document.getElementById('edge-labels');
+  const nodesLayer = document.getElementById('nodes');
+
+  function el(tag, attrs = {}) {
+    const e = document.createElementNS(svgNS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  // Tegn en node som <g><rect/><text/></g>
+  // Spørgsmål bruger { lead, body } og rendres som én linje med bold prefix + normal body.
+  // Andre nodes bruger { title, sub } og rendres som to linjer.
+  function renderNode(n) {
+    const g = el('g', { class: `node ${n.type}`, 'data-id': n.id, transform: `translate(${n.x},${n.y})` });
+    if (n.q) g.setAttribute('data-question', n.q);
+    if (n.value) g.setAttribute('data-answer', n.value);
+
+    const rect = el('rect', { x: 0, y: 0, width: n.w, height: n.h, rx: 10, ry: 10 });
+    g.appendChild(rect);
+
+    if (n.lead) {
+      // Spørgsmål: én linje, lead i bold + ": " + body i normal vægt.
+      // Centreret vertikalt og horisontalt.
+      const text = el('text', {
+        x: n.w / 2, y: n.h / 2 + 5,
+        'text-anchor': 'middle',
+        class: 'node-title'
+      });
+      const leadSpan = el('tspan', { 'font-weight': '800' });
+      leadSpan.textContent = n.lead;
+      text.appendChild(leadSpan);
+      const bodySpan = el('tspan', { 'font-weight': '400', class: 'node-body' });
+      bodySpan.textContent = ': ' + n.body;
+      text.appendChild(bodySpan);
+      g.appendChild(text);
+    } else {
+      // Title centreret
+      const title = el('text', {
+        x: n.w / 2, y: n.h / 2 - 4,
+        'text-anchor': 'middle',
+        class: 'node-title'
+      });
+      title.textContent = n.title;
+      g.appendChild(title);
+
+      // Subtitle centreret
+      const sub = el('text', {
+        x: n.w / 2, y: n.h / 2 + 14,
+        'text-anchor': 'middle',
+        class: 'node-sub'
+      });
+      sub.textContent = n.sub;
+      g.appendChild(sub);
+    }
+
+    // Click på svar-pills
+    if (n.type === 'answer') {
+      g.addEventListener('click', () => selectAnswer(n.q, n.value));
+      g.setAttribute('tabindex', '0');
+      g.setAttribute('role', 'button');
+      g.setAttribute('aria-label', `${n.title}: ${n.sub}`);
+      g.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectAnswer(n.q, n.value); }
+      });
+    }
+
+    return g;
+  }
+
+  // Bezier-kurve fra bunden af "from" til toppen af "to"
+  function renderEdge(e) {
+    const a = nodeIndex[e.from];
+    const b = nodeIndex[e.to];
+    const ax = a.x + a.w / 2;
+    const ay = a.y + a.h;
+    const bx = b.x + b.w / 2;
+    const by = b.y;
+    // Kontrolpunkter — glat S-kurve. Brug halve vertikal-afstand.
+    const dy = (by - ay) * 0.55;
+    const d = `M ${ax} ${ay} C ${ax} ${ay + dy}, ${bx} ${by - dy}, ${bx} ${by}`;
+    const path = el('path', {
+      class: 'edge',
+      d: d,
+      'data-from': e.from,
+      'data-to': e.to,
+      'marker-end': 'url(#arrow)'
+    });
+    return path;
+  }
+
+  // Render nodes + edges
+  edges.forEach(e => edgesLayer.appendChild(renderEdge(e)));
+  nodes.forEach(n => nodesLayer.appendChild(renderNode(n)));
+
+  // -----------------------------
+  // Recommendation-logik (ren funktion)
+  // Input: state med q1..q5. Output: { status, feature, mode, required, forbidden, warnings, leverandor }
+  // -----------------------------
+  function recommend(s) {
+    if (s.q1 === 'auto') {
+      return {
+        status: 'BLOCK',
+        title: 'Stop — formel godkendelse kræves',
+        reason: 'Automatiseret afgørelse om person trækker potentielt ind i AI Act højrisiko (annex III). Kræver formel klassificering og DPIA før udrulning.'
+      };
+    }
+
+    const feature = s.q5 ? FEATURE_LABEL[s.q5] : null;
+    const leverandor = s.q3 || null;
+    let mode = 'Default';
+    const required = [];
+    const forbidden = [];
+    const warnings = [];
+
+    // Persondata-krav — afhænger af kategori, mitigation og leverandør
+    const isArt9   = s.q4 === 'art9-pseudo'   || s.q4 === 'art9-direct';
+    const isCommon = s.q4 === 'common-pseudo' || s.q4 === 'common-direct';
+    const isPseudo = s.q4 === 'common-pseudo' || s.q4 === 'art9-pseudo';
+    const isDirect = s.q4 === 'common-direct' || s.q4 === 'art9-direct';
+
+    if (isArt9) {
+      required.push('DPIA + eksplicit lovligt grundlag før opgavestart');
+      warnings.push('Trifecta-risiko forhøjet — art. 9 data i konteksten');
+    }
+
+    if (isPseudo) {
+      required.push('Hent persondata via pseudonymiserende MCP — ingen direkte fildump');
+    }
+
+    if (isDirect) {
+      // Direct = leverandørens DPA bærer ansvaret
+      if (leverandor === 'foundry') {
+        required.push('Verificér at MSFT DPA dækker behandlingen' + (isArt9 ? ' (inkl. art. 9)' : ''));
+      } else if (leverandor === 'bedrock') {
+        required.push('Etabler ny AWS DPA' + (isArt9 ? ' der dækker art. 9' : '') + ' før opgaven kan køre');
+        warnings.push('Direct uden pseudo kræver dokumenteret DPA-dækning hos AWS');
+      } else if (leverandor === 'claude') {
+        required.push('Etabler ny Anthropic DPA' + (isArt9 ? ' der dækker art. 9' : '') + ' før opgaven kan køre');
+        warnings.push('Direct uden pseudo er governance-tung ved Claude Enterprise — overvej pseudo-MCP');
+      } else {
+        required.push('Afhænger af leverandørens DPA — vælg leverandør');
+      }
+    }
+
+    // Fortrolighed
+    if (s.q2 === 'high') {
+      mode = 'Ask-before-acting';
+      forbidden.push('Email connector');
+      forbidden.push('Brede Drive / SharePoint connectors');
+      forbidden.push('Slack / Teams connectors');
+      warnings.push('Trifecta-risiko — fortrolig data i konteksten. Slå eksternt input + ud-going connectors fra.');
+    }
+
+    // Handlingsradius — ud til medlem
+    if (s.q1 === 'external') {
+      required.push('Transparenskrav AI Act art. 50 — markér at output er AI-genereret');
+      required.push('Kommunikationsgodkendelse før udsendelse');
+    }
+
+    // Trifecta = følsom kontekst (fortroligt/persondata) + autonom udførsel
+    const sensitive = s.q2 === 'high' || isArt9 || isCommon;
+
+    // Feature-specifikke krav
+    if (s.q5 === 'code' || s.q5 === 'code-bedrock' || s.q5 === 'codex') {
+      required.push('Devcontainer sandbox');
+      required.push('Ingen prod-credentials i miljøet');
+      required.push('Allowlist på Bash');
+      if (sensitive) {
+        warnings.push('Trifecta-risiko — agent eksekverer kode autonomt med følsom kontekst');
+      }
+      if (s.q2 === 'high' || isArt9) {
+        mode = 'Ask-before-acting på alle tool calls';
+      }
+    }
+
+    if (s.q5 === 'mcp' && s.q2 === 'high') {
+      mode = 'Ask-before-acting + isoleret workspace';
+    }
+    if (s.q5 === 'cowork-bedrock' && s.q2 === 'high') {
+      mode = 'Ask-before-acting + isoleret workspace';
+    }
+
+    // Leverandør-specifik advarsel
+    if (leverandor === 'foundry') {
+      warnings.push('GPT-model, ikke Claude — forskellige svar end Claude-features');
+    }
+
+    return { status: 'OK', feature, mode, required, forbidden, warnings, leverandor };
+  }
+
+  // -----------------------------
+  // Værktøjsanbefaling (Q5) baseret på Q1–Q4 (inkl. leverandør Q3)
+  // Returnerer { value, reason } eller null hvis ikke nok info.
+  // Agent-features (code/codex) anbefales aldrig — bevidst tilvalg.
+  // -----------------------------
+  function recommendTool(s) {
+    if (s.q1 === 'auto') return null;                                 // BLOCK
+    if (!s.q1 || !s.q2 || !s.q3 || !s.q4) return null;                // ikke nok info
+
+    const isArt9 = s.q4 === 'art9-pseudo' || s.q4 === 'art9-direct';
+    const hasPersondata = s.q4 !== 'none';
+    const sensitive = isArt9 || s.q2 === 'high';
+
+    // Foundry — Codex eller ChatGPT
+    if (s.q3 === 'foundry') {
+      if (sensitive || hasPersondata) {
+        return { value: 'codex', reason: 'struktureret arbejde med følsom data' };
+      }
+      return { value: 'chatgpt', reason: 'simpel intern opgave uden persondata' };
+    }
+
+    // AWS Bedrock — kun Cowork eller Code. Anbefal Cowork som default.
+    if (s.q3 === 'bedrock') {
+      return { value: 'cowork-bedrock', reason: 'Cowork via Bedrock dækker brede opgaver' };
+    }
+
+    // Claude Enterprise — original logik
+    if (sensitive) {
+      return { value: 'mcp', reason: isArt9 ? 'art. 9 følsom data' : 'strengt fortrolig data' };
+    }
+    if (hasPersondata) {
+      return { value: 'mcp', reason: 'persondata i konteksten' };
+    }
+    if (s.q1 === 'external') {
+      return { value: 'mcp', reason: 'output går eksternt — kræver review-flow' };
+    }
+    return { value: 'chat', reason: 'simpel intern opgave uden persondata' };
+  }
+
+  // -----------------------------
+  // Branch-membership: hvilken (q, value)-gren et node hører til.
+  // -----------------------------
+  const BRANCH = {
+    // Q1 Handlingsradius
+    'q1.internal':         { q: 'q1', v: 'internal' },
+    'q1.external':         { q: 'q1', v: 'external' },
+    'q1.auto':             { q: 'q1', v: 'auto' },
+    'q1.action.external':  { q: 'q1', v: 'external' },
+    'block':               { q: 'q1', v: 'auto' },
+    // Q2 Fortrolighed
+    'q2.low':              { q: 'q2', v: 'low' },
+    'q2.high':             { q: 'q2', v: 'high' },
+    'q2.action.high':      { q: 'q2', v: 'high' },
+    // Q3 Leverandør
+    'q3.claude':           { q: 'q3', v: 'claude' },
+    'q3.bedrock':          { q: 'q3', v: 'bedrock' },
+    'q3.foundry':          { q: 'q3', v: 'foundry' },
+    // Q4 Persondata — 5 pills, hver med (kategori, mitigation)
+    'q4.none':          { q: 'q4', v: 'none' },
+    'q4.common-pseudo': { q: 'q4', v: 'common-pseudo' },
+    'q4.common-direct': { q: 'q4', v: 'common-direct' },
+    'q4.art9-pseudo':   { q: 'q4', v: 'art9-pseudo' },
+    'q4.art9-direct':   { q: 'q4', v: 'art9-direct' },
+    // Q5 Feature — bemærk: branch er kun (q5, value); leverandør-filtrering håndteres separat
+    'q5.chat':             { q: 'q5', v: 'chat' },
+    'q5.mcp':              { q: 'q5', v: 'mcp' },
+    'q5.code':             { q: 'q5', v: 'code' },
+    'q5.cowork-bedrock':   { q: 'q5', v: 'cowork-bedrock' },
+    'q5.code-bedrock':     { q: 'q5', v: 'code-bedrock' },
+    'q5.chatgpt':          { q: 'q5', v: 'chatgpt' },
+    'q5.codex':            { q: 'q5', v: 'codex' },
+  };
+
+  // Nodes der skal være helt skjult (display:none), ikke bare dæmpet.
+  // Q5-pills hører til en specifik leverandør og må ikke vises når en anden leverandør er valgt.
+  function isNodeHidden(id, s) {
+    const n = nodeIndex[id];
+    if (!n || !n.leverandor) return false;
+    if (!s.q3) return true;            // før leverandør er valgt: skjul alle Q5-pills
+    return n.leverandor !== s.q3;       // ellers: skjul dem der ikke matcher
+  }
+
+  // Q4-gating: hvilke (leverandør, q4-værdi)-kombinationer er tilladt?
+  // Pseudo-pills er altid OK. Direct-pills kræver at leverandørens DPA dækker.
+  // Workshop-antagelse: kun foundry har MSFT DPA assumed in place. Andre leverandører
+  // ville kræve eksplicit ny DPA — derfor dæmpes direct ved claude/bedrock.
+  function isQ4Gated(q4value, leverandor) {
+    if (q4value === 'none') return false;
+    if (q4value === 'common-pseudo' || q4value === 'art9-pseudo') return false;
+    // direct pills:
+    if (leverandor === 'foundry') return false;   // MSFT DPA assumed
+    return true;                                  // claude / bedrock: gated
+  }
+
+  // Dæmpet hvis gren er fravalgt. Hvis Q1=auto: alt nedenfor (Q2-Q5+go) dæmpes.
+  // Q4-pills dæmpes også hvis leverandør (Q3) gater den specifikke mitigation.
+  function isNodeDimmed(id, s) {
+    // Hvis Q1=auto, alt under Q1 dæmpes
+    if (s.q1 === 'auto') {
+      if (id === 'q2' || id === 'q3' || id === 'q4' || id === 'q5' || id === 'go') return true;
+      const b = BRANCH[id];
+      if (b && (b.q === 'q2' || b.q === 'q3' || b.q === 'q4' || b.q === 'q5')) return true;
+    }
+
+    // q5 og go skal kun ses hvis vi rent faktisk når dertil
+    if (id === 'q5' || id === 'go') {
+      return s.q1 === 'auto';
+    }
+
+    const b = BRANCH[id];
+    if (!b) return false; // spørgsmål er aldrig dæmpede
+
+    // Leverandør-gating på Q4-pills: gated pills dæmpes og kan ikke klikkes
+    if (b.q === 'q4' && s.q3 && isQ4Gated(b.v, s.q3)) {
+      return true;
+    }
+
+    if (s[b.q] === null || s[b.q] === undefined) return false;
+    return s[b.q] !== b.v;
+  }
+
+  // -----------------------------
+  // Beregn hvilke nodes der ligger på den aktive sti
+  // Rækkefølge: q1 (handlingsradius) → q2 (fortrolighed) → q3 (leverandør) → q4 (persondata) → q5 (feature) → go
+  // -----------------------------
+  function computePathNodes(s) {
+    const path = new Set();
+    path.add('q1');
+    if (!s.q1) return path;
+    path.add(`q1.${s.q1}`);
+    if (s.q1 === 'external') path.add('q1.action.external');
+    if (s.q1 === 'auto') { path.add('block'); return path; }
+
+    if (!s.q2) return path;
+    path.add('q2');
+    path.add(`q2.${s.q2}`);
+    if (s.q2 === 'high') path.add('q2.action.high');
+
+    if (!s.q3) return path;
+    path.add('q3');
+    path.add(`q3.${s.q3}`);
+
+    if (!s.q4) return path;
+    path.add('q4');
+    path.add(`q4.${s.q4}`);
+
+    if (!s.q5) return path;
+    path.add('q5');
+    path.add(`q5.${s.q5}`);
+    path.add('go');
+    return path;
+  }
+
+  // For edges: brug nodes-on-path til at afgøre om begge ender er på sti
+  function isEdgeOnPath(e, pathNodes, s) {
+    if (!pathNodes.has(e.from) || !pathNodes.has(e.to)) return false;
+    // Vi skal også sikre vi ikke "lyser" en edge til en svar-pill der ikke er valgt.
+    // Et answer-node er på sti hvis det matcher state — det dækker ovenfor.
+    return true;
+  }
+
+  // -----------------------------
+  // Klik på svar → opdater state. Hvis brugeren klikker det samme svar igen, toggler vi det fra.
+  // Hvis brugeren klikker et nyt svar tidligere i træet, nulstiller vi efterfølgende svar.
+  // -----------------------------
+  function selectAnswer(q, value) {
+    // Bloker klik på gated Q4-pills (mitigations leverandøren ikke tillader)
+    if (q === 'q4' && state.q3 && isQ4Gated(value, state.q3)) {
+      return;
+    }
+    if (state[q] === value) {
+      state[q] = null;
+    } else {
+      state[q] = value;
+    }
+    // Nulstil senere svar — kæden afhænger af tidligere (særligt Q5 som varierer med Q3)
+    const order = ['q1','q2','q3','q4','q5'];
+    const idx = order.indexOf(q);
+    for (let i = idx + 1; i < order.length; i++) state[order[i]] = null;
+
+    rerender();
+  }
+
+  // -----------------------------
+  // Rerender: opdater klasser på nodes + edges + recommendation panel
+  // -----------------------------
+  function rerender() {
+    const pathNodes = computePathNodes(state);
+    const tool = recommendTool(state);
+
+    // (Q4-action-nodes findes ikke længere — mitigation er en del af selve pillen)
+
+    // Nodes
+    document.querySelectorAll('#nodes .node').forEach(g => {
+      const id = g.getAttribute('data-id');
+      const q = g.getAttribute('data-question');
+      const v = g.getAttribute('data-answer');
+
+      g.classList.remove('on-path', 'selected', 'dimmed', 'recommended', 'gated');
+
+      // Helt skjulte nodes (Q5-pills for andre leverandører)
+      if (isNodeHidden(id, state)) {
+        g.style.display = 'none';
+        return;
+      } else {
+        g.style.display = '';
+      }
+
+      const dimmed = isNodeDimmed(id, state);
+      const onPath = pathNodes.has(id);
+      const isSelectedAnswer = q && v && state[q] === v;
+
+      if (dimmed) {
+        g.classList.add('dimmed');
+        // Markér gated Q4-pills som ikke-klikbare (leverandør tillader ikke mitigationen)
+        if (q === 'q4' && state.q3 && isQ4Gated(v, state.q3)) {
+          g.classList.add('gated');
+        }
+      } else if (isSelectedAnswer) {
+        g.classList.add('selected');
+      } else if (onPath) {
+        g.classList.add('on-path');
+      }
+
+      // Markér den anbefalede Q5-pille (kun hvis ikke allerede valgt)
+      if (tool && q === 'q5' && v === tool.value && !isSelectedAnswer) {
+        g.classList.add('recommended');
+      }
+    });
+
+    // Edges — dæmpet/skjult hvis endepunkt er det
+    document.querySelectorAll('#edges .edge').forEach(p => {
+      p.classList.remove('on-path', 'dimmed');
+      const from = p.getAttribute('data-from');
+      const to = p.getAttribute('data-to');
+
+      // Skjul edge hvis endepunkt er skjult (Q5-pills fra andre leverandører)
+      if (isNodeHidden(from, state) || isNodeHidden(to, state)) {
+        p.style.display = 'none';
+        return;
+      } else {
+        p.style.display = '';
+      }
+
+      const onPath = pathNodes.has(from) && pathNodes.has(to);
+      const dimmed = isNodeDimmed(from, state) || isNodeDimmed(to, state);
+
+      if (onPath) {
+        p.classList.add('on-path');
+        p.setAttribute('marker-end', 'url(#arrow-primary)');
+      } else {
+        p.setAttribute('marker-end', 'url(#arrow)');
+        if (dimmed) p.classList.add('dimmed');
+      }
+    });
+
+    renderRecommendOverlay(tool);
+    renderRecommendation(tool);
+    renderProgress();
+  }
+
+  // Opdater en action-nodes tekst i live (bruges når Q3 ændrer Q4-action-indhold)
+  function updateActionNode(id, content) {
+    const g = document.querySelector(`#nodes [data-id="${id}"]`);
+    if (!g) return;
+    const texts = g.querySelectorAll('text');
+    if (!content) {
+      if (texts[0]) texts[0].textContent = '(vælg leverandør først)';
+      if (texts[1]) texts[1].textContent = '';
+      return;
+    }
+    if (texts[0]) texts[0].textContent = content.title;
+    if (texts[1]) texts[1].textContent = content.sub;
+  }
+
+  // -----------------------------
+  // Tegn anbefalings-overlay (badge på pille + lille hint over Q4)
+  // -----------------------------
+  function renderRecommendOverlay(tool) {
+    const overlay = document.getElementById('overlay');
+    overlay.innerHTML = '';
+    if (!tool) return;
+
+    // Find den anbefalede Q5-pille for at placere badge oven på den
+    const target = nodeIndex[`q5.${tool.value}`];
+    if (!target) return;
+
+    // Badge: "💡 Anbefalet" — centreret over toppen af pillen
+    const badgeW = 96, badgeH = 22;
+    const bx = target.x + target.w / 2 - badgeW / 2;
+    const by = target.y - badgeH / 2;
+    const badge = el('g', { class: 'recommend-badge', transform: `translate(${bx},${by})` });
+    badge.appendChild(el('rect', { x: 0, y: 0, width: badgeW, height: badgeH, rx: 11, ry: 11 }));
+    const bt = el('text', {
+      x: badgeW / 2, y: badgeH / 2 + 3.5,
+      'text-anchor': 'middle'
+    });
+    bt.textContent = '💡 Anbefalet';
+    badge.appendChild(bt);
+    overlay.appendChild(badge);
+
+  }
+
+  // -----------------------------
+  // Render anbefalings-panelet
+  // -----------------------------
+  function renderRecommendation(tool) {
+    const rec = recommend(state);
+    if (typeof tool === 'undefined') tool = recommendTool(state);
+    const statusEl = document.getElementById('rec-status');
+    const statusLabel = document.getElementById('rec-status-label');
+    const featureEl = document.getElementById('rec-feature');
+    const modeWrap = document.getElementById('rec-mode-wrap');
+    const body = document.getElementById('rec-body');
+
+    statusEl.classList.remove('ok', 'partial', 'block');
+    modeWrap.innerHTML = '';
+
+    const noSelection = Object.values(state).every(v => v === null);
+
+    // Status header
+    if (rec.status === 'BLOCK') {
+      statusEl.classList.add('block');
+      statusLabel.textContent = 'Stop — governance før kode';
+      featureEl.textContent = 'BLOCK';
+    } else if (noSelection) {
+      statusLabel.textContent = 'Vælg svar i træet';
+      featureEl.textContent = 'Anbefaling';
+    } else if (!state.q5) {
+      statusEl.classList.add('partial');
+      statusLabel.textContent = 'Fortsæt — vælg feature';
+      featureEl.textContent = 'Under opbygning…';
+    } else {
+      statusEl.classList.add('ok');
+      statusLabel.textContent = 'OK — kør med disse krav';
+      featureEl.textContent = rec.feature;
+    }
+
+    // Mode chip
+    if (rec.status === 'OK' && state.q5 && rec.mode) {
+      const chip = document.createElement('div');
+      chip.className = 'rec-mode';
+      chip.textContent = 'Mode: ' + rec.mode;
+      modeWrap.appendChild(chip);
+    }
+
+    // Body
+    body.innerHTML = '';
+
+    if (noSelection) {
+      body.innerHTML = `<div class="rec-empty">
+        Klik dig gennem træet ovenfor. Anbefalingen opdaterer sig live —
+        leverandør-konsekvenser, feature, mode, krav, forbudte connectors og trifecta-advarsler.
+      </div>`;
+      return;
+    }
+
+    // Leverandør-sektion (vises så snart Q3 er valgt) — kommer øverst i body
+    if (rec.status !== 'BLOCK' && state.q3) {
+      body.appendChild(makeLeverandorCard(state.q3));
+    }
+
+    // Fraveget-note (kun hvis Q5 er valgt og afviger fra anbefalingen)
+    if (rec.status === 'OK' && state.q5 && tool && state.q5 !== tool.value) {
+      const note = document.createElement('div');
+      note.className = 'rec-empty';
+      note.style.borderStyle = 'solid';
+      note.style.background = 'rgba(239, 196, 124, .12)';
+      note.style.borderColor = 'rgba(239, 196, 124, .55)';
+      note.style.color = '#7b5518';
+      note.style.fontSize = '13px';
+      note.innerHTML = `Du har fraveget anbefalingen <strong>${FEATURE_LABEL[tool.value]}</strong> (${tool.reason}). Læs kravene nedenfor grundigt.`;
+      body.appendChild(note);
+    }
+
+    if (rec.status === 'BLOCK') {
+      const box = document.createElement('div');
+      box.className = 'block-card';
+      box.innerHTML = `<h3>${rec.title}</h3><p>${rec.reason}</p>`;
+      body.appendChild(box);
+      return;
+    }
+
+    // Required, forbidden, warnings
+    if (rec.required && rec.required.length) {
+      body.appendChild(makeList('Krav', 'required', '✓', rec.required));
+    }
+    if (rec.forbidden && rec.forbidden.length) {
+      body.appendChild(makeList('Forbudte connectors', 'forbidden', '✗', rec.forbidden));
+    }
+    if (rec.warnings && rec.warnings.length) {
+      body.appendChild(makeList('Advarsler', 'warnings', '⚠', rec.warnings));
+    }
+
+    if (!rec.required.length && !rec.forbidden.length && !rec.warnings.length && state.q5) {
+      const ok = document.createElement('div');
+      ok.className = 'rec-empty';
+      ok.style.borderStyle = 'solid';
+      ok.style.background = 'rgba(133, 180, 153, .08)';
+      ok.style.color = '#446e55';
+      ok.style.borderColor = 'rgba(133, 180, 153, .45)';
+      ok.textContent = 'Ingen særlige krav. Følg baseline (ZDR, logging, DPA).';
+      body.appendChild(ok);
+    }
+  }
+
+  // Leverandør-kort til toppen af anbefalingspanelet.
+  // Visuelt ligner det rec-list men er en kompakt info-boks med ✓/⚠-punkter.
+  function makeLeverandorCard(leverandor) {
+    const wrap = document.createElement('div');
+    wrap.className = 'rec-block';
+    const h = document.createElement('h4');
+    h.textContent = 'Leverandør';
+    wrap.appendChild(h);
+
+    const box = document.createElement('div');
+    box.style.cssText = 'border:1px solid var(--border);border-radius:7px;padding:9px 11px;background:#fffdfe;font-size:12.5px;line-height:1.4;';
+
+    const title = document.createElement('div');
+    title.style.cssText = 'font-weight:700;color:var(--bordeaux);margin-bottom:6px;font-size:13.5px;';
+    title.textContent = LEVERANDOR_LABEL[leverandor];
+    box.appendChild(title);
+
+    const points = getLeverandorPoints(leverandor, state);
+    const ul = document.createElement('ul');
+    ul.style.cssText = 'list-style:none;margin:0;padding:0;display:grid;gap:3px;';
+    points.forEach(([icon, text, klass]) => {
+      const li = document.createElement('li');
+      li.style.cssText = 'display:grid;grid-template-columns:14px 1fr;gap:6px;align-items:start;';
+      const ic = document.createElement('span');
+      ic.textContent = icon;
+      ic.style.cssText = klass === 'ok' ? 'color:#355e44;font-weight:800;' : 'color:#7b5518;font-weight:800;';
+      const tx = document.createElement('span');
+      tx.textContent = text;
+      tx.style.color = '#4f4249';
+      li.appendChild(ic);
+      li.appendChild(tx);
+      ul.appendChild(li);
+    });
+    box.appendChild(ul);
+    wrap.appendChild(box);
+    return wrap;
+  }
+
+  // Punktliste pr. leverandør — filtreres efter den faktiske sti i træet
+  function getLeverandorPoints(leverandor, s) {
+    const hasPersondata = s.q4 && s.q4 !== 'none';
+    const isArt9 = s.q4 === 'art9-pseudo' || s.q4 === 'art9-direct';
+    const isCodeFeature = s.q5 === 'code' || s.q5 === 'code-bedrock' || s.q5 === 'codex';
+    const sensitive = s.q2 === 'high' || hasPersondata;
+
+    if (leverandor === 'claude') {
+      const pts = [['✓', 'Faktisk Claude-model', 'ok']];
+      if (hasPersondata) pts.push(['⚠', 'Pseudo-MCP påkrævet ved persondata', 'warn']);
+      pts.push(['⚠', 'Anthropic som processor (US) — kræver DPA', 'warn']);
+      return pts;
+    }
+    if (leverandor === 'bedrock') {
+      const pts = [
+        ['✓', 'Faktisk Claude-model', 'ok'],
+        ['✓', 'EU data residency (eu-central-1)', 'ok'],
+      ];
+      if (hasPersondata) pts.push(['⚠', 'Kræver ny AWS DPA hvis ikke etableret', 'warn']);
+      pts.push(['⚠', 'Ikke tilgængelig: vanilla Chat (kun Cowork + Code)', 'warn']);
+      return pts;
+    }
+    if (leverandor === 'foundry') {
+      const pts = [
+        ['✓', 'Genbruger eksisterende MSFT DPA', 'ok'],
+        ['✓', 'EU data residency', 'ok'],
+      ];
+      if (hasPersondata) pts.push(['✓', 'Pseudo-MCP nedgraderet til best practice', 'ok']);
+      pts.push(['⚠', 'GPT-model, ikke Claude', 'warn']);
+      if (sensitive && isCodeFeature) pts.push(['⚠', 'Trifecta-risiko fortsat aktiv', 'warn']);
+      return pts;
+    }
+    return [];
+  }
+
+  function makeList(heading, klass, icon, items) {
+    const wrap = document.createElement('div');
+    wrap.className = 'rec-block';
+    const h = document.createElement('h4');
+    h.textContent = heading;
+    wrap.appendChild(h);
+    const ul = document.createElement('ul');
+    ul.className = 'rec-list ' + klass;
+    items.forEach(t => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span class="ico">${icon}</span><span>${t}</span>`;
+      ul.appendChild(li);
+    });
+    wrap.appendChild(ul);
+    return wrap;
+  }
+
+  // -----------------------------
+  // Progress (5 pips + badge)
+  // -----------------------------
+  function renderProgress() {
+    const done = Object.values(state).filter(v => v !== null).length;
+    document.querySelectorAll('#progress .pip').forEach(pip => {
+      const step = parseInt(pip.getAttribute('data-step'), 10);
+      pip.classList.toggle('done', step <= done);
+    });
+    document.getElementById('progress-badge').textContent = `${done} / 5 svar`;
+  }
+
+  // -----------------------------
+  // Reset
+  // -----------------------------
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    state.q1 = state.q2 = state.q3 = state.q4 = state.q5 = null;
+    rerender();
+  });
+
+  // -----------------------------
+  // Arketype-opgaver — typiske hverdagsopgaver.
+  // Hver arketype mapper til et færdigt sæt af svar i træet (q1-q5).
+  // -----------------------------
+  const ARCHETYPES = [
+    {
+      org: 'Medlemsservices',
+      title: 'Pensionsrådgiver forbereder medlemssamtale',
+      sub: 'Træk medlemsdata fra warehouse og opsummer pensionsordning før telefonisk rådgivning.',
+      answers: { q1: 'internal', q2: 'low', q3: 'claude', q4: 'common-pseudo', q5: 'mcp' },
+      result: 'Claude Cowork + pseudo-MCP',
+    },
+    {
+      org: 'Medlemsservices',
+      title: 'Udkast til pensionsbrev til medlem',
+      sub: 'Sagsbehandler skriver svarbrev til konkret medlemshenvendelse — skal review-godkendes før udsendelse.',
+      answers: { q1: 'external', q2: 'low', q3: 'claude', q4: 'common-pseudo', q5: 'mcp' },
+      result: 'Cowork + kommunikationsgodkendelse',
+    },
+    {
+      org: 'Aktuarservice',
+      title: 'Aktuar bygger lille beregningsscript',
+      sub: 'Prototype af forsikringsteknisk beregning til intern analyse — ingen medlemsdata i koden.',
+      answers: { q1: 'internal', q2: 'low', q3: 'claude', q4: 'none', q5: 'code' },
+      result: 'Claude Code i devcontainer',
+    },
+    {
+      org: 'Fondsservices',
+      title: 'Investment ops automatiserer SimCorp-afstemning',
+      sub: 'Back-office laver script der afstemmer fondstransaktioner mod tilsynsrapport.',
+      answers: { q1: 'internal', q2: 'high', q3: 'bedrock', q4: 'none', q5: 'code-bedrock' },
+      result: 'Code via Bedrock + ask-before-acting',
+    },
+    {
+      org: 'Investeringer',
+      title: 'Porteføljemanager forbereder IK-oplæg',
+      sub: 'Strukturerer investeringsoplæg til investeringskomite — strategiske data og positioner.',
+      answers: { q1: 'internal', q2: 'high', q3: 'claude', q4: 'none', q5: 'mcp' },
+      result: 'Cowork ask-before-acting + isoleret',
+    },
+    {
+      org: 'Medlemmer',
+      title: 'Analyse af invalidesager og diagnosemønstre',
+      sub: 'Forretningsudvikler ser på mønstre i tab af erhvervsevne for at forbedre rådgivning.',
+      answers: { q1: 'internal', q2: 'high', q3: 'claude', q4: 'art9-pseudo', q5: 'mcp' },
+      result: 'Cowork + pseudo-MCP + DPIA',
+    },
+    {
+      org: 'Finans',
+      title: 'Risikomedarbejder analyserer medlemsportefølje',
+      sub: 'Mønsteranalyse på medlemskohorte til risiko- og solvensrapport.',
+      answers: { q1: 'internal', q2: 'low', q3: 'claude', q4: 'common-pseudo', q5: 'mcp' },
+      result: 'Cowork + pseudo-MCP',
+    },
+    {
+      org: 'Stab',
+      title: 'Juridisk research til bestyrelse',
+      sub: 'Bestyrelsessekretariatet research på lovgivning og governance — offentlige kilder.',
+      answers: { q1: 'internal', q2: 'low', q3: 'foundry', q4: 'none', q5: 'chatgpt' },
+      result: 'ChatGPT via Foundry',
+    },
+    {
+      org: 'IT-services',
+      title: 'Automatisk afgørelse af simple udbetalingssager',
+      sub: 'Idé om at lade AI tage selvstændig afgørelse om udbetaling uden menneskelig review.',
+      answers: { q1: 'auto', q2: null, q3: null, q4: null, q5: null },
+      result: 'Stop — AI Act annex III',
+      blocked: true,
+    },
+  ];
+
+  function renderArchetypes() {
+    const grid = document.getElementById('archetypes');
+    grid.innerHTML = '';
+    ARCHETYPES.forEach((arche, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'arche' + (arche.blocked ? ' blocked' : '');
+      btn.innerHTML = `
+        <div class="arche-org">${arche.org}</div>
+        <h3>${arche.title}</h3>
+        <p>${arche.sub}</p>
+        <div class="arche-result"><span class="arche-pill">→</span>${arche.result}</div>
+      `;
+      btn.addEventListener('click', () => loadArchetype(idx));
+      grid.appendChild(btn);
+    });
+  }
+
+  function renderArchetypeMenu() {
+    const menu = document.getElementById('arche-menu');
+    menu.innerHTML = '';
+    ARCHETYPES.forEach((a, idx) => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.role = 'option';
+      item.className = 'arche-menu-item' + (a.blocked ? ' blocked' : '');
+      item.dataset.idx = idx;
+      item.innerHTML = `
+        <strong>${a.title}</strong>
+        <span class="arche-item-result">${a.org} → ${a.result}</span>
+      `;
+      item.addEventListener('click', () => {
+        loadArchetype(idx);
+        closeArcheMenu();
+      });
+      menu.appendChild(item);
+    });
+  }
+
+  function loadArchetype(idx) {
+    const arche = ARCHETYPES[idx];
+    const answers = arche.answers;
+    state.q1 = answers.q1 ?? null;
+    state.q2 = answers.q2 ?? null;
+    state.q3 = answers.q3 ?? null;
+    state.q4 = answers.q4 ?? null;
+    state.q5 = answers.q5 ?? null;
+    const lbl = document.getElementById('arche-trigger-label');
+    lbl.textContent = arche.title;
+    lbl.classList.remove('placeholder');
+    rerender();
+    document.getElementById('tree').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Dropdown toggle
+  const archeSelect = document.getElementById('arche-select');
+  const archeTrigger = document.getElementById('arche-trigger');
+  function openArcheMenu() {
+    archeSelect.classList.add('open');
+    archeTrigger.setAttribute('aria-expanded', 'true');
+  }
+  function closeArcheMenu() {
+    archeSelect.classList.remove('open');
+    archeTrigger.setAttribute('aria-expanded', 'false');
+  }
+  archeTrigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    archeSelect.classList.contains('open') ? closeArcheMenu() : openArcheMenu();
+  });
+  document.addEventListener('click', (e) => {
+    if (!archeSelect.contains(e.target)) closeArcheMenu();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeArcheMenu();
+  });
+
+  renderArchetypes();
+  renderArchetypeMenu();
+
+  // Initial render
+  rerender();
+  </script>
+</body>
+</html>

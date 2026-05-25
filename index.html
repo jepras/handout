@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PKA · AI-workshop</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+  <style>
+    :root {
+      --background: #fbfafb;
+      --foreground: #22131b;
+      --card: #ffffff;
+      --muted: #f5f1f3;
+      --muted-foreground: #6f6369;
+      --border: #e4dde1;
+      --primary: #92004d;
+      --primary-hover: #7a0040;
+      --primary-foreground: #ffffff;
+      --ruby: #ce0060;
+      --bordeaux: #660036;
+      --mint: #9edfce;
+      --lilac: #c5aed5;
+      --beige: #e88f80;
+      --sky: #6e9baa;
+      --yellow: #efc47c;
+      --leaf: #85b499;
+      --radius: 10px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 14% 0%, rgba(206, 0, 96, .08), transparent 36%),
+        radial-gradient(circle at 86% 12%, rgba(146, 0, 77, .06), transparent 40%),
+        linear-gradient(180deg, rgba(245, 241, 243, .85), rgba(251, 250, 251, 0) 520px),
+        var(--background);
+      color: var(--foreground);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 64px 24px 96px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 13px;
+      color: var(--muted-foreground);
+      font-weight: 500;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 8px; height: 8px;
+      background: var(--primary);
+      border-radius: 999px;
+    }
+
+    h1 {
+      font-size: clamp(36px, 5vw, 56px);
+      line-height: 1.05;
+      margin: 20px 0 16px;
+      letter-spacing: -0.02em;
+      color: var(--bordeaux);
+    }
+    h1 span { color: var(--primary); }
+
+    .lede {
+      font-size: 18px;
+      color: var(--muted-foreground);
+      max-width: 640px;
+      margin: 0 0 32px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 64px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: background .15s, border-color .15s, transform .05s;
+      cursor: pointer;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary {
+      background: var(--card);
+      color: var(--foreground);
+      border-color: var(--border);
+    }
+    .btn-secondary:hover { background: var(--muted); }
+
+    .section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted-foreground);
+      font-weight: 600;
+      margin: 0 0 16px;
+    }
+
+    .sessions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color .15s, box-shadow .15s, transform .15s;
+    }
+    .card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 6px 24px rgba(146, 0, 77, .08);
+      transform: translateY(-2px);
+    }
+    .card .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--muted);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .card h3 {
+      margin: 0;
+      font-size: 19px;
+      letter-spacing: -0.01em;
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted-foreground);
+      font-size: 14.5px;
+    }
+    .card .tag {
+      align-self: flex-start;
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--muted);
+      color: var(--muted-foreground);
+      font-weight: 500;
+    }
+    .card a.link {
+      margin-top: auto;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .card a.link:hover { color: var(--bordeaux); }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+    }
+    .panel p { color: var(--muted-foreground); margin: 0 0 16px; }
+
+    footer {
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      color: var(--muted-foreground);
+      font-size: 13.5px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    footer a { color: var(--muted-foreground); }
+
+    svg.icon { width: 16px; height: 16px; }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <span class="eyebrow">PKA · AI-workshop</span>
+    <h1>Claude i praksis <span>for PKA</span></h1>
+    <p class="lede">
+      Tre sessioner der tager dig fra chat-vinduet til kode — med fokus på compliance,
+      brugbare workflows og hvordan I trygt bringer AI ind i PKA's hverdag.
+    </p>
+
+    <div class="actions">
+      <a class="btn btn-primary" href="https://github.com/jepras/handout/archive/refs/heads/main.zip">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download alt materiale (.zip)
+      </a>
+      <a class="btn btn-secondary" href="https://github.com/jepras/handout" target="_blank" rel="noopener">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        Se på GitHub
+      </a>
+    </div>
+
+    <h2 class="section-title">De tre sessioner</h2>
+    <div class="sessions">
+      <article class="card">
+        <span class="num">01</span>
+        <span class="tag">Chat</span>
+        <h3>Claude Desktop</h3>
+        <p>Intro til Claude som chat-assistent. MCP-connectoren, PII-filtrering og din første guidede opgave på Nordpension-data.</p>
+        <a class="link" href="session1-chat/session1-guidet-opgave.html">Åbn guidet opgave →</a>
+      </article>
+
+      <article class="card">
+        <span class="num">02</span>
+        <span class="tag">Cowork</span>
+        <h3>Claude som kollega</h3>
+        <p>Arbejd med dokumenter, regneark og rapporter sammen med Claude. Lethal trifecta, decision tree og praktiske workflows.</p>
+        <a class="link" href="session2-cowork/session2-guidet-opgave.html">Åbn guidet opgave →</a>
+      </article>
+
+      <article class="card">
+        <span class="num">03</span>
+        <span class="tag">Code</span>
+        <h3>Claude Code</h3>
+        <p>Direkte adgang til data via Supabase API. Prototyping af rådgiver-360, datakvalitets-monitors og anomali-detektorer.</p>
+        <a class="link" href="session3-code/session3-guidet-opgave.html">Åbn guidet opgave →</a>
+      </article>
+    </div>
+
+    <section class="panel">
+      <h2>Sådan kommer du i gang</h2>
+      <p>
+        Klik <strong>Download alt materiale</strong> for at hente hele mappen som zip — det indeholder
+        guidede opgaver, præsentationer og data-filer til alle tre sessioner. Du kan også åbne hver
+        session direkte herfra.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>Præsentationer</h2>
+      <p>De fem slidedecks der gennemgås på dagen:</p>
+      <ul style="margin:0; padding-left: 20px; color: var(--muted-foreground); font-size: 14.5px;">
+        <li><a href="præsentation/1-claude-desktop-intro.html">01 · Claude Desktop — intro</a></li>
+        <li><a href="præsentation/2-lethal-trifecta.html">02 · Den farlige treenighed</a></li>
+        <li><a href="præsentation/3-compliance-bekymringer.html">03 · Compliance-bekymringer</a></li>
+        <li><a href="præsentation/4-decision-tree-alternatives.html">04 · Decision tree & alternativer</a></li>
+        <li><a href="præsentation/5-haab-forude.html">05 · Håb forude</a></li>
+      </ul>
+    </section>
+
+    <footer>
+      <span>PKA · AI-workshop med Jeppe Rasher</span>
+      <a href="https://github.com/jepras/handout" target="_blank" rel="noopener">github.com/jepras/handout</a>
+    </footer>
+  </main>
+</body>
+</html>

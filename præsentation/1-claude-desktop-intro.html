@@ -1,0 +1,2143 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>01 · Claude Desktop – intro for PKA</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👋</text></svg>">
+  <style>
+    :root {
+      --background: #fbfafb;
+      --foreground: #22131b;
+      --card: #ffffff;
+      --card-foreground: #22131b;
+      --muted: #f5f1f3;
+      --muted-foreground: #6f6369;
+      --border: #d8d4d7;
+      --primary: #92004d;
+      --primary-foreground: #ffffff;
+      --ruby: #ce0060;
+      --bordeaux: #660036;
+      --warm-gray: #aca39a;
+      --mint: #9edfce;
+      --lilac: #c5aed5;
+      --beige: #e88f80;
+      --sky: #6e9baa;
+      --yellow: #efc47c;
+      --leaf: #85b499;
+      --summer-gray: #d8d4d7;
+      --winter-gray: #c7c9d4;
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-snap-type: y proximity;
+      background: var(--background);
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(206, 0, 96, .13), transparent 32%),
+        linear-gradient(180deg, rgba(245, 241, 243, .94), rgba(251, 250, 251, 0) 520px),
+        var(--background);
+      color: var(--foreground);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+
+    .deck {
+      width: min(1240px, calc(100vw - 40px));
+      margin: 0 auto;
+      padding: 34px 0 64px;
+    }
+
+    .slide {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 18px;
+      aspect-ratio: 16 / 9;
+      min-height: 620px;
+      margin: 0 0 34px;
+      overflow: hidden;
+      scroll-snap-align: start;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .96);
+      box-shadow: 0 18px 50px rgba(34, 19, 27, .09);
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 7px;
+      background: linear-gradient(90deg, var(--primary), var(--ruby), var(--lilac), var(--sky));
+    }
+
+    .slide-header,
+    .slide-body {
+      position: relative;
+      z-index: 1;
+    }
+
+    .slide-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 34px 38px 0;
+    }
+
+    .slide-body {
+      min-height: 0;
+      padding: 0 38px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      letter-spacing: 0;
+      line-height: 1.05;
+    }
+
+    h1 {
+      max-width: 860px;
+      margin-bottom: 18px;
+      color: var(--bordeaux);
+      font-size: clamp(44px, 6vw, 78px);
+      font-weight: 760;
+    }
+
+    h2 {
+      max-width: 850px;
+      margin: 0;
+      color: var(--bordeaux);
+      font-size: clamp(34px, 4.2vw, 56px);
+      font-weight: 730;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+      font-weight: 720;
+    }
+
+    p {
+      margin-bottom: 12px;
+      color: var(--muted-foreground);
+      font-size: 16px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 13px;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      font-weight: 760;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      background: var(--primary);
+      box-shadow: 0 0 0 4px rgba(146, 0, 77, .12);
+    }
+
+    .slide-number {
+      display: inline-flex;
+      min-width: 42px;
+      height: 34px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--card);
+      color: var(--bordeaux);
+      font-size: 13px;
+      font-weight: 760;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .lead {
+      max-width: 850px;
+      color: #4f4249;
+      font-size: clamp(18px, 2vw, 24px);
+      line-height: 1.35;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      color: var(--card-foreground);
+      box-shadow: 0 1px 2px rgba(16, 12, 14, .04);
+    }
+
+    .card-body {
+      padding: 18px;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 18px;
+      font-weight: 760;
+    }
+
+    .badge {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: var(--card);
+      color: var(--foreground);
+      font-size: 11px;
+      font-weight: 760;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .badge.primary { border-color: rgba(146, 0, 77, .25); background: rgba(146, 0, 77, .08); color: var(--primary); }
+    .badge.blue { border-color: rgba(110, 155, 170, .38); background: rgba(110, 155, 170, .14); color: #375f6b; }
+    .badge.green { border-color: rgba(133, 180, 153, .45); background: rgba(133, 180, 153, .18); color: #446e55; }
+    .badge.amber { border-color: rgba(239, 196, 124, .72); background: rgba(239, 196, 124, .24); color: #7b5518; }
+    .badge.red { border-color: rgba(206, 0, 96, .28); background: rgba(206, 0, 96, .10); color: var(--primary); }
+    .badge.lilac { border-color: rgba(197, 174, 213, .72); background: rgba(197, 174, 213, .28); color: #563d69; }
+
+    .hero-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(360px, .98fr);
+      gap: 28px;
+      align-items: center;
+      height: 100%;
+    }
+
+    .hero-panel {
+      position: relative;
+      min-height: 420px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(146, 0, 77, .09), rgba(158, 223, 206, .20)),
+        #fff;
+    }
+
+    .window {
+      position: absolute;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .92);
+      box-shadow: 0 16px 38px rgba(34, 19, 27, .10);
+    }
+
+    .window.main {
+      inset: 46px 58px 74px 44px;
+      display: grid;
+      grid-template-rows: 42px 1fr;
+    }
+
+    .window.small {
+      right: 28px;
+      bottom: 30px;
+      width: 250px;
+      padding: 14px;
+      background: #fff8fb;
+    }
+
+    .window-bar {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border-bottom: 1px solid var(--border);
+      padding: 0 14px;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .traffic {
+      width: 8px;
+      height: 8px;
+      border-radius: 99px;
+      background: var(--ruby);
+      box-shadow: 14px 0 0 var(--yellow), 28px 0 0 var(--leaf);
+      margin-right: 28px;
+    }
+
+    .chat-lines {
+      display: grid;
+      gap: 12px;
+      align-content: center;
+      padding: 24px;
+    }
+
+    .line {
+      height: 16px;
+      border-radius: 6px;
+      background: var(--muted);
+    }
+
+    .line:nth-child(1) { width: 78%; background: rgba(146, 0, 77, .14); }
+    .line:nth-child(2) { width: 92%; }
+    .line:nth-child(3) { width: 66%; }
+    .line:nth-child(4) { width: 84%; background: rgba(110, 155, 170, .18); }
+
+    .quick-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 11px;
+      margin-top: 24px;
+    }
+
+    .quick {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: #fff;
+      min-height: 112px;
+    }
+
+    .quick strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--foreground);
+      font-size: 15px;
+    }
+
+    .quick span {
+      color: var(--muted-foreground);
+      font-size: 13px;
+    }
+
+    .mode-card {
+      min-height: 270px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .mode-icon {
+      display: flex;
+      width: 48px;
+      height: 48px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 16px;
+      background: var(--muted);
+      color: var(--bordeaux);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .mode-card ul,
+    .checklist {
+      display: grid;
+      gap: 8px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mode-card li,
+    .checklist li {
+      position: relative;
+      padding-left: 18px;
+      color: var(--muted-foreground);
+      font-size: 14px;
+    }
+
+    .mode-card li::before,
+    .checklist li::before {
+      content: "";
+      position: absolute;
+      top: .62em;
+      left: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 2px;
+      background: var(--primary);
+    }
+
+    .capability-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.18fr) minmax(320px, .82fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .matrix-card {
+      overflow: hidden;
+    }
+
+    .capability-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .capability-table th {
+      border-bottom: 1px solid var(--border);
+      padding: 10px 12px;
+      background: var(--muted);
+      color: var(--muted-foreground);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-align: left;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .capability-table td {
+      border-bottom: 1px solid var(--border);
+      padding: 10px 12px;
+      vertical-align: top;
+    }
+
+    .capability-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .capability-table td:not(:first-child) {
+      color: var(--muted-foreground);
+      font-size: 12px;
+    }
+
+    .capability-table td:first-child {
+      width: 27%;
+      color: var(--foreground);
+      font-weight: 750;
+    }
+
+    .matrix-note {
+      display: grid;
+      gap: 12px;
+    }
+
+    .note-block {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px;
+      background: var(--card);
+    }
+
+    .note-block.emphasis {
+      border-color: rgba(206, 0, 96, .25);
+      background: #fff8fb;
+    }
+
+    .note-block strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--foreground);
+      font-size: 15px;
+    }
+
+    .note-block span {
+      color: var(--muted-foreground);
+      font-size: 13px;
+    }
+
+    .case-flow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .case-step {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      min-height: 375px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 17px;
+      background: var(--card);
+      box-shadow: 0 1px 2px rgba(16, 12, 14, .04);
+    }
+
+    .case-step::after {
+      content: "->";
+      position: absolute;
+      top: 50%;
+      right: -15px;
+      color: var(--muted-foreground);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .case-step:last-child::after {
+      display: none;
+    }
+
+    .case-step.chat { box-shadow: inset 0 5px 0 var(--primary), 0 1px 2px rgba(16, 12, 14, .04); }
+    .case-step.cowork { box-shadow: inset 0 5px 0 var(--sky), 0 1px 2px rgba(16, 12, 14, .04); }
+    .case-step.code { box-shadow: inset 0 5px 0 var(--leaf), 0 1px 2px rgba(16, 12, 14, .04); }
+
+    .case-step h3 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .case-prompt {
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      margin-bottom: 13px;
+      padding: 11px;
+      background: var(--muted);
+      color: #4f4249;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .case-step ul {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 14px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .case-step li {
+      position: relative;
+      padding-left: 17px;
+      color: var(--muted-foreground);
+      font-size: 13px;
+    }
+
+    .case-step li::before {
+      content: "";
+      position: absolute;
+      top: .62em;
+      left: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 2px;
+      background: var(--primary);
+    }
+
+    .limit {
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      color: var(--foreground);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .chat-feature-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(340px, .88fr);
+      gap: 18px;
+      align-items: stretch;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .chat-slide .slide-header {
+      padding-top: 28px;
+    }
+
+    .chat-slide h2 {
+      max-width: 900px;
+      font-size: clamp(36px, 3.8vw, 50px);
+    }
+
+    .chat-slide .mock-composer {
+      display: none;
+    }
+
+    .claude-mock {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(16, 12, 14, .04);
+    }
+
+    .mock-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      padding: 9px 12px;
+      background: var(--muted);
+    }
+
+    .mock-brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--foreground);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .mock-logo {
+      display: grid;
+      width: 26px;
+      height: 26px;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .mock-body {
+      display: grid;
+      gap: 9px;
+      align-content: start;
+      padding: 12px 14px;
+      background:
+        linear-gradient(180deg, rgba(251, 250, 251, .9), rgba(255, 255, 255, .96)),
+        #fff;
+    }
+
+    .bubble {
+      max-width: 92%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 12px;
+      line-height: 1.32;
+    }
+
+    .bubble.user {
+      justify-self: end;
+      background: #fff8fb;
+      color: var(--foreground);
+    }
+
+    .bubble.assistant {
+      justify-self: start;
+      background: #fff;
+      color: var(--muted-foreground);
+    }
+
+    .attached-table {
+      margin-top: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: #fff;
+      font-size: 11px;
+    }
+
+    .attached-row {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr .8fr;
+    }
+
+    .attached-row span {
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 5px 7px;
+      color: var(--muted-foreground);
+    }
+
+    .attached-row span:last-child { border-right: 0; }
+    .attached-row:last-child span { border-bottom: 0; }
+    .attached-row.head span {
+      background: var(--muted);
+      color: var(--foreground);
+      font-weight: 800;
+    }
+
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 3px;
+    }
+
+    .output-card {
+      min-height: 78px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px;
+      background: var(--card);
+    }
+
+    .output-icon {
+      display: grid;
+      width: 28px;
+      height: 28px;
+      place-items: center;
+      border-radius: 7px;
+      margin-bottom: 6px;
+      background: var(--muted);
+      color: var(--bordeaux);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .output-card strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--foreground);
+      font-size: 12px;
+    }
+
+    .output-card span {
+      color: var(--muted-foreground);
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .mock-composer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-top: 1px solid var(--border);
+      padding: 9px 12px;
+      background: #fff;
+    }
+
+    .composer-pill {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 11px;
+      color: var(--muted-foreground);
+      font-size: 12px;
+    }
+
+    .send-dot {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .chat-right {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .shortfall-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      background: var(--card);
+    }
+
+    .shortfall-card h3 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .shortfall-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .shortfall-list li {
+      display: grid;
+      grid-template-columns: 26px 1fr;
+      gap: 8px;
+      align-items: start;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px;
+      background: #fff;
+    }
+
+    .shortfall-list li:last-child {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 9px;
+    }
+
+    .shortfall-num {
+      display: grid;
+      width: 24px;
+      height: 24px;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--muted);
+      color: var(--bordeaux);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .shortfall-list strong {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--foreground);
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .shortfall-list span {
+      color: var(--muted-foreground);
+      font-size: 11px;
+      line-height: 1.32;
+    }
+
+    .chat-risk {
+      border: 1px solid rgba(206, 0, 96, .28);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      background: #fff8fb;
+    }
+
+    .chat-risk strong {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+      color: var(--foreground);
+      font-size: 14px;
+    }
+
+    .chat-risk p {
+      margin: 0;
+      color: #5f4e56;
+      font-size: 12px;
+    }
+
+    .cowork-slide .slide-header {
+      padding-top: 28px;
+    }
+
+    .cowork-slide h2 {
+      max-width: 930px;
+      font-size: clamp(36px, 3.8vw, 50px);
+    }
+
+    .cowork-feature-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(340px, .9fr);
+      gap: 18px;
+      align-items: stretch;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .cowork-board {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(16, 12, 14, .04);
+    }
+
+    .cowork-svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .cowork-svg text {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .svg-ui-bg { fill: #ffffff; }
+    .svg-ui-muted { fill: #f8f5f7; }
+    .svg-ui-panel { fill: #ffffff; stroke: var(--border); stroke-width: 1.2; }
+    .svg-ui-blue { fill: rgba(110, 155, 170, .11); stroke: rgba(110, 155, 170, .52); stroke-width: 1.2; }
+    .svg-ui-green { fill: rgba(133, 180, 153, .16); stroke: rgba(133, 180, 153, .55); stroke-width: 1.2; }
+    .svg-ui-rose { fill: #fff8fb; stroke: rgba(206, 0, 96, .28); stroke-width: 1.2; }
+    .svg-ui-title { fill: var(--foreground); font-size: 15px; font-weight: 850; }
+    .svg-ui-label { fill: var(--foreground); font-size: 12px; font-weight: 800; }
+    .svg-ui-copy { fill: var(--muted-foreground); font-size: 11px; }
+    .svg-task-copy { fill: var(--muted-foreground); font-size: 13px; }
+    .svg-ui-small { fill: var(--muted-foreground); font-size: 10px; }
+    .svg-pka { fill: var(--primary); font-size: 11px; font-weight: 850; }
+    .svg-folder-line { stroke: var(--border); stroke-width: 1.2; }
+    .svg-arrow { stroke: var(--muted-foreground); stroke-width: 1.8; fill: none; marker-end: url(#coworkArrow); }
+
+    .summary-slide .slide-header {
+      padding-top: 28px;
+    }
+
+    .summary-slide h2 {
+      max-width: 960px;
+      font-size: clamp(36px, 3.8vw, 50px);
+    }
+
+    .summary-diagram-card {
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: 0 1px 2px rgba(16, 12, 14, .04);
+    }
+
+    .summary-svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .summary-svg text {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .summary-card-bg { fill: #ffffff; stroke: var(--border); stroke-width: 1.2; }
+    .summary-card-chat { fill: #fff8fb; stroke: rgba(206, 0, 96, .32); stroke-width: 1.4; }
+    .summary-card-cowork { fill: rgba(110, 155, 170, .10); stroke: rgba(110, 155, 170, .48); stroke-width: 1.4; }
+    .summary-card-code { fill: rgba(133, 180, 153, .13); stroke: rgba(133, 180, 153, .56); stroke-width: 1.4; }
+    .summary-title { fill: var(--foreground); font-size: 22px; font-weight: 850; }
+    .summary-label { fill: var(--bordeaux); font-size: 13px; font-weight: 850; }
+    .summary-copy { fill: var(--muted-foreground); font-size: 14px; }
+    .summary-small { fill: var(--muted-foreground); font-size: 12px; }
+    .summary-chip { fill: #ffffff; stroke: var(--border); stroke-width: 1; }
+    .summary-chip-text { fill: var(--foreground); font-size: 12px; font-weight: 750; }
+    .summary-warning { fill: #fff8fb; stroke: rgba(206, 0, 96, .32); stroke-width: 1.2; }
+    .summary-warning-text { fill: var(--primary); font-size: 12px; font-weight: 800; }
+    .summary-axis { stroke: var(--border); stroke-width: 2; fill: none; marker-end: url(#summaryArrow); }
+    .summary-axis-label { fill: var(--foreground); font-size: 16px; font-weight: 850; }
+
+    .code-slide .slide-header {
+      padding-top: 28px;
+    }
+
+    .code-slide h2 {
+      max-width: 930px;
+      font-size: clamp(36px, 3.8vw, 50px);
+    }
+
+    .code-feature-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(340px, .9fr);
+      gap: 18px;
+      align-items: stretch;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .code-board {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(16, 12, 14, .04);
+    }
+
+    .code-svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .code-svg text {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .code-terminal { fill: #211821; stroke: #3a2a35; stroke-width: 1.4; }
+    .code-terminal-text { fill: #c7c9d4; font-size: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .code-terminal-good { fill: #9edfce; font-size: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .code-repo-bg { fill: #f8f5f7; stroke: var(--border); stroke-width: 1.2; }
+    .code-flow { stroke: var(--muted-foreground); stroke-width: 1.8; fill: none; marker-end: url(#codeArrow); }
+    .code-right {
+      display: grid;
+      grid-template-rows: auto auto auto;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .cowork-body {
+      display: grid;
+      grid-template-columns: minmax(190px, .72fr) minmax(0, 1.28fr);
+      min-height: 0;
+      background: #fff;
+    }
+
+    .folder-pane {
+      border-right: 1px solid var(--border);
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(245, 241, 243, .88), rgba(255, 255, 255, .96));
+    }
+
+    .pane-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+      color: var(--foreground);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .file-list {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .file-list li {
+      display: grid;
+      grid-template-columns: 26px 1fr;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px;
+      background: #fff;
+      color: var(--muted-foreground);
+      font-size: 11px;
+      line-height: 1.2;
+    }
+
+    .file-icon {
+      display: grid;
+      width: 24px;
+      height: 24px;
+      place-items: center;
+      border-radius: 7px;
+      background: var(--muted);
+      color: var(--bordeaux);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .task-pane {
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 10px;
+      padding: 12px;
+      min-height: 0;
+    }
+
+    .task-card {
+      border: 1px solid rgba(110, 155, 170, .38);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(110, 155, 170, .10);
+    }
+
+    .task-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--foreground);
+      font-size: 13px;
+    }
+
+    .task-card span {
+      color: var(--muted-foreground);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .progress-rail {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .progress-step {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px;
+      background: #fff;
+      min-height: 72px;
+    }
+
+    .progress-step .dot {
+      display: block;
+      width: 10px;
+      height: 10px;
+      border-radius: 99px;
+      margin-bottom: 7px;
+      background: var(--leaf);
+      box-shadow: none;
+    }
+
+    .progress-step strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--foreground);
+      font-size: 11px;
+      line-height: 1.2;
+    }
+
+    .progress-step span {
+      color: var(--muted-foreground);
+      font-size: 10px;
+      line-height: 1.25;
+    }
+
+    .deliverables {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      align-content: end;
+      min-height: 0;
+    }
+
+    .deliverable {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px;
+      background: #fff;
+    }
+
+    .deliverable strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--foreground);
+      font-size: 12px;
+    }
+
+    .deliverable span {
+      color: var(--muted-foreground);
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .cowork-right {
+      display: grid;
+      grid-template-rows: auto auto auto;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .forward-box {
+      border: 1px solid rgba(110, 155, 170, .36);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      background: rgba(110, 155, 170, .10);
+    }
+
+    .forward-box strong,
+    .cowork-risk strong {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+      color: var(--foreground);
+      font-size: 14px;
+    }
+
+    .forward-box p,
+    .cowork-risk p {
+      margin: 0;
+      color: #5f4e56;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .cowork-risk {
+      border: 1px solid rgba(206, 0, 96, .28);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      background: #fff8fb;
+    }
+
+    .taxonomy {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .taxonomy-card {
+      min-height: 322px;
+      border-top: 5px solid var(--primary);
+    }
+
+    .taxonomy-card.skills { border-top-color: var(--leaf); }
+    .taxonomy-card.connectors { border-top-color: var(--sky); }
+
+    .mini-table {
+      display: grid;
+      gap: 1px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--border);
+      font-size: 13px;
+    }
+
+    .mini-row {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 12px;
+      min-height: 54px;
+      align-items: center;
+      padding: 10px 12px;
+      background: var(--card);
+    }
+
+    .mini-row strong {
+      color: var(--foreground);
+      font-size: 13px;
+    }
+
+    .mini-row span {
+      color: var(--muted-foreground);
+    }
+
+    .trifecta-layout {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(420px, 1.05fr);
+      gap: 22px;
+      align-items: center;
+      height: 100%;
+    }
+
+    .triangle {
+      position: relative;
+      min-height: 440px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(251, 250, 251, .96), rgba(245, 241, 243, .95)),
+        #fff;
+    }
+
+    .trifecta-svg {
+      display: block;
+      width: 100%;
+      height: 440px;
+    }
+
+    .svg-leg {
+      stroke: var(--border);
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    .svg-cut {
+      stroke: var(--ruby);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-dasharray: 18 14;
+    }
+
+    .svg-node {
+      fill: #fff;
+      stroke: var(--border);
+      stroke-width: 1.5;
+      filter: drop-shadow(0 10px 20px rgba(34, 19, 27, .10));
+    }
+
+    .svg-node-top { stroke: rgba(146, 0, 77, .62); }
+    .svg-node-left { stroke: rgba(239, 196, 124, .88); }
+    .svg-node-right { stroke: rgba(110, 155, 170, .72); }
+
+    .svg-center {
+      fill: #fff8fb;
+      stroke: rgba(206, 0, 96, .35);
+      stroke-width: 1.5;
+    }
+
+    .svg-break {
+      fill: rgba(133, 180, 153, .18);
+      stroke: rgba(133, 180, 153, .52);
+      stroke-width: 1.5;
+    }
+
+    .svg-title {
+      fill: var(--foreground);
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .svg-copy {
+      fill: var(--muted-foreground);
+      font-size: 13px;
+      line-height: 1.25;
+    }
+
+    .svg-center-text {
+      fill: var(--primary);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .svg-break-text {
+      fill: #446e55;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .tri-node {
+      position: absolute;
+      display: grid;
+      width: 190px;
+      min-height: 120px;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--card);
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(34, 19, 27, .09);
+    }
+
+    .tri-node strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--foreground);
+      font-size: 16px;
+    }
+
+    .tri-node span {
+      color: var(--muted-foreground);
+      font-size: 12px;
+    }
+
+    .tri-node.a { top: 28px; left: calc(50% - 95px); border-top: 5px solid var(--primary); }
+    .tri-node.b { left: 38px; bottom: 38px; border-top: 5px solid var(--yellow); }
+    .tri-node.c { right: 38px; bottom: 38px; border-top: 5px solid var(--sky); }
+
+    .tri-line {
+      position: absolute;
+      height: 2px;
+      transform-origin: left center;
+      background: var(--border);
+    }
+
+    .tri-line.one { width: 248px; top: 185px; left: 229px; transform: rotate(42deg); }
+    .tri-line.two { width: 248px; top: 185px; right: 229px; transform: rotate(138deg); transform-origin: right center; }
+    .tri-line.three { width: 420px; left: 138px; bottom: 98px; }
+
+    .tri-line.broken {
+      width: 122px;
+      right: 28px;
+      top: 210px;
+      transform: rotate(-18deg);
+      background: repeating-linear-gradient(90deg, var(--ruby) 0 16px, transparent 16px 26px);
+    }
+
+    .tri-center {
+      position: absolute;
+      top: 228px;
+      left: calc(50% - 82px);
+      display: grid;
+      width: 178px;
+      height: 80px;
+      place-items: center;
+      border: 1px solid rgba(206, 0, 96, .35);
+      border-radius: 8px;
+      background: #fff8fb;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .trifecta-copy {
+      display: grid;
+      gap: 12px;
+    }
+
+    .plain-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .plain-list li {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: var(--card);
+    }
+
+    .plain-list .num,
+    .attack-step .num {
+      display: flex;
+      width: 34px;
+      height: 34px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: var(--muted);
+      color: var(--bordeaux);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .plain-list strong,
+    .attack-step strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--foreground);
+    }
+
+    .plain-list span,
+    .attack-step span {
+      display: block;
+      color: var(--muted-foreground);
+      font-size: 13px;
+    }
+
+    .point-card {
+      border: 1px solid rgba(206, 0, 96, .24);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      background: #fff8fb;
+    }
+
+    .point-card p {
+      margin: 0;
+      color: #4f4249;
+      font-size: 14px;
+    }
+
+    .attack-flow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .attack-step {
+      position: relative;
+      min-height: 120px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 13px;
+      background: var(--card);
+    }
+
+    .attack-step::after {
+      content: "->";
+      position: absolute;
+      top: 48px;
+      right: -16px;
+      color: var(--muted-foreground);
+      font-weight: 900;
+    }
+
+    .attack-step:last-child::after { display: none; }
+
+    .remove-one {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid rgba(133, 180, 153, .45);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      background: rgba(133, 180, 153, .14);
+    }
+
+    .remove-one .break-icon {
+      display: grid;
+      width: 44px;
+      height: 44px;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--primary);
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .remove-one strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--foreground);
+    }
+
+    .remove-one span {
+      color: var(--muted-foreground);
+      font-size: 13px;
+    }
+
+    .guardrail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .do-dont {
+      overflow: hidden;
+    }
+
+    .do-dont .card-body {
+      padding: 0;
+    }
+
+    .do-dont h3 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 0;
+      border-bottom: 1px solid var(--border);
+      padding: 15px 18px;
+      background: #fff8fb;
+    }
+
+    .do-dont.good h3 { background: rgba(133, 180, 153, .15); }
+
+    .do-dont ul {
+      display: grid;
+      gap: 1px;
+      margin: 0;
+      padding: 0;
+      background: var(--border);
+      list-style: none;
+    }
+
+    .do-dont li {
+      min-height: 70px;
+      padding: 13px 18px;
+      background: var(--card);
+    }
+
+    .do-dont strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--foreground);
+      font-size: 14px;
+    }
+
+    .do-dont span {
+      color: var(--muted-foreground);
+      font-size: 13px;
+    }
+
+    .source-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .source-links a {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: var(--card);
+      text-decoration: none;
+    }
+
+    @media (max-width: 980px) {
+      .slide {
+        aspect-ratio: auto;
+        min-height: auto;
+      }
+
+      .hero-layout,
+      .trifecta-layout,
+      .guardrail-grid,
+      .capability-layout,
+      .chat-feature-layout,
+      .cowork-feature-layout,
+      .two,
+      .three,
+      .case-flow,
+      .taxonomy {
+        grid-template-columns: 1fr;
+      }
+
+      .cowork-body,
+      .deliverables,
+      .progress-rail {
+        grid-template-columns: 1fr;
+      }
+
+      .case-step {
+        min-height: auto;
+      }
+
+      .case-step::after {
+        content: "↓";
+        top: auto;
+        right: 50%;
+        bottom: -24px;
+      }
+
+      .hero-panel,
+      .triangle {
+        min-height: 420px;
+      }
+
+      .trifecta-svg {
+        height: 420px;
+      }
+
+      .slide-header,
+      .slide-body,
+    }
+
+    @media (max-width: 620px) {
+      .deck {
+        width: min(100vw - 22px, 1240px);
+        padding-top: 18px;
+      }
+
+      h1 { font-size: 38px; }
+      h2 { font-size: 31px; }
+
+      .quick-row {
+        grid-template-columns: 1fr;
+      }
+
+      .window.main {
+        inset: 28px 18px 84px;
+      }
+
+      .window.small {
+        right: 18px;
+        bottom: 20px;
+        width: calc(100% - 36px);
+      }
+
+      .triangle {
+        min-height: 520px;
+      }
+
+      .trifecta-svg {
+        height: 520px;
+      }
+
+      .tri-node {
+        width: calc(100% - 48px);
+        left: 24px !important;
+        right: auto !important;
+      }
+
+      .tri-node.a { top: 24px; }
+      .tri-node.b { top: 176px; bottom: auto; }
+      .tri-node.c { top: 328px; bottom: auto; }
+      .tri-line,
+      .tri-center { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide" aria-labelledby="slide-1-title">
+      <header class="slide-header">
+        <div>
+          <div class="kicker">Claude Desktop intro</div>
+          <h1 id="slide-1-title">Fra chat til ansvarlig AI-arbejdsplads</h1>
+          <p class="lead">Claude kan bruges som samtalepartner, lokal coworker og kodeagent. Pointen er ikke at bremse teknologien, men at bruge den med tydelige rammer for data, værktøjer og ansvar.</p>
+        </div>
+        <div class="slide-number">01</div>
+      </header>
+      <div class="slide-body hero-layout">
+        <div>
+          <div class="quick-row">
+            <div class="quick">
+              <strong>Praktisk erfaring</strong>
+              <span>Se hvordan arbejdet faktisk flytter sig, når Claude får kontekst og mål.</span>
+            </div>
+            <div class="quick">
+              <strong>Kvalificeret dialog</strong>
+              <span>Tal om governance, compliance og arbejdsprocesser ud fra konkrete cases.</span>
+            </div>
+            <div class="quick">
+              <strong>Sikker implementering</strong>
+              <span>Skab et sprog for hvad der må kombineres, og hvad der skal adskilles.</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-panel" aria-hidden="true">
+          <div class="window main">
+            <div class="window-bar"><span class="traffic"></span>Claude Desktop</div>
+            <div class="chat-lines">
+              <div class="line"></div>
+              <div class="line"></div>
+              <div class="line"></div>
+              <div class="line"></div>
+            </div>
+          </div>
+          <div class="window small">
+            <span class="badge primary">PKA træning</span>
+            <p style="margin: 12px 0 0; font-size: 14px;">Muligheder og risici vurderes sammen, før Claude Enterprise rulles bredt ud.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide chat-slide" aria-labelledby="slide-2-title">
+      <header class="slide-header">
+        <div>
+          <div class="kicker">Claude Chat</div>
+          <h2 id="slide-2-title">God til første analyse, udkast og små leverancer</h2>
+        </div>
+        <div class="slide-number">02</div>
+      </header>
+      <div class="slide-body">
+        <div class="chat-feature-layout">
+          <article class="claude-mock" aria-label="Visuelt eksempel på Claude Chat">
+            <div class="mock-topbar">
+              <div class="mock-brand"><span class="mock-logo">C</span>Claude Chat</div>
+              <span class="badge primary">session</span>
+            </div>
+            <div class="mock-body">
+              <div class="bubble user">
+                “Opsummer serviceklagerne for måneden og lav et udkast til ledelsesrapport.”
+                <div class="attached-table" aria-label="Vedhæftet tabel med serviceklager">
+                  <div class="attached-row head"><span>Kategori</span><span>Sager</span><span>Trend</span></div>
+                  <div class="attached-row"><span>Udbetaling</span><span>42</span><span>+8%</span></div>
+                  <div class="attached-row"><span>Rådgivning</span><span>31</span><span>-3%</span></div>
+                  <div class="attached-row"><span>Digital selvbetjening</span><span>27</span><span>+14%</span></div>
+                </div>
+              </div>
+              <div class="bubble assistant">
+                Jeg kan se tre hovedpointer: digital selvbetjening stiger mest, udbetaling fylder fortsat mest, og rådgivning er stabiliseret.
+              </div>
+              <div class="output-grid" aria-label="Mulige Chat outputs">
+                <div class="output-card">
+                  <div class="output-icon">R</div>
+                  <strong>Rapportudkast</strong>
+                  <span>Ledelsesresume, nøgletal og anbefalede handlinger.</span>
+                </div>
+                <div class="output-card">
+                  <div class="output-icon">P</div>
+                  <strong>PPTX</strong>
+                  <span>3-5 slides med hovedbudskaber og grafer.</span>
+                </div>
+                <div class="output-card">
+                  <div class="output-icon">A</div>
+                  <strong>Artifact</strong>
+                  <span>Simpel visning, tabel eller mini-dashboard.</span>
+                </div>
+              </div>
+            </div>
+            <div class="mock-composer">
+              <div class="composer-pill">Bed Claude om at forklare, omskrive eller lave en fil...</div>
+              <div class="send-dot">↑</div>
+            </div>
+          </article>
+          <aside class="chat-right">
+            <div class="shortfall-card">
+              <h3>Chat kommer til kort når <span class="badge amber">proces</span></h3>
+              <ul class="shortfall-list">
+                <li><div class="shortfall-num">1</div><div><strong>Brugeren bliver procesmotor</strong><span>Chatten kan lave output, men brugeren skal selv drive filvalg, næste trin og overlevering.</span></div></li>
+                <li><div class="shortfall-num">2</div><div><strong>Kvalitetssikring kræver eksplicit prompt</strong><span>Review, krydstjek og forbedring sker kun sikkert, hvis brugeren beder om det og følger op.</span></div></li>
+                <li><div class="shortfall-num">3</div><div><strong>Leverancen lever i sessionen</strong><span>Rapport, pptx og artifact kan laves, men arbejdsprocessen er ikke i sig selv et lokalt projekt med filstyring.</span></div></li>
+                <li><div class="shortfall-num">4</div><div><strong>Gentagelse bliver manuel</strong><span>Næste måned starter man ofte forfra med data, kontekst, prompt og kontrolpunkter.</span></div></li>
+              </ul>
+            </div>
+            <div class="chat-risk">
+              <strong>Risiko ved Chat <span class="badge red">connectors</span></strong>
+              <p>Chat er størst risikomæssigt, når den får connectors til confidential data. Så er det ikke længere bare en samtale, men en samtale med adgang til interne kilder.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide cowork-slide" aria-labelledby="slide-3-title">
+      <header class="slide-header">
+        <div>
+          <div class="kicker">Claude Cowork</div>
+          <h2 id="slide-3-title">Når arbejdet skal leve i filer, mapper og et opgaveflow</h2>
+        </div>
+        <div class="slide-number">03</div>
+      </header>
+      <div class="slide-body">
+        <div class="cowork-feature-layout">
+          <article class="cowork-board" aria-label="Visuelt eksempel på Claude Cowork">
+            <div class="mock-topbar">
+              <div class="mock-brand"><span class="mock-logo">W</span>Cowork projekt</div>
+              <span class="badge blue">connected folder</span>
+            </div>
+            <svg class="cowork-svg" viewBox="0 0 720 430" role="img" aria-labelledby="cowork-svg-title cowork-svg-desc">
+              <title id="cowork-svg-title">Cowork arbejder i en lokal projektmappe</title>
+              <desc id="cowork-svg-desc">En filstruktur på brugerens pc, en opgave og fire faser med pile: find input, opdater filer, review output og gem resultat.</desc>
+              <defs>
+                <marker id="coworkArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#6f6369"></path>
+                </marker>
+              </defs>
+
+              <rect class="svg-ui-bg" x="0" y="0" width="720" height="430"></rect>
+              <rect class="svg-ui-muted" x="18" y="20" width="236" height="384" rx="8"></rect>
+              <text class="svg-ui-title" x="36" y="49">Nordpension-PC</text>
+              <text class="svg-ui-copy" x="36" y="69">/Connected folders/Månedspakke</text>
+              <rect class="svg-ui-rose" x="174" y="32" width="54" height="24" rx="12"></rect>
+              <text class="svg-pka" x="201" y="49" text-anchor="middle">PKA</text>
+
+              <line class="svg-folder-line" x1="44" y1="96" x2="44" y2="329"></line>
+              <line class="svg-folder-line" x1="44" y1="117" x2="62" y2="117"></line>
+              <line class="svg-folder-line" x1="44" y1="163" x2="62" y2="163"></line>
+              <line class="svg-folder-line" x1="44" y1="209" x2="62" y2="209"></line>
+              <line class="svg-folder-line" x1="44" y1="255" x2="62" y2="255"></line>
+              <line class="svg-folder-line" x1="44" y1="301" x2="62" y2="301"></line>
+
+              <rect class="svg-ui-panel" x="62" y="96" width="166" height="34" rx="7"></rect>
+              <text class="svg-ui-label" x="78" y="117">serviceklager_maj.xlsx</text>
+              <rect class="svg-ui-panel" x="62" y="142" width="166" height="34" rx="7"></rect>
+              <text class="svg-ui-label" x="78" y="163">sidste_rapport.pptx</text>
+              <rect class="svg-ui-panel" x="62" y="188" width="166" height="34" rx="7"></rect>
+              <text class="svg-ui-label" x="78" y="209">rapport_template.docx</text>
+              <rect class="svg-ui-panel" x="62" y="234" width="166" height="34" rx="7"></rect>
+              <text class="svg-ui-label" x="78" y="255">review_checklist.md</text>
+              <rect class="svg-ui-panel" x="62" y="280" width="166" height="54" rx="7"></rect>
+              <text class="svg-ui-label" x="78" y="303">projekt-memory</text>
+              <text class="svg-ui-small" x="78" y="320">instruktioner og kontekst</text>
+
+              <rect class="svg-ui-blue" x="286" y="30" width="400" height="86" rx="8"></rect>
+              <text class="svg-ui-title" x="306" y="58">Opgave</text>
+              <text class="svg-task-copy" x="306" y="82">“Saml månedens input, opdater rapport og slides,</text>
+              <text class="svg-task-copy" x="306" y="104">review resultatet og gem filerne i projektmappen.”</text>
+
+              <rect class="svg-ui-panel" x="286" y="150" width="92" height="86" rx="8"></rect>
+              <circle cx="306" cy="174" r="6" fill="#85b499"></circle>
+              <text class="svg-ui-label" x="306" y="198">Find input</text>
+              <text class="svg-ui-small" x="306" y="218">læser folder</text>
+              <line class="svg-arrow" x1="382" y1="193" x2="418" y2="193"></line>
+
+              <rect class="svg-ui-panel" x="424" y="150" width="92" height="86" rx="8"></rect>
+              <circle cx="444" cy="174" r="6" fill="#85b499"></circle>
+              <text class="svg-ui-label" x="444" y="198">Opdater</text>
+              <text class="svg-ui-label" x="444" y="214">filer</text>
+              <line class="svg-arrow" x1="520" y1="193" x2="556" y2="193"></line>
+
+              <rect class="svg-ui-panel" x="562" y="150" width="92" height="86" rx="8"></rect>
+              <circle cx="582" cy="174" r="6" fill="#85b499"></circle>
+              <text class="svg-ui-label" x="582" y="198">Review</text>
+              <text class="svg-ui-label" x="582" y="214">output</text>
+              <line class="svg-arrow" x1="608" y1="240" x2="608" y2="270"></line>
+
+              <rect class="svg-ui-panel" x="562" y="278" width="92" height="86" rx="8"></rect>
+              <circle cx="582" cy="302" r="6" fill="#85b499"></circle>
+              <text class="svg-ui-label" x="582" y="326">Gem</text>
+              <text class="svg-ui-label" x="582" y="342">resultat</text>
+
+              <rect class="svg-ui-green" x="286" y="278" width="238" height="86" rx="8"></rect>
+              <text class="svg-ui-title" x="306" y="306">Leverancer i mappen</text>
+              <text class="svg-ui-copy" x="306" y="328">rapport.docx · slides.pptx</text>
+              <text class="svg-ui-copy" x="306" y="345">review-noter.md · scheduled task</text>
+              <text class="svg-ui-copy" x="306" y="362">kun når Desktop er åben og PC'en vågen</text>
+              <line class="svg-arrow" x1="558" y1="321" x2="532" y2="321"></line>
+            </svg>
+          </article>
+          <aside class="cowork-right">
+            <div class="shortfall-card">
+              <h3>Cowork hjælper når <span class="badge blue">workflow</span></h3>
+              <ul class="shortfall-list">
+                <li><div class="shortfall-num">1</div><div><strong>Opgaven har filer</strong><span>Claude kan arbejde i en connected folder frem for kun i samtalen.</span></div></li>
+                <li><div class="shortfall-num">2</div><div><strong>Output skal reviewes</strong><span>Udkast, rettelser, review-noter og status kan samles i samme flow.</span></div></li>
+                <li><div class="shortfall-num">3</div><div><strong>Kontekst skal leve videre</strong><span>Projektfiler, instruktioner og memory holder opgaven samlet.</span></div></li>
+                <li><div class="shortfall-num">4</div><div><strong>Opgaven gentages</strong><span>Scheduled tasks kan køre, når computeren er vågen og Desktop er åben.</span></div></li>
+              </ul>
+            </div>
+            <div class="forward-box">
+              <strong>Videre til Code når <span class="badge green">system</span></strong>
+              <p>Beregninger skal industrialiseres, der skal bygges scripts, SQL-checks, tests, servere, pipelines eller egentlige integrationer.</p>
+            </div>
+            <div class="cowork-risk">
+              <strong>Risiko ved Cowork <span class="badge red">arbejdsrum</span></strong>
+              <p>Shell/kode kører isoleret i VM, ikke frit på hele maskinen. Risikoen ligger især i rigtige filer, connectors, computer use, web access og skrivning tilbage til arbejdsmapper.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide code-slide" aria-labelledby="slide-4-title">
+      <header class="slide-header">
+        <div>
+          <div class="kicker">Claude Code</div>
+          <h2 id="slide-4-title">Når du vil programmere alt og gøre processen testbar</h2>
+        </div>
+        <div class="slide-number">04</div>
+      </header>
+      <div class="slide-body">
+        <div class="code-feature-layout">
+          <article class="code-board" aria-label="Visuelt eksempel på Claude Code">
+            <div class="mock-topbar">
+              <div class="mock-brand"><span class="mock-logo">#</span>Claude Code workspace</div>
+              <span class="badge green">repo + terminal</span>
+            </div>
+            <svg class="code-svg" viewBox="0 0 720 430" role="img" aria-labelledby="code-svg-title code-svg-desc">
+              <title id="code-svg-title">Claude Code arbejder i repo og terminal</title>
+              <desc id="code-svg-desc">Et repo, en terminal og en pipeline der viser scripts, tests, server og rapportgenerator.</desc>
+              <defs>
+                <marker id="codeArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#6f6369"></path>
+                </marker>
+              </defs>
+
+              <rect class="svg-ui-bg" x="0" y="0" width="720" height="430"></rect>
+              <rect class="code-repo-bg" x="18" y="20" width="236" height="384" rx="8"></rect>
+              <text class="svg-ui-title" x="36" y="49">nordpension-reporting</text>
+              <text class="svg-ui-copy" x="36" y="69">~/Developer/reporting</text>
+              <rect class="svg-ui-panel" x="48" y="96" width="174" height="34" rx="7"></rect>
+              <text class="svg-ui-label" x="64" y="117">src/report_generator.py</text>
+              <rect class="svg-ui-panel" x="48" y="142" width="174" height="34" rx="7"></rect>
+              <text class="svg-ui-label" x="64" y="163">sql/quality_checks.sql</text>
+              <rect class="svg-ui-panel" x="48" y="188" width="174" height="34" rx="7"></rect>
+              <text class="svg-ui-label" x="64" y="209">tests/test_report.py</text>
+              <rect class="svg-ui-panel" x="48" y="234" width="174" height="34" rx="7"></rect>
+              <text class="svg-ui-label" x="64" y="255">package.json</text>
+              <rect class="svg-ui-panel" x="48" y="280" width="174" height="54" rx="7"></rect>
+              <text class="svg-ui-label" x="64" y="303">README.md</text>
+              <text class="svg-ui-small" x="64" y="320">pipeline og kørselsvejledning</text>
+
+              <rect class="code-terminal" x="286" y="30" width="400" height="150" rx="9"></rect>
+              <circle cx="306" cy="54" r="5" fill="#ce0060"></circle>
+              <circle cx="322" cy="54" r="5" fill="#efc47c"></circle>
+              <circle cx="338" cy="54" r="5" fill="#85b499"></circle>
+              <text class="code-terminal-text" x="306" y="86">$ claude \"programmer rapportflowet\"</text>
+              <text class="code-terminal-text" x="306" y="112">$ npm run lint</text>
+              <text class="code-terminal-text" x="306" y="138">$ pytest</text>
+              <text class="code-terminal-good" x="306" y="164">✓ 24 tests passed · report pipeline ready</text>
+
+              <rect class="svg-ui-blue" x="286" y="216" width="108" height="80" rx="8"></rect>
+              <text class="svg-ui-label" x="306" y="247">Programmer</text>
+              <text class="svg-ui-small" x="306" y="267">feature, script, app</text>
+              <line class="code-flow" x1="398" y1="256" x2="438" y2="256"></line>
+
+              <rect class="svg-ui-panel" x="444" y="216" width="108" height="80" rx="8"></rect>
+              <text class="svg-ui-label" x="464" y="247">Kør tests</text>
+              <text class="svg-ui-small" x="464" y="267">lint, pytest, diff</text>
+              <line class="code-flow" x1="556" y1="256" x2="596" y2="256"></line>
+
+              <rect class="svg-ui-green" x="602" y="216" width="86" height="80" rx="8"></rect>
+              <text class="svg-ui-label" x="622" y="247">Pipeline</text>
+              <text class="svg-ui-small" x="622" y="267">gentagelig</text>
+
+              <rect class="svg-ui-rose" x="286" y="330" width="400" height="54" rx="8"></rect>
+              <text class="svg-ui-title" x="306" y="354">Resultat</text>
+              <text class="svg-ui-copy" x="386" y="354">Fra idé til feature, script, app eller pipeline.</text>
+              <text class="svg-ui-copy" x="306" y="374">Ikke kun et dokument, men en kontrollerbar proces.</text>
+            </svg>
+          </article>
+          <aside class="code-right">
+            <div class="shortfall-card">
+              <h3>Code hjælper når <span class="badge green">udvikling</span></h3>
+              <ul class="shortfall-list">
+                <li><div class="shortfall-num">1</div><div><strong>Processen skal gentages</strong><span>Rapporten bygges fra scripts, data og tests i stedet for manuelt arbejde.</span></div></li>
+                <li><div class="shortfall-num">2</div><div><strong>Der er repo og kode</strong><span>Claude kan læse, ændre og teste på tværs af filer.</span></div></li>
+                <li><div class="shortfall-num">3</div><div><strong>Servere skal køre</strong><span>Bruges til Python, Node, dev-servere, CLI'er og testværktøjer.</span></div></li>
+                <li><div class="shortfall-num">4</div><div><strong>Review skal være teknisk</strong><span>Diff, lint, tests og CI-fejl kan bruges som feedbackloop.</span></div></li>
+              </ul>
+            </div>
+            <div class="forward-box">
+              <strong>Code kommer til kort når <span class="badge amber">governance</span></strong>
+              <p>Opgaven primært handler om forretningstekst, fortolkning eller beslutninger. Code kræver også repo, miljø, testdata og klare permissions.</p>
+            </div>
+            <div class="cowork-risk">
+              <strong>Risiko ved Code <span class="badge red">blast radius</span></strong>
+              <p>Risikoen stiger med shell, filsystem, netværk, web fetch, interne data og skip permissions. Brug sandbox, allowlists og testdata.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide summary-slide" aria-labelledby="slide-5-title">
+      <header class="slide-header">
+        <div>
+          <div class="kicker">Opsummering</div>
+          <h2 id="slide-5-title">Fra sparring til proces til system</h2>
+        </div>
+        <div class="slide-number">05</div>
+      </header>
+      <div class="slide-body">
+        <article class="summary-diagram-card" aria-label="Opsummering af Claude Chat, Cowork og Code">
+          <svg class="summary-svg" viewBox="0 0 1120 520" role="img" aria-labelledby="summary-svg-title summary-svg-desc">
+            <title id="summary-svg-title">Fra sparring til proces til system</title>
+            <desc id="summary-svg-desc">Tre kolonner forklarer Claude Chat som sparringspartner, Claude Cowork som opgaveflow og Claude Code som udviklingsflow.</desc>
+            <defs>
+              <marker id="summaryArrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,8 L11,4 z" fill="#d8d4d7"></path>
+              </marker>
+            </defs>
+
+            <rect class="summary-card-bg" x="0" y="0" width="1120" height="520"></rect>
+
+            <rect class="summary-card-chat" x="34" y="38" width="320" height="350" rx="10"></rect>
+            <rect class="summary-card-cowork" x="400" y="38" width="320" height="350" rx="10"></rect>
+            <rect class="summary-card-code" x="766" y="38" width="320" height="350" rx="10"></rect>
+
+            <circle cx="76" cy="80" r="24" fill="#92004d"></circle>
+            <text x="76" y="88" text-anchor="middle" fill="#fff" font-size="22" font-weight="900">C</text>
+            <text class="summary-title" x="116" y="78">Claude Chat</text>
+            <text class="summary-label" x="116" y="101">Sparringspartner</text>
+            <path d="M70 150 h190 a20 20 0 0 1 20 20 v42 a20 20 0 0 1-20 20 h-104 l-34 30 v-30 h-52 a20 20 0 0 1-20-20 v-42 a20 20 0 0 1 20-20z" fill="#fff" stroke="#d8d4d7" stroke-width="1.4"></path>
+            <text class="summary-copy" x="70" y="300">Primært tekst:</text>
+            <text class="summary-copy" x="70" y="323">forstå, forklare, skrive,</text>
+            <text class="summary-copy" x="70" y="346">omskrive og lave første version.</text>
+            <rect class="summary-chip" x="64" y="410" width="65" height="30" rx="15"></rect>
+            <text class="summary-chip-text" x="96" y="430" text-anchor="middle">udkast</text>
+            <rect class="summary-chip" x="138" y="410" width="98" height="30" rx="15"></rect>
+            <text class="summary-chip-text" x="187" y="430" text-anchor="middle">opsummering</text>
+            <rect class="summary-chip" x="246" y="410" width="72" height="30" rx="15"></rect>
+            <text class="summary-chip-text" x="282" y="430" text-anchor="middle">artifact</text>
+            <rect class="summary-warning" x="64" y="454" width="254" height="34" rx="8"></rect>
+            <text class="summary-warning-text" x="191" y="476" text-anchor="middle">Review kræver brugerens styring</text>
+
+            <circle cx="442" cy="80" r="24" fill="#6e9baa"></circle>
+            <text x="442" y="88" text-anchor="middle" fill="#fff" font-size="22" font-weight="900">W</text>
+            <text class="summary-title" x="482" y="78">Claude Cowork</text>
+            <text class="summary-label" x="482" y="101">Opgaveflow</text>
+            <path d="M450 158 h96 l16 18 h110 a12 12 0 0 1 12 12 v76 a12 12 0 0 1-12 12 h-222 a12 12 0 0 1-12-12 v-94 a12 12 0 0 1 12-12z" fill="#fff" stroke="#d8d4d7" stroke-width="1.4"></path>
+            <line x1="466" y1="201" x2="656" y2="201" stroke="#d8d4d7" stroke-width="1.2"></line>
+            <line x1="466" y1="227" x2="620" y2="227" stroke="#d8d4d7" stroke-width="1.2"></line>
+            <line x1="466" y1="253" x2="640" y2="253" stroke="#d8d4d7" stroke-width="1.2"></line>
+            <text class="summary-copy" x="436" y="300">Arbejder med filer, mapper,</text>
+            <text class="summary-copy" x="436" y="323">kontekst, review-noter og</text>
+            <text class="summary-copy" x="436" y="346">leverancer i et lokalt projekt.</text>
+            <rect class="summary-chip" x="430" y="410" width="116" height="30" rx="15"></rect>
+            <text class="summary-chip-text" x="488" y="430" text-anchor="middle">connected folder</text>
+            <rect class="summary-chip" x="556" y="410" width="82" height="30" rx="15"></rect>
+            <text class="summary-chip-text" x="597" y="430" text-anchor="middle">rapport</text>
+            <rect class="summary-chip" x="648" y="410" width="64" height="30" rx="15"></rect>
+            <text class="summary-chip-text" x="680" y="430" text-anchor="middle">review</text>
+            <text class="summary-warning-text" x="560" y="476" text-anchor="middle">God til klassisk knowledge work</text>
+
+            <circle cx="808" cy="80" r="24" fill="#85b499"></circle>
+            <text x="808" y="88" text-anchor="middle" fill="#fff" font-size="22" font-weight="900">#</text>
+            <text class="summary-title" x="848" y="78">Claude Code</text>
+            <text class="summary-label" x="848" y="101">Udviklingsflow</text>
+            <rect x="812" y="158" width="228" height="132" rx="9" fill="#1f1b1f"></rect>
+            <circle cx="830" cy="178" r="5" fill="#ce0060"></circle>
+            <circle cx="846" cy="178" r="5" fill="#efc47c"></circle>
+            <circle cx="862" cy="178" r="5" fill="#85b499"></circle>
+            <text x="830" y="216" fill="#9edfce" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">$ npm test</text>
+            <text x="830" y="240" fill="#c7c9d4" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">$ python build_report.py</text>
+            <text x="830" y="264" fill="#c7c9d4" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">✓ pipeline ready</text>
+            <text class="summary-copy" x="802" y="320">Ændrer kode og gør</text>
+            <text class="summary-copy" x="802" y="343">processen reproducerbar med</text>
+            <text class="summary-copy" x="802" y="366">scripts, tests og pipelines.</text>
+            <rect class="summary-chip" x="796" y="410" width="55" height="30" rx="15"></rect>
+            <text class="summary-chip-text" x="824" y="430" text-anchor="middle">repo</text>
+            <rect class="summary-chip" x="860" y="410" width="64" height="30" rx="15"></rect>
+            <text class="summary-chip-text" x="892" y="430" text-anchor="middle">tests</text>
+            <rect class="summary-chip" x="934" y="410" width="78" height="30" rx="15"></rect>
+            <text class="summary-chip-text" x="973" y="430" text-anchor="middle">pipelines</text>
+            <text class="summary-warning-text" x="926" y="476" text-anchor="middle">God til systematisering</text>
+
+            <path class="summary-axis" d="M354 214 C374 214 380 214 398 214"></path>
+            <path class="summary-axis" d="M720 214 C740 214 746 214 764 214"></path>
+            <text class="summary-axis-label" x="194" y="26" text-anchor="middle">Samtale</text>
+            <text class="summary-axis-label" x="560" y="26" text-anchor="middle">Arbejdsproces</text>
+            <text class="summary-axis-label" x="926" y="26" text-anchor="middle">Reproducerbart system</text>
+          </svg>
+        </article>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="slide-6-title">
+      <header class="slide-header">
+        <div>
+          <div class="kicker">Kontekst og udvidelser</div>
+          <h2 id="slide-6-title">Projects, Skills og Connectors løser forskellige problemer</h2>
+        </div>
+        <div class="slide-number">06</div>
+      </header>
+      <div class="slide-body">
+        <div class="taxonomy">
+          <article class="card taxonomy-card">
+            <div class="card-body">
+              <div class="card-title">Projects <span class="badge primary">kontekst</span></div>
+              <p>Et projekt samler relevante chats, instruktioner og projektviden, så Claude forstår baggrund, dokumenter og mål for et afgrænset arbejde.</p>
+              <div class="mini-table">
+                <div class="mini-row"><strong>Bruges til</strong><span>Afdelingscases, politikker, rapportpakker, gentagne opgaver.</span></div>
+                <div class="mini-row"><strong>Governance</strong><span>Hvem må se projektet, og hvilke filer hører til?</span></div>
+              </div>
+            </div>
+          </article>
+          <article class="card taxonomy-card skills">
+            <div class="card-body">
+              <div class="card-title">Skills <span class="badge green">arbejdsmåde</span></div>
+              <p>Skills er mapper med instruktioner, scripts og ressourcer, som Claude kan indlæse dynamisk for at udføre specialiserede opgaver mere ensartet.</p>
+              <div class="mini-table">
+                <div class="mini-row"><strong>Bruges til</strong><span>Brandguides, analysemetoder, dokumentproduktion, faste tjeklister.</span></div>
+                <div class="mini-row"><strong>Governance</strong><span>Godkendte skills kan standardisere kvalitet og compliance.</span></div>
+              </div>
+            </div>
+          </article>
+          <article class="card taxonomy-card connectors">
+            <div class="card-body">
+              <div class="card-title">Connectors <span class="badge blue">adgang</span></div>
+              <p>Connectors forbinder Claude til værktøjer, datakilder og services. De kan give Claude mulighed for at søge, læse eller handle på vegne af brugeren.</p>
+              <div class="mini-table">
+                <div class="mini-row"><strong>Bruges til</strong><span>M365, GitHub, interne systemer, databaser og MCP-services.</span></div>
+                <div class="mini-row"><strong>Governance</strong><span>Læs/skriv-rettigheder, audit, scope og tool access per samtale.</span></div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>

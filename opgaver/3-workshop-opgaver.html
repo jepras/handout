@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>03 · NordPension workshop-format</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛠️</text></svg>">
+  <style>
+    :root {
+      --background: #fbfafb;
+      --foreground: #22131b;
+      --card: #ffffff;
+      --card-foreground: #22131b;
+      --muted: #f5f1f3;
+      --muted-foreground: #6f6369;
+      --border: #d8d4d7;
+      --primary: #92004d;
+      --primary-foreground: #ffffff;
+      --ruby: #ce0060;
+      --bordeaux: #660036;
+      --warm-gray: #aca39a;
+      --mint: #9edfce;
+      --lilac: #c5aed5;
+      --beige: #e88f80;
+      --sky: #6e9baa;
+      --yellow: #efc47c;
+      --leaf: #85b499;
+      --summer-gray: #d8d4d7;
+      --winter-gray: #c7c9d4;
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 14% 0%, rgba(206, 0, 96, .12), transparent 32%),
+        linear-gradient(180deg, rgba(245, 241, 243, .95), rgba(251, 250, 251, 0) 520px),
+        var(--background);
+      color: var(--foreground);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      width: min(1180px, calc(100vw - 40px));
+      margin: 0 auto;
+      padding: 36px 0 64px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 960px;
+      margin-bottom: 16px;
+      color: var(--bordeaux);
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.02;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      color: var(--bordeaux);
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.1;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 17px;
+      line-height: 1.2;
+    }
+
+    p {
+      margin-bottom: 12px;
+      color: var(--muted-foreground);
+    }
+
+    code {
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--muted);
+      padding: 1px 5px;
+      color: var(--bordeaux);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .92em;
+    }
+
+    section { margin-top: 72px; }
+    section:first-of-type { margin-top: 0; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(330px, .95fr);
+      gap: 22px;
+      align-items: stretch;
+      padding: 10px 0 8px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      font-weight: 760;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      background: var(--primary);
+      box-shadow: 0 0 0 4px rgba(146, 0, 77, .12);
+    }
+
+    .lead {
+      max-width: 820px;
+      color: #4f4249;
+      font-size: 19px;
+      line-height: 1.36;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .96);
+      color: var(--card-foreground);
+      box-shadow: 0 1px 2px rgba(16, 12, 14, .04);
+    }
+
+    .card-header { padding: 18px 18px 0; }
+    .card-body { padding: 18px; }
+
+    .badge {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: var(--card);
+      color: var(--foreground);
+      font-size: 11px;
+      font-weight: 760;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .badge.primary { border-color: rgba(146, 0, 77, .25); background: rgba(146, 0, 77, .08); color: var(--primary); }
+    .badge.red { border-color: rgba(206, 0, 96, .28); background: rgba(206, 0, 96, .10); color: var(--primary); }
+    .badge.blue { border-color: rgba(110, 155, 170, .38); background: rgba(110, 155, 170, .14); color: #375f6b; }
+    .badge.green { border-color: rgba(133, 180, 153, .45); background: rgba(133, 180, 153, .18); color: #446e55; }
+    .badge.amber { border-color: rgba(239, 196, 124, .72); background: rgba(239, 196, 124, .24); color: #7b5518; }
+    .badge.lilac { border-color: rgba(197, 174, 213, .72); background: rgba(197, 174, 213, .28); color: #563d69; }
+
+    .grid { display: grid; gap: 16px; }
+    .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .stat {
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 12px;
+      background: #fff8fb;
+    }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--bordeaux);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      line-height: 1.3;
+    }
+
+    .journey {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr) 46px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .node {
+      min-height: 200px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: var(--card);
+    }
+
+    .node-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .node-icon {
+      display: flex;
+      width: 38px;
+      height: 38px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .node:nth-child(3) .node-icon { background: var(--sky); }
+    .node:nth-child(5) .node-icon { background: var(--leaf); }
+
+    .arrow {
+      position: relative;
+      height: 2px;
+      background: var(--border);
+    }
+
+    .arrow::after {
+      content: "";
+      position: absolute;
+      top: -5px;
+      right: -1px;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      border-left: 9px solid var(--border);
+    }
+
+    .tool-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .tool-list div {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 10px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 9px;
+      background: #fffdfd;
+      color: var(--muted-foreground);
+      font-size: 13px;
+    }
+
+    .tool-list strong { color: var(--bordeaux); }
+
+    .surface {
+      overflow: hidden;
+    }
+
+    .surface-top {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 13px;
+      align-items: start;
+      border-bottom: 1px solid var(--border);
+      padding: 16px;
+      background: #fff8fb;
+    }
+
+    .surface-mark {
+      display: flex;
+      width: 42px;
+      height: 42px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 900;
+      font-size: 19px;
+    }
+
+    .surface.cowork .surface-mark { background: var(--sky); }
+    .surface.code .surface-mark { background: var(--leaf); }
+
+    .surface-body { padding: 16px; }
+
+    .split {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .mini {
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 12px;
+      background: var(--card);
+    }
+
+    .mini strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--bordeaux);
+      font-size: 13px;
+    }
+
+    .mini span {
+      display: block;
+      color: var(--muted-foreground);
+      font-size: 13px;
+    }
+
+    .case-card {
+      min-height: 100%;
+      border-top: 5px solid var(--primary);
+    }
+
+    .case-card:nth-child(2) { border-top-color: var(--sky); }
+    .case-card:nth-child(3) { border-top-color: var(--leaf); }
+    .case-card:nth-child(4) { border-top-color: var(--yellow); }
+    .case-card:nth-child(5) { border-top-color: var(--lilac); }
+    .case-card:nth-child(6) { border-top-color: var(--beige); }
+
+    .case-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 12px 0;
+    }
+
+    .data-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 7px;
+    }
+
+    .data-list li {
+      display: grid;
+      grid-template-columns: 10px 1fr;
+      gap: 8px;
+      color: var(--muted-foreground);
+      font-size: 13px;
+    }
+
+    .data-list li::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      margin-top: 7px;
+      background: var(--ruby);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      font-size: 14px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--border);
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #fff8fb;
+      color: #4f4249;
+      font-size: 12px;
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    td code { font-size: 12.5px; }
+
+    .callout {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 13px;
+      border: 1px solid rgba(146, 0, 77, .22);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: rgba(146, 0, 77, .07);
+    }
+
+    .callout-icon {
+      display: flex;
+      width: 36px; height: 36px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .callout p { margin-bottom: 0; color: var(--bordeaux); }
+
+    .surface-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 960px) {
+      main { width: min(100vw - 26px, 1180px); }
+      .hero, .two, .three, .four, .split, .journey { grid-template-columns: 1fr; }
+      .arrow { width: 2px; height: 28px; margin: 0 auto; }
+      .arrow::after { right: -5px; top: auto; bottom: -1px; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid var(--border); border-bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Workshop-format · dag 1</div>
+        <h1>Fra samtale til arbejdsflow til system</h1>
+        <p class="lead">Deltagerne arbejder mod samme fake pensionsselskab, men bruger Claude-fladerne forskelligt. Chat finder retning og forklarer mønstre. Cowork samler materialer i en arbejdsmappe. Code bygger en gentagelig prototype. På tværs af alle tre former møder de samme spørgsmål: hvor henter jeg data fra, og hvilket ansvar har jeg for det jeg henter?</p>
+      </div>
+
+      <aside class="card">
+        <div class="card-header">
+          <span class="badge primary">NordPension sandbox</span>
+          <h2 style="margin-top: 12px;">Designprincip</h2>
+          <p>Samme problem undersøges tre gange — én gang pr. flade. Hver gang bliver det tydeligere hvor fladen er stærk, og hvor den må give stafetten videre.</p>
+        </div>
+        <div class="card-body">
+          <div class="stat-grid">
+            <div class="stat"><strong>Chat</strong><span>hurtig forståelse og første output</span></div>
+            <div class="stat"><strong>Cowork</strong><span>filer, review og samlet flow</span></div>
+            <div class="stat"><strong>Code</strong><span>app, scripts, tests og pipeline</span></div>
+            <div class="stat"><strong>Sandbox</strong><span>MCP-connector + direkte Supabase</span></div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="card">
+      <div class="card-body">
+        <div class="journey" aria-label="Workshoprejse fra Chat til Cowork til Code">
+          <article class="node">
+            <div class="node-top">
+              <div class="node-icon">C</div>
+              <span class="badge primary">Chat</span>
+            </div>
+            <h3>Hvad sker der?</h3>
+            <p>Brug MCP-connectoren til at forstå situationen, formulere hypoteser og lave første beslutningsoplæg. Claude analyserer på PII-filtreret data og holder samtalen compliant.</p>
+            <div class="tool-list">
+              <div><strong>Output</strong><span>notat, hypoteser, beslutningsoplæg</span></div>
+              <div><strong>Datakilde</strong><span>MCP-connector (safe tier)</span></div>
+              <div><strong>Grænse</strong><span>brugeren driver processen manuelt</span></div>
+            </div>
+          </article>
+          <div class="arrow" aria-hidden="true"></div>
+          <article class="node">
+            <div class="node-top">
+              <div class="node-icon">W</div>
+              <span class="badge blue">Cowork</span>
+            </div>
+            <h3>Hvordan arbejder vi med det?</h3>
+            <p>Brug en connected folder til at samle research, rapporter, review-noter og risici. Claude bruger MCP til at hente data og strukturerer output i filer.</p>
+            <div class="tool-list">
+              <div><strong>Output</strong><span>arbejdsmappe og reviewpakke</span></div>
+              <div><strong>Datakilde</strong><span>MCP-connector (safe tier)</span></div>
+              <div><strong>Grænse</strong><span>gentagelig drift er stadig tung</span></div>
+            </div>
+          </article>
+          <div class="arrow" aria-hidden="true"></div>
+          <article class="node">
+            <div class="node-top">
+              <div class="node-icon">#</div>
+              <span class="badge green">Code</span>
+            </div>
+            <h3>Hvordan gør vi det gentageligt?</h3>
+            <p>Byg en prototype direkte på Supabase: dashboard, rapportgenerator, kontrol, automation. Her får udvikleren fuld PII-adgang — og ansvar for at håndtere den korrekt.</p>
+            <div class="tool-list">
+              <div><strong>Output</strong><span>repo, app, script, test</span></div>
+              <div><strong>Datakilde</strong><span>direkte Supabase REST (expert tier)</span></div>
+              <div><strong>Grænse</strong><span>kræver miljø, nøgler, governance</span></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>De tre flader — hvad de er gode til</h2>
+      <div class="grid three">
+        <article class="card surface">
+          <div class="surface-top">
+            <div class="surface-mark">C</div>
+            <div>
+              <span class="badge primary">Claude Chat</span>
+              <h3 style="margin-top: 10px;">Find problemfeltet og formulér oplæg</h3>
+              <p>Hurtig analyse, dialog og første beslutningsstof. Lav rapportudkast på 5 minutter, find anomalier, opsummer en politik.</p>
+            </div>
+          </div>
+          <div class="surface-body">
+            <div class="surface-chips">
+              <span class="badge primary">MCP-connector</span>
+              <span class="badge">analyse</span>
+              <span class="badge">opsummering</span>
+              <span class="badge">beslutningsoplæg</span>
+            </div>
+            <div class="split">
+              <div class="mini"><strong>De oplever</strong><span>Claude bliver compliant data-assistent.</span></div>
+              <div class="mini"><strong>Kommer til kort</strong><span>Chat styrer ikke flerstegs-flows selv.</span></div>
+              <div class="mini"><strong>Leverance</strong><span>Notat, analyse eller use case.</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card surface cowork">
+          <div class="surface-top">
+            <div class="surface-mark">W</div>
+            <div>
+              <span class="badge blue">Claude Cowork</span>
+              <h3 style="margin-top: 10px;">Bygge en arbejdsmappe med review og forbehold</h3>
+              <p>God til større knowledge work, lokale filer og struktureret output. Saml data, rapporter og noter i én pakke.</p>
+            </div>
+          </div>
+          <div class="surface-body">
+            <div class="surface-chips">
+              <span class="badge primary">MCP-connector</span>
+              <span class="badge">files</span>
+              <span class="badge">research</span>
+              <span class="badge">reviewpakke</span>
+            </div>
+            <div class="split">
+              <div class="mini"><strong>De oplever</strong><span>Cowork samler filer, kontekst og output.</span></div>
+              <div class="mini"><strong>Kommer til kort</strong><span>Gentagelig drift kræver kode.</span></div>
+              <div class="mini"><strong>Leverance</strong><span>Reviewet analysemappe.</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card surface code">
+          <div class="surface-top">
+            <div class="surface-mark">#</div>
+            <div>
+              <span class="badge green">Claude Code</span>
+              <h3 style="margin-top: 10px;">Byg en gentagelig prototype</h3>
+              <p>Repo, terminal, tests, fuld dataadgang og gentagelige flows. Her bygger man <i>noget</i> — et dashboard, en pipeline, en automation.</p>
+            </div>
+          </div>
+          <div class="surface-body">
+            <div class="surface-chips">
+              <span class="badge blue">Direkte Supabase</span>
+              <span class="badge">dashboard</span>
+              <span class="badge">SQL/REST</span>
+              <span class="badge">cross-schema joins</span>
+            </div>
+            <div class="split">
+              <div class="mini"><strong>De oplever</strong><span>Code gør processen reproducerbar.</span></div>
+              <div class="mini"><strong>Kommer til kort</strong><span>Kræver miljø, nøgler, governance.</span></div>
+              <div class="mini"><strong>Leverance</strong><span>Kørende prototype eller script.</span></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Case-katalog — pensionsfaglige problemfelter</h2>
+      <p style="max-width:820px;">Seks brede case-områder deltagerne kan vælge fra. Hver case kan undersøges i alle tre flader. Tabellen længere nede viser hvilke af de fem systemer (medlem, crm, erp, dwh, kms) der er mest relevante for hver case.</p>
+
+      <div class="card" style="margin-bottom: 16px;">
+        <div class="card-body">
+          <div class="grid four">
+            <div class="mini">
+              <strong>Medlemsværdi</strong>
+              <span>Rådgivning, kommunikation, livssituationer og bedre forståelse af hvad der får medlemmer til at handle.</span>
+            </div>
+            <div class="mini">
+              <strong>Digital service</strong>
+              <span>Kanalvalg, dialogcenter, selvbetjening, skriftlige henvendelser og personlig rådgivning på rette tidspunkt.</span>
+            </div>
+            <div class="mini">
+              <strong>Ansvarlige investeringer</strong>
+              <span>Risikojusteret afkast, klima, sociale investeringer, aktivt ejerskab og forklarbar rapportering.</span>
+            </div>
+            <div class="mini">
+              <strong>Transformation</strong>
+              <span>Fælles platforme, leverandørstyring, datamigrering, kvalitet, stabil drift og lavere kompleksitet.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid three">
+        <article class="card case-card">
+          <div class="card-body">
+            <h3>Medlem tæt på pension</h3>
+            <p>Et medlem nærmer sig pension og har brug for overblik over scenarier, rådgivning, skat, udbetaling og kommunikation.</p>
+            <div class="case-meta">
+              <span class="badge primary">Medlemmer</span>
+              <span class="badge green">Aktuar</span>
+              <span class="badge blue">Data</span>
+            </div>
+            <ul class="data-list">
+              <li>pensionsprognoser, løn, alder, scenarier</li>
+              <li>rådgivningshistorik og kanalvalg</li>
+              <li>forklarbarhed og human review</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card case-card">
+          <div class="card-body">
+            <h3>Bestyrelsespakken</h3>
+            <p>Ledelsen skal have et samlet månedsbillede på medlemmer, økonomi, investering, risiko og drift.</p>
+            <div class="case-meta">
+              <span class="badge red">Finans</span>
+              <span class="badge blue">Data</span>
+              <span class="badge lilac">Governance</span>
+            </div>
+            <ul class="data-list">
+              <li>KPI'er, afkast, omkostninger og risici</li>
+              <li>forklaringer på udvikling måned for måned</li>
+              <li>sporbarhed fra tal til konklusion</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card case-card">
+          <div class="card-body">
+            <h3>Ansvarlige investeringer</h3>
+            <p>Investeringsområdet skal forklare afkast, benchmark, ESG, aktivt ejerskab og målkonflikter i et klart beslutningsoplæg.</p>
+            <div class="case-meta">
+              <span class="badge green">Investering</span>
+              <span class="badge amber">ESG</span>
+              <span class="badge blue">Data</span>
+            </div>
+            <ul class="data-list">
+              <li>fund returns, benchmark og ESG-score</li>
+              <li>sociale og klimarelaterede investeringer</li>
+              <li>aktivt ejerskab og policy-afvigelser</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card case-card">
+          <div class="card-body">
+            <h3>Ny digital kanal</h3>
+            <p>Dialogcenter, skriftlige henvendelser og selvbetjening ændrer medlemmenes adfærd og kapacitetsbehov.</p>
+            <div class="case-meta">
+              <span class="badge primary">Medlemmer</span>
+              <span class="badge blue">IKT</span>
+              <span class="badge green">Drift</span>
+            </div>
+            <ul class="data-list">
+              <li>kanalvolumen, svartider og tilfredshed</li>
+              <li>hvilke henvendelser kan automatiseres</li>
+              <li>hvornår skal rådgiver overtage</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card case-card">
+          <div class="card-body">
+            <h3>Produktændring og valgfri opsparing</h3>
+            <p>Nye produktvalg giver medlemmer flere muligheder, men kræver forklaring, beregning, kommunikation og kontrol.</p>
+            <div class="case-meta">
+              <span class="badge green">Aktuar</span>
+              <span class="badge red">Finans</span>
+              <span class="badge primary">Medlemmer</span>
+            </div>
+            <ul class="data-list">
+              <li>valg, segmenter og økonomiske konsekvenser</li>
+              <li>beregningsforudsætninger og følsomhed</li>
+              <li>kommunikation uden rådgivningsfejl</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card case-card">
+          <div class="card-body">
+            <h3>Platformstransformation</h3>
+            <p>En ny samlet digital løsning kræver overblik over afhængigheder, datamigrering, test, driftsrisiko og leverandørstyring.</p>
+            <div class="case-meta">
+              <span class="badge blue">IKT</span>
+              <span class="badge lilac">Governance</span>
+              <span class="badge red">Finans</span>
+            </div>
+            <ul class="data-list">
+              <li>systemlandskab og integrationskort</li>
+              <li>migreringsfejl og datakvalitet</li>
+              <li>kontroller, audit trail og leverandør-KPI'er</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Hvilke systemer er relevante for hver case?</h2>
+      <p style="max-width:820px;">Næsten alle cases trækker på flere systemer. Det er hele pointen — i et rigtigt pensionsselskab ligger svaret aldrig i ét system alene. Schemaerne fra <code>2-data-deepdive</code> er angivet med deres præfiks.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Case</th>
+            <th>Primære systemer</th>
+            <th>Centrale tabeller</th>
+            <th>Sekundære systemer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Medlem tæt på pension</td>
+            <td><code>medlem</code>, <code>crm</code></td>
+            <td><code>medlem.members</code>, <code>medlem.pension_projections</code>, <code>crm.service_cases</code>, <code>crm.interactions</code></td>
+            <td><code>kms</code> (rådgivningsproces, faqs)</td>
+          </tr>
+          <tr>
+            <td>Bestyrelsespakken</td>
+            <td><code>dwh</code>, <code>erp</code></td>
+            <td><code>dwh.report_metrics</code>, <code>dwh.board_reports</code>, <code>dwh.company_history</code>, <code>erp.general_ledger</code></td>
+            <td><code>medlem</code> (segmentering), <code>kms</code> (initiativer)</td>
+          </tr>
+          <tr>
+            <td>Ansvarlige investeringer</td>
+            <td><code>dwh</code>, <code>kms</code></td>
+            <td><code>dwh.fund_returns</code>, <code>dwh.investment_holdings</code>, <code>kms.policies</code> (ESG-politik), <code>kms.initiatives</code> (klimamål)</td>
+            <td><code>erp.departments</code> (ejerskab)</td>
+          </tr>
+          <tr>
+            <td>Ny digital kanal</td>
+            <td><code>crm</code>, <code>medlem</code></td>
+            <td><code>crm.interactions</code>, <code>crm.emails</code>, <code>crm.service_cases</code>, <code>medlem.members</code> (demografi)</td>
+            <td><code>kms.systems</code>, <code>kms.processes</code></td>
+          </tr>
+          <tr>
+            <td>Produktændring</td>
+            <td><code>medlem</code>, <code>kms</code></td>
+            <td><code>medlem.members</code>, <code>medlem.pension_projections</code>, <code>kms.policies</code>, <code>kms.faqs</code></td>
+            <td><code>crm.emails</code> (medlemskommunikation)</td>
+          </tr>
+          <tr>
+            <td>Platformstransformation</td>
+            <td><code>kms</code>, <code>erp</code>, <code>dwh</code></td>
+            <td><code>kms.systems</code>, <code>kms.initiatives</code>, <code>erp.suppliers</code>, <code>dwh.data_quality_issues</code></td>
+            <td><code>kms.processes</code>, <code>kms.policies</code> (governance)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Hvornår bruger man hvilken adgangsvej?</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Behov</th>
+            <th>MCP-connector (Chat/Cowork)</th>
+            <th>Direkte Supabase REST (Code)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Forstå mønstre, finde anomalier, opsummere tekster</td>
+            <td>✅ Primært valg — PII er ude af billedet</td>
+            <td>Kun hvis I også skal visualisere</td>
+          </tr>
+          <tr>
+            <td>Læse politik, proces, FAQ, ordbog</td>
+            <td>✅ Pass-through — fuld markdown</td>
+            <td>Også fint</td>
+          </tr>
+          <tr>
+            <td>Vise medlemmet navn, adresse, kontaktinfo i en app</td>
+            <td>❌ Kun pseudonym ID + demografi</td>
+            <td>✅ Nødvendigt — udvikler har ansvar for PII</td>
+          </tr>
+          <tr>
+            <td>Lave dashboards med live filter, sortering, paginering</td>
+            <td>Begrænset (max 500 rækker pr. kald)</td>
+            <td>✅ Bedre — Supabase-klienten har lokale features</td>
+          </tr>
+          <tr>
+            <td>Arbejde med fritekst-narrativer (sager, mails, helbredsnoter)</td>
+            <td>❌ Fritekst er filtreret</td>
+            <td>✅ Men forudsætter DPIA-tankegang</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="callout">
+      <div class="callout-icon">!</div>
+      <div>
+        <h3>Facilitatorgreb</h3>
+        <p>Lad hver gruppe vælge samme overordnede problemfelt, men give det deres faglige vinkel. <b>Data</b> bygger talgrundlaget på tværs af systemer. <b>Finans</b> følger konsekvens og rapportering i dwh + erp. <b>Aktuar</b> vurderer antagelser i medlem.pension_projections. <b>Investering</b> vurderer porteføljeeffekt i dwh.fund_returns. <b>IKT</b> vurderer integration og drift via kms.systems + erp.suppliers. Når grupperne mødes til afrunding, har de uvilkårligt brugt samme datagrundlag fra forskellige vinkler — og det er der den interessante samtale opstår.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Compliance-bekymringer — tre stemmer rundt om bordet</title>
+  <style>
+    :root {
+      --background: #fbfafb;
+      --foreground: #22131b;
+      --card: #ffffff;
+      --muted: #f5f1f3;
+      --muted-foreground: #6f6369;
+      --border: #d8d4d7;
+      --primary: #92004d;
+      --bordeaux: #660036;
+      --ruby: #ce0060;
+      --mint: #9edfce;
+      --lilac: #c5aed5;
+      --sky: #6e9baa;
+      --yellow: #efc47c;
+      --leaf: #85b499;
+      --beige: #e88f80;
+      --red: #c0392b;
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 14% 0%, rgba(206, 0, 96, .10), transparent 36%),
+        linear-gradient(180deg, rgba(245, 241, 243, .92), rgba(251, 250, 251, 0) 480px),
+        var(--background);
+      color: var(--foreground);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 36px 22px 64px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 920px;
+      margin-bottom: 16px;
+      color: var(--bordeaux);
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.04;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      color: var(--bordeaux);
+      font-size: clamp(22px, 2.6vw, 30px);
+    }
+
+    h3 { margin-bottom: 8px; font-size: 17px; }
+
+    p { margin-bottom: 12px; color: var(--muted-foreground); }
+
+    section { margin-top: 38px; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      font-weight: 760;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 10px; height: 10px;
+      border-radius: 3px;
+      background: var(--primary);
+      box-shadow: 0 0 0 4px rgba(146, 0, 77, .12);
+    }
+
+    .lead {
+      max-width: 820px;
+      color: #4f4249;
+      font-size: 18px;
+      line-height: 1.42;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: var(--card);
+      color: var(--foreground);
+      font-size: 11px;
+      font-weight: 760;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .badge.primary { border-color: rgba(146, 0, 77, .25); background: rgba(146, 0, 77, .08); color: var(--primary); }
+    .badge.blue   { border-color: rgba(110, 155, 170, .38); background: rgba(110, 155, 170, .14); color: #375f6b; }
+    .badge.green  { border-color: rgba(133, 180, 153, .5);  background: rgba(133, 180, 153, .18); color: #446e55; }
+    .badge.amber  { border-color: rgba(239, 196, 124, .72); background: rgba(239, 196, 124, .24); color: #7b5518; }
+    .badge.lilac  { border-color: rgba(197, 174, 213, .72); background: rgba(197, 174, 213, .28); color: #563d69; }
+
+    /* ===== Bridge from trifecta ===== */
+    .bridge {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 60px minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      margin-top: 24px;
+    }
+
+    .bridge-box {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: var(--card);
+    }
+
+    .bridge-box.sec {
+      border-top: 5px solid var(--sky);
+    }
+    .bridge-box.comp {
+      border-top: 5px solid var(--primary);
+    }
+
+    .bridge-box .kicker {
+      display: block;
+      font-size: 11px;
+      font-weight: 760;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+      margin-bottom: 6px;
+    }
+
+    .bridge-box h3 {
+      color: var(--bordeaux);
+      margin-bottom: 6px;
+    }
+
+    .bridge-box p {
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+
+    .bridge-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-foreground);
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    /* ===== Concentric blast-radius diagram ===== */
+    .blast {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+      gap: 28px;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      background: var(--card);
+    }
+
+    .blast-svg-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .blast-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .blast-legend .row {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .blast-legend .swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+
+    .blast-legend h4 {
+      margin: 0 0 2px;
+      font-size: 14px;
+      color: var(--bordeaux);
+    }
+
+    .blast-legend p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    /* ===== Persona cards ===== */
+    .personas {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .persona {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border: 1px solid var(--border);
+      border-top: 5px solid var(--primary);
+      border-radius: var(--radius);
+      background: var(--card);
+      padding: 20px;
+      box-shadow: 0 1px 2px rgba(16, 12, 14, .04);
+    }
+
+    .persona.confidentiality { border-top-color: var(--lilac); }
+    .persona.aiact { border-top-color: var(--sky); }
+
+    .persona-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .persona-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      background: rgba(146, 0, 77, .10);
+      border: 1px solid rgba(146, 0, 77, .20);
+    }
+
+    .persona.confidentiality .persona-avatar {
+      background: rgba(197, 174, 213, .25);
+      border-color: rgba(197, 174, 213, .55);
+    }
+    .persona.aiact .persona-avatar {
+      background: rgba(110, 155, 170, .18);
+      border-color: rgba(110, 155, 170, .45);
+    }
+
+    .persona-role {
+      font-size: 11px;
+      font-weight: 760;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+      margin-bottom: 2px;
+    }
+
+    .persona-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--bordeaux);
+    }
+
+    .quote {
+      position: relative;
+      padding: 16px 16px 16px 28px;
+      border-radius: 8px;
+      background: var(--muted);
+      font-size: 15px;
+      color: var(--foreground);
+      font-style: italic;
+      line-height: 1.45;
+    }
+
+    .quote::before {
+      content: "“";
+      position: absolute;
+      left: 6px;
+      top: -2px;
+      font-size: 38px;
+      color: var(--primary);
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+
+    .persona.confidentiality .quote::before { color: #563d69; }
+    .persona.aiact .quote::before { color: #375f6b; }
+
+    .persona-meta {
+      display: grid;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .persona-meta .meta-row {
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 8px;
+      color: var(--muted-foreground);
+    }
+
+    .persona-meta .meta-row strong {
+      color: var(--foreground);
+      font-weight: 700;
+    }
+
+    .persona-meta .axis-link {
+      margin-top: 4px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+      color: var(--bordeaux);
+      font-weight: 700;
+      font-size: 13.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .persona-meta .axis-link::before {
+      content: "→";
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    /* ===== Outro hand-off to tree ===== */
+    .handoff {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 16px;
+      align-items: center;
+      border-left: 4px solid var(--primary);
+      background: rgba(146, 0, 77, .04);
+      border-radius: 6px;
+      padding: 18px 20px;
+      margin-top: 30px;
+    }
+
+    .handoff-num {
+      display: flex;
+      width: 48px;
+      height: 48px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .handoff p {
+      margin: 0;
+      color: var(--bordeaux);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .handoff p strong { color: var(--bordeaux); }
+
+    @media (max-width: 960px) {
+      .bridge, .blast, .personas { grid-template-columns: 1fr; }
+      .bridge-arrow { transform: rotate(90deg); margin: -4px 0; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section>
+      <div class="eyebrow">Step 3 · Compliance-perspektivet</div>
+      <h1>Sikkerhed er sat. Nu er det legal der har ordet.</h1>
+      <p class="lead">Trifecta-trekanten handler om hvad der teknisk kan gå galt indeni. Compliance handler om hvad omverdenen kræver af jer. Det er tre uafhængige bekymringer, hver med sin egen myndighed, sin egen lovgivning og sin egen stemme i mødelokalet.</p>
+    </section>
+
+    <section>
+      <div class="bridge">
+        <div class="bridge-box sec">
+          <span class="kicker">Side 2 — sikkerhed</span>
+          <h3>Den farlige treenighed</h3>
+          <p>Tre tekniske ingredienser der <em>kombineret</em> kan kapre en agent og lække data. Risikoen opstår når benene mødes.</p>
+        </div>
+        <div class="bridge-arrow">→</div>
+        <div class="bridge-box comp">
+          <span class="kicker">Denne side — compliance</span>
+          <h3>De tre bekymringer</h3>
+          <p>Tre <em>uafhængige</em> krav fra omverdenen. Hver skal afdækkes for sig — det hjælper ikke at score højt på én og glemme de andre.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Blast radius — hvem rammes hvis vi fejler?</h2>
+      <p>De tre bekymringer er ikke lige store. Et brud på fortrolighed rammer jer selv. Et GDPR-brud rammer jer + Datatilsynet + de registrerede. Et AI Act-brud rammer jer + samfundet + den europæiske tilsynsstruktur. Tænk det som koncentriske ringe af konsekvens.</p>
+
+      <div class="blast">
+        <div class="blast-svg-wrap">
+          <svg viewBox="0 0 360 360" width="100%" style="max-width: 360px;" role="img" aria-label="Koncentriske ringe der viser blast radius for de tre compliance-bekymringer">
+            <!-- Outer: AI Act -->
+            <circle cx="180" cy="180" r="170" fill="rgba(110, 155, 170, .12)" stroke="rgba(110, 155, 170, .55)" stroke-width="1.5"/>
+            <!-- Middle: GDPR -->
+            <circle cx="180" cy="180" r="120" fill="rgba(146, 0, 77, .10)" stroke="rgba(146, 0, 77, .50)" stroke-width="1.5"/>
+            <!-- Inner: Fortrolighed -->
+            <circle cx="180" cy="180" r="68" fill="rgba(197, 174, 213, .35)" stroke="rgba(86, 61, 105, .65)" stroke-width="1.5"/>
+
+            <!-- Labels -->
+            <text x="180" y="184" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="800" fill="#563d69">Fortrolighed</text>
+            <text x="180" y="200" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#563d69">jer + ejere</text>
+
+            <text x="180" y="80" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="800" fill="#660036">GDPR</text>
+            <text x="180" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#660036">+ Datatilsynet</text>
+
+            <text x="180" y="28" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="800" fill="#375f6b">AI Act</text>
+            <text x="180" y="44" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#375f6b">+ samfundet</text>
+          </svg>
+        </div>
+
+        <div class="blast-legend">
+          <div class="row">
+            <div class="swatch" style="background: rgba(197, 174, 213, .55);"></div>
+            <div>
+              <h4>Inderst — Fortrolighed</h4>
+              <p>Hvis vi lækker bestyrelsesmateriale eller strategi, rammer det <strong>os selv og vores ejere</strong>. Ingen tilsynsmyndighed, men reelt forretningstab og tillidskrise.</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="swatch" style="background: rgba(146, 0, 77, .40);"></div>
+            <div>
+              <h4>Midt — GDPR</h4>
+              <p>Et databrud rammer os + <strong>Datatilsynet</strong> + de registrerede medlemmer. Bøde, notifikationspligt, individuelle krav.</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="swatch" style="background: rgba(110, 155, 170, .45);"></div>
+            <div>
+              <h4>Yderst — AI Act</h4>
+              <p>Et brud rammer os + <strong>EU's AI-tilsyn</strong> + den offentlige forventning til ansvarlig AI. Større omdømmekonsekvens end økonomisk straf.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Tre stemmer rundt om bordet</h2>
+      <p>Hver bekymring har en menneskelig afsender — en rolle der ringer hvis vi får det galt i halsen. Det er deres bekymringer der bliver til de tre akser i beslutningstræet.</p>
+
+      <div class="personas">
+        <article class="persona confidentiality">
+          <div class="persona-head">
+            <div class="persona-avatar">⚖️</div>
+            <div>
+              <div class="persona-role">Legal &amp; compliance</div>
+              <div class="persona-name">Compliance officer</div>
+            </div>
+          </div>
+          <div class="quote">Vores bestyrelsesmateriale, investeringsstrategi og leverandørforhandlinger må ikke ende uden for huset. Det er hverken et GDPR-spørgsmål eller et AI-spørgsmål — det er et forretningsspørgsmål jeg står til ansvar for over for ledelsen.</div>
+          <div class="persona-meta">
+            <div class="meta-row"><span>Anker</span><strong>Intern klassifikation + FIL</strong></div>
+            <div class="meta-row"><span>Myndighed</span><strong>Finanstilsynet + ejere</strong></div>
+            <div class="meta-row"><span>Værktøjer</span><strong>Klassifikation, need-to-know, geografi, ZDR</strong></div>
+            <div class="axis-link">Akse 2 i beslutningstræet: Fortrolighed</div>
+          </div>
+        </article>
+
+        <article class="persona">
+          <div class="persona-head">
+            <div class="persona-avatar">👤</div>
+            <div>
+              <div class="persona-role">Datatilsynsansvarlig</div>
+              <div class="persona-name">DPO</div>
+            </div>
+          </div>
+          <div class="quote">Vi må ikke dele GDPR-følsomme oplysninger med leverandører uden lovligt grundlag og dokumenteret behandling. Helbredsdata på vores invalidesager er det første jeg får spørgsmål om.</div>
+          <div class="persona-meta">
+            <div class="meta-row"><span>Anker</span><strong>GDPR art. 6 + art. 9</strong></div>
+            <div class="meta-row"><span>Myndighed</span><strong>Datatilsynet</strong></div>
+            <div class="meta-row"><span>Værktøjer</span><strong>DPIA, DPA, dataminimering, pseudonymisering</strong></div>
+            <div class="axis-link">Akse 1 i beslutningstræet: Persondata</div>
+          </div>
+        </article>
+
+        <article class="persona aiact">
+          <div class="persona-head">
+            <div class="persona-avatar">📐</div>
+            <div>
+              <div class="persona-role">AI risk &amp; governance</div>
+              <div class="persona-name">AI Risk Officer</div>
+            </div>
+          </div>
+          <div class="quote">Hvis Claude indgår i en afgørelse om et menneske — udbetaling, berettigelse, optagelse — skal vi kunne klassificere systemet, dokumentere risiko og sikre menneskelig kontrol. Ellers er det mig der står med tilsynet i den anden ende.</div>
+          <div class="persona-meta">
+            <div class="meta-row"><span>Anker</span><strong>AI Act art. 50 + annex III</strong></div>
+            <div class="meta-row"><span>Myndighed</span><strong>Kommende dansk AI-tilsyn</strong></div>
+            <div class="meta-row"><span>Værktøjer</span><strong>Risikoklassificering, DPIA, human oversight</strong></div>
+            <div class="axis-link">Akse 3 i beslutningstræet: Handlingsradius</div>
+          </div>
+        </article>
+      </div>
+
+      <div class="handoff">
+        <div class="handoff-num">↓</div>
+        <p>De tre stemmer er ikke modstandere — de er <strong>tre forskellige skyderegler på samme proces</strong>. Beslutningstræet nedenfor stiller præcis de spørgsmål der gør hver af dem rolige. Svar grønt på alle tre, og opgaven kan køres.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

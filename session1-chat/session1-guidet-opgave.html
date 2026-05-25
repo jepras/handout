@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>5a · Chat-sessionen · Direktionsbriefen</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💬</text></svg>">
+  <style>
+    :root {
+      --background: #fbfafb;
+      --foreground: #22131b;
+      --card: #ffffff;
+      --muted: #f5f1f3;
+      --muted-foreground: #6f6369;
+      --border: #d8d4d7;
+      --primary: #92004d;
+      --primary-foreground: #ffffff;
+      --ruby: #ce0060;
+      --bordeaux: #660036;
+      --mint: #9edfce;
+      --lilac: #c5aed5;
+      --beige: #e88f80;
+      --sky: #6e9baa;
+      --yellow: #efc47c;
+      --leaf: #85b499;
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 14% 0%, rgba(206, 0, 96, .08), transparent 32%),
+        linear-gradient(180deg, rgba(245, 241, 243, .85), rgba(251, 250, 251, 0) 520px),
+        var(--background);
+      color: var(--foreground);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 44px 22px 96px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      margin-bottom: 18px;
+      color: var(--bordeaux);
+      font-size: clamp(34px, 4.4vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -.01em;
+    }
+    h2 {
+      margin: 0 0 6px;
+      color: var(--bordeaux);
+      font-size: 22px;
+      line-height: 1.2;
+    }
+    h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+    p { margin-bottom: 14px; color: #3f3a3d; }
+    p.lead { font-size: 19px; color: #2f1b25; line-height: 1.45; margin-bottom: 12px; }
+    p.muted { color: var(--muted-foreground); font-size: 14.5px; }
+
+    code {
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--muted);
+      padding: 1px 6px;
+      color: var(--bordeaux);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .9em;
+    }
+
+    a { color: var(--primary); text-decoration: none; border-bottom: 1px solid rgba(146,0,77,.3); }
+    a:hover { border-bottom-color: var(--primary); }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      font-weight: 760;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 10px; height: 10px;
+      border-radius: 3px;
+      background: var(--primary);
+      box-shadow: 0 0 0 4px rgba(146, 0, 77, .12);
+    }
+
+    .toc {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      padding: 14px 18px;
+      margin: 28px 0 40px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .03);
+    }
+    .toc h3 { margin-bottom: 8px; color: var(--bordeaux); font-size: 13px; letter-spacing: .04em; text-transform: uppercase; }
+    .toc ol { margin: 0; padding-left: 22px; color: var(--muted-foreground); font-size: 14.5px; }
+    .toc li { margin: 4px 0; }
+    .toc li b { color: var(--foreground); }
+
+    /* A phase = one big numbered section */
+    .phase {
+      position: relative;
+      margin: 56px 0 0;
+      padding: 28px 0 0;
+      border-top: 1px solid var(--border);
+    }
+    .phase:first-of-type { border-top: 0; padding-top: 12px; margin-top: 28px; }
+
+    .phase-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; height: 36px;
+      margin-bottom: 14px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .phase > p { font-size: 16px; }
+
+    /* A step inside a phase */
+    .step {
+      margin: 22px 0;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: 0 1px 2px rgba(16, 12, 14, .03);
+    }
+    .step-label {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: rgba(146, 0, 77, .08);
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 760;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .step p { margin: 6px 0; }
+
+    /* Prompt-box: user-typed prompt */
+    .prompt {
+      margin: 10px 0;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: #1f1b1f;
+      color: #f5f1f3;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13.5px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .prompt::before {
+      content: "Prompt";
+      display: inline-block;
+      margin: -2px 8px 4px -2px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: rgba(206, 0, 96, .25);
+      color: #f5d6e3;
+      font-size: 10.5px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-weight: 700;
+      vertical-align: top;
+    }
+
+    /* Action callout (do this in the UI) */
+    .action {
+      margin: 10px 0;
+      padding: 11px 14px;
+      border: 1px solid rgba(110, 155, 170, .35);
+      border-radius: 7px;
+      background: rgba(110, 155, 170, .1);
+      color: #2c4d57;
+      font-size: 14.5px;
+    }
+    .action::before {
+      content: "Gør";
+      display: inline-block;
+      margin-right: 9px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: rgba(110, 155, 170, .25);
+      color: #2c4d57;
+      font-size: 10.5px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    /* Expectation block */
+    .expect {
+      margin: 10px 0;
+      padding: 11px 14px;
+      border: 1px solid rgba(133, 180, 153, .4);
+      border-radius: 7px;
+      background: rgba(133, 180, 153, .12);
+      color: #305e44;
+      font-size: 14.5px;
+    }
+    .expect::before {
+      content: "Forvent";
+      display: inline-block;
+      margin-right: 9px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: rgba(133, 180, 153, .26);
+      color: #305e44;
+      font-size: 10.5px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    /* Insight / why-this-matters callout */
+    .insight {
+      margin: 14px 0 0;
+      padding: 12px 14px;
+      border-left: 4px solid var(--yellow);
+      background: rgba(239, 196, 124, .12);
+      border-radius: 0 7px 7px 0;
+      color: #6b4a08;
+      font-size: 14.5px;
+    }
+    .insight strong { color: #4d3406; }
+
+    /* Hint / aside */
+    .hint {
+      margin: 12px 0;
+      padding: 10px 13px;
+      border: 1px dashed var(--border);
+      border-radius: 7px;
+      background: #fefcfa;
+      color: var(--muted-foreground);
+      font-size: 13.5px;
+    }
+    .hint::before {
+      content: "💡 Hint";
+      font-weight: 700;
+      color: var(--bordeaux);
+      margin-right: 8px;
+    }
+
+    /* Final brief box */
+    .mission {
+      margin: 28px 0 0;
+      padding: 22px 24px;
+      border: 1px solid rgba(146, 0, 77, .25);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(146, 0, 77, .07), rgba(146, 0, 77, .02));
+    }
+    .mission .label {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      font-weight: 760;
+    }
+    .mission h3 { font-size: 20px; color: var(--bordeaux); margin-bottom: 6px; }
+    .mission p { color: #3f3a3d; font-size: 15.5px; }
+
+    /* Reflection panel at end */
+    .reflect {
+      margin: 40px 0 0;
+      padding: 22px 24px;
+      border: 1px dashed rgba(146, 0, 77, .4);
+      border-radius: var(--radius);
+      background: rgba(146, 0, 77, .04);
+    }
+    .reflect h2 { color: var(--bordeaux); font-size: 19px; }
+    .reflect ul { margin: 8px 0 0; padding-left: 22px; color: #3f3a3d; }
+    .reflect li { margin: 6px 0; font-size: 15px; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">💬 Dag 1 · Session 1 · Claude Chat</div>
+    <h1>Få Claude til at kende NordPension — og brief direktionen</h1>
+    <p class="lead">I denne session bygger du op fra at Claude ikke ved hvad NordPension er, til at du kan bede den om at lave et beslutningsoplæg til direktionen ud fra det syntetiske datawarehouse. Du oplever undervejs <strong>Projects</strong>, <strong>Artifacts</strong>, <strong>Skills</strong> og <strong>MCP Connectors</strong>.</p>
+    <p class="muted"><strong>Fase 1-4 gennemgår vi sammen på storskærm</strong> — du følger med på din egen Claude undervejs. <strong>Fra fase 5 arbejder du selv</strong>.</p>
+
+    <div class="toc">
+      <h3>Sessionens fem faser</h3>
+      <ol>
+        <li><b>Lær Claude at kende NordPension</b> — Projects og kontekstfiler</li>
+        <li><b>Lav noget visuelt</b> — Artifacts med og uden Skills</li>
+        <li><b>Tilslut MCP-connectoren</b></li>
+        <li><b>Smag på MCP'en</b> — fire sonderende kald</li>
+        <li><b>Direktionsbriefen</b> — den åbne opgave (solo)</li>
+      </ol>
+    </div>
+
+    <!-- ───────────────────────── PHASE 1 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">1</div>
+      <h2>Lær Claude at kende NordPension</h2>
+      <p>Først ser du hvad Claude IKKE ved. Bagefter giver du den fundamentet i form af et Project med en kontekstfil. Pointen er at mærke forskellen.</p>
+
+      <div class="step">
+        <span class="step-label">1.1 — Den kolde start</span>
+        <p>Åbn en helt ny samtale i Claude (uden Project).</p>
+        <div class="prompt">Hvad hedder direktøren for det danske pensionsselskab NordPension?</div>
+        <div class="expect">Claude kan ikke svare. NordPension er fiktiv. Forvent enten "det ved jeg ikke" eller en høflig undskyldning — ikke et opdigtet navn.</div>
+        <div class="insight"><strong>Hvorfor det er pointen:</strong> Claude er en generel sprogmodel. Uden kontekst eksisterer NordPension ikke for den. Det er præcis det Projects løser.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">1.2 — Opret et Project</span>
+        <div class="action">I Claude: klik <b>Projects</b> i sidebaren → <b>New project</b>. Kald det <code>NordPension</code>.</div>
+        <div class="action">Upload filen <code>projekt-kontekst</code> til projektets Knowledge. Den ligger i workshop-mappen og indeholder NordPensions strategi, ledelse og fokusområder.</div>
+        <p class="muted">Knowledge-filer i et Project er tilgængelige for hver samtale du starter dér — uden at du skal uploade dem igen.</p>
+      </div>
+
+      <div class="step">
+        <span class="step-label">1.3 — Spørg igen</span>
+        <p>Start en ny samtale <strong>inde i NordPension-projektet</strong> og prøv igen:</p>
+        <div class="prompt">Hvad hedder direktøren for NordPension?</div>
+        <div class="expect">Nu finder Claude svaret i kontekstfilen og citerer navnet — sammen med en kort note om hvor det kom fra.</div>
+        <div class="insight"><strong>Læringen:</strong> Projects er det fælles fundament for en arbejdsdag. Tilføj en fil én gang, så er den der i hver samtale fremover.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── PHASE 2 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">2</div>
+      <h2>Lav noget visuelt — Artifacts og Skills</h2>
+      <p>Næste lag: få Claude til at <em>producere</em> noget visuelt og oplev hvordan Skills ændrer kvaliteten uden at du selv skal være designer.</p>
+
+      <div class="step">
+        <span class="step-label">2.1 — En visualisering uden hjælp</span>
+        <p>Bliv i NordPension-projektet og bed Claude lave en visualisering af strategien.</p>
+        <div class="prompt">Lav en visualisering der opsummerer NordPensions strategi som en infografik.</div>
+        <div class="expect">Claude åbner en <strong>Artifact</strong> (typisk HTML eller SVG) til højre. Den fungerer, men virker generisk — standard farver, basal typografi, "AI-look".</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">2.2 — Installer en Skill</span>
+        <div class="action">I Claude Chat: <b>Customize → Skills</b>, klik på <b>+</b> → <b>Browse skills</b> → vælg <code>theme-factory</code>. Vend tilbage til din samtale.</div>
+        <p class="muted">Skills er små "udvidelser" der lærer Claude domænespecifikke konventioner — fx hvordan brand-typografi, farver og layout-mønstre skal se ud.</p>
+      </div>
+
+      <div class="step">
+        <span class="step-label">2.3 — Lav visualiseringen igen</span>
+        <div class="prompt">Lav den samme visualisering igen, men brug theme-factory denne gang.</div>
+        <div class="expect">Den nye artifact har konsistent typografi, brand-farver og et meget mere modent layout. Forskellen er tydelig.</div>
+        <div class="insight"><strong>Læringen:</strong> Skills er en måde at give Claude "house style" på, så hver bruger ikke skal lære at prompte design ind fra bunden.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── PHASE 3 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">3</div>
+      <h2>Tilslut MCP-connectoren</h2>
+      <p>Indtil nu har Claude kun haft en kontekstfil. Nu giver vi den adgang til det syntetiske datawarehouse via NordPensions MCP-connector.</p>
+
+      <div class="step">
+        <span class="step-label">3.1 — Tilføj connectoren</span>
+        <div class="action">I Claude: <b>Settings → Connectors → Add custom connector</b>.</div>
+        <div class="action">Indsæt URL'en: <code>https://nordpension-mcp.jeprasher.workers.dev/mcp</code></div>
+        <p class="muted">Connectoren er authless og read-only. Den udstiller fem generiske værktøjer — Claude kan ikke kalde noget der ikke står på listen.</p>
+        <div class="expect">Connectoren dukker op som tilgængelig i din samtale. Du ser dens tools listet i værktøjsmenuen.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── PHASE 4 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">4</div>
+      <h2>Smag på MCP'en — fire sonderende kald</h2>
+      <p>Disse fire prompts dækker hele værktøjskassen og giver dig en fornemmelse af hvad connectoren kan og hvor den filtrerer for dig.</p>
+
+      <div class="step">
+        <span class="step-label">4.1 — Hvad er tilgængeligt?</span>
+        <div class="prompt">Brug NordPension-connectoren. Vis mig hvad der er tilgængeligt.</div>
+        <div class="expect">Claude kalder <code>list_data_model</code> og opsummerer de 5 systemer (medlem, crm, erp, dwh, kms) og deres ~26 tabeller.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">4.2 — PII-filteret i praksis</span>
+        <div class="prompt">Beskriv tabellen medlem.members for mig — hvilke kolonner kan jeg få ud, og hvilke er filtreret væk?</div>
+        <div class="expect">Claude kalder <code>describe_table</code> og forklarer at <code>full_name</code>, <code>cpr_masked</code>, <code>email</code>, <code>phone</code>, adresse og bank-konto er filtreret væk af MCP-laget — uanset hvad du spørger om.</div>
+        <div class="insight"><strong>Læringen:</strong> Governance-laget er <em>synligt</em> for Claude. Den ved at PII ikke er noget den kan få fat i gennem connectoren.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">4.3 — Et tal hurtigt</span>
+        <div class="prompt">Hvor mange aktive medlemmer er der i Hovedstaden?</div>
+        <div class="expect">Claude kalder <code>query</code> med <code>count_only: true</code> og svarer med et tal (omkring 700-800).</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">4.4 — Ordering og PII-transparens</span>
+        <div class="prompt">Find de 10 medlemmer over 60 år med højest løn. Hvilke felter får jeg IKKE at se?</div>
+        <div class="expect">Claude returnerer <code>member_id</code>, <code>age</code>, <code>profession_group</code>, <code>annual_salary</code> — og forklarer at navn, CPR, email osv. er filtreret væk af MCP'en. Du tester <code>order</code>, <code>limit</code> og governance-transparens i ét.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">4.5 — Bonus: en hurtig artifact</span>
+        <div class="prompt">Lav en artifact med et kort eller en graf der viser hvordan vores medlemmer er fordelt geografisk på de fem regioner.</div>
+        <div class="expect">Claude henter aggregeret data via <code>query</code> og bygger en artifact (typisk SVG-kort eller bar chart). Nu har du både Projects, Artifacts, Skills og en MCP-connector spillet sammen.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── PHASE 5 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">5</div>
+      <h2>Den rigtige opgave: brief direktionen</h2>
+      <p>Nu er du klar til den åbne opgave. Den er bevidst bred — det er meningen.</p>
+
+      <div class="mission">
+        <span class="label">Opgave</span>
+        <h3>Hvordan har vi det med medlemmerne lige nu?</h3>
+        <p>Direktøren har bedt om en kort statusrapport til direktionsmødet på torsdag. Hun vil have fakta, ikke fluff. Brug NordPension-connectoren og det du allerede ved fra projektkonteksten.</p>
+      </div>
+
+      <div class="step" style="margin-top: 22px;">
+        <span class="step-label">5.1 — Start med din egen vinkel</span>
+        <p>Spørg Claude åbent ud fra det du er bedst til at se. Eksempler:</p>
+        <div class="prompt">Ud fra min rolle som [aktuar / økonomi-controller / kunderådgiver / dataanalytiker], hvilke data i connectoren er mest relevante for at besvare "hvordan har vi det med medlemmerne lige nu?"</div>
+        <div class="hint">Claude vil komme med en liste over relevante tabeller. Bed den om at <em>vise dig tallene</em> for de tre vigtigste mønstre den finder, før du skriver noget som helst.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">5.2 — Sammensæt din brief</span>
+        <p>Når du har fundet et par interessante mønstre, så bed Claude om at samle det i det format der passer dig:</p>
+        <ul>
+          <li>En <strong>artifact</strong> (HTML eller SVG til skærmen)</li>
+          <li>Et <strong>markdown-notat</strong> du kan kopiere ind i e-Boks-style mail</li>
+          <li>Et <strong>PDF-udkast</strong> til print</li>
+          <li>En <strong>PowerPoint</strong> hvis du foretrækker slides</li>
+        </ul>
+        <p class="muted">Du vælger formatet. Sigt efter noget der kan stå alene — en direktør skal kunne forstå det uden dig ved siden af.</p>
+      </div>
+
+      <div class="step">
+        <span class="step-label">5.3 — Iterér</span>
+        <p>Læs det igennem. Hvad mangler? Spørg Claude om at tilføje en risiko-vinkel, en relevant politik fra <code>kms.policies</code>, eller en sammenligning med historik fra <code>dwh.company_history</code>.</p>
+        <div class="hint">Du må gerne spørge Claude om at <em>citere</em> de konkrete tabeller og felter den har brugt — så har du et revisionsspor for hvor talene kommer fra.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── REFLECTION ───────────────────────── -->
+    <div class="reflect">
+      <h2>Stop op før session 2</h2>
+      <p style="margin-bottom: 6px;">Sessionen handler ikke kun om hvad du fik lavet — men også om hvor du <em>kom til kort</em>. Spørg dig selv:</p>
+      <ul>
+        <li>Følte du at chatten holdt styr på konteksten, eller mistede du tråden undervejs?</li>
+        <li>Hvor mange gange måtte du genstarte fordi du var nået i et blindspor?</li>
+        <li>Hvis du skulle køre den samme brief igen om en måned med nye tal — kunne du genbruge noget af det du lige har lavet?</li>
+        <li>Hvad ville en compliance-officer sige til den måde du har sat tingene sammen på?</li>
+      </ul>
+      <p style="margin-top: 14px; margin-bottom: 0;">Hold dine svar i baghovedet. Næste session (<strong>Cowork</strong>) bygger videre på samme opgave, men i et helt andet værktøj.</p>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>03 · NordPension · datagrundlag i dybden</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    /* shadcn-style light theme, PKA brand palette */
+    :root{
+      --background:#ffffff; --foreground:#0a0a0a;
+      --card:#ffffff; --muted:#f5f4f5; --muted-foreground:#6b6168;
+      --border:#e7e3e5; --input:#e7e3e5;
+      --primary:#92004D;
+      --primary-foreground:#ffffff;
+      --ruby:#CE0060; --bordeaux:#660036;
+      --mint:#9EDFCE; --syren:#C5AED5; --pudder:#E88F80;
+      --himmel:#6E9BAA; --eng:#EFC47C; --loev:#85B499; --graa:#ACA39A;
+      --radius:0.65rem;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    }
+    *{box-sizing:border-box;}
+    body{margin:0;background:var(--background);color:var(--foreground);line-height:1.55;
+      background-image:radial-gradient(680px 280px at 88% -8%,rgba(146,0,77,.06),transparent);}
+    main{max-width:1080px;margin:0 auto;padding:44px 22px 72px;}
+    h1{font-size:clamp(30px,4.6vw,48px);line-height:1.05;letter-spacing:-.01em;margin:0 0 14px;}
+    h2{font-size:21px;letter-spacing:-.01em;margin:80px 0 14px;display:flex;align-items:center;gap:10px;}
+    main > h2:first-of-type{margin-top:52px;}
+    h2::before{content:"";width:8px;height:20px;border-radius:3px;background:var(--primary);}
+    .sub{margin:0 0 14px;}
+    p{color:var(--muted-foreground);margin:0 0 12px;}
+    .lead{font-size:18px;color:#3f3a3d;max-width:790px;}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;
+      padding:5px 12px;background:var(--card);color:var(--primary);font-weight:600;font-size:12.5px;margin-bottom:18px;}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--loev);box-shadow:0 0 0 4px rgba(133,180,153,.22);}
+    .grid{display:grid;gap:14px;}
+    .cols-3{grid-template-columns:repeat(3,1fr);} .cols-2{grid-template-columns:repeat(2,1fr);}
+    .cols-5{grid-template-columns:repeat(5,1fr);}
+    .card{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);
+      box-shadow:0 1px 2px rgba(16,10,13,.04);padding:16px;}
+    .card h3{margin:0 0 5px;font-size:15.5px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+    .card p{margin:0 0 4px;font-size:13.5px;}
+    .accent{border-left:3px solid var(--graa);}
+    .a-mint{border-left-color:var(--mint);} .a-syren{border-left-color:var(--syren);}
+    .a-pudder{border-left-color:var(--pudder);} .a-himmel{border-left-color:var(--himmel);}
+    .a-eng{border-left-color:var(--eng);} .a-loev{border-left-color:var(--loev);}
+    .a-red{border-left-color:var(--ruby);} .a-bord{border-left-color:var(--bordeaux);}
+    .tables{margin-top:11px;display:flex;flex-wrap:wrap;gap:6px;}
+    .tag{border:1px solid var(--border);border-radius:6px;background:var(--muted);color:#4a4348;
+      font-size:11.5px;padding:3px 8px;font-family:ui-monospace,Menlo,monospace;}
+    .badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:600;white-space:nowrap;}
+    .badge.rows{background:rgba(146,0,77,.08);color:var(--primary);border:1px solid rgba(146,0,77,.18);}
+    .badge.warn{background:rgba(206,0,96,.1);color:var(--ruby);border:1px solid rgba(206,0,96,.25);}
+    .badge.ok{background:rgba(133,180,153,.18);color:#2f6b48;border:1px solid rgba(133,180,153,.45);}
+    .badge.mcp{background:rgba(110,155,170,.14);color:#375f6b;border:1px solid rgba(110,155,170,.38);}
+    .pill{display:inline-block;border-radius:999px;padding:2px 8px;font-size:11px;font-weight:700;border:1px solid transparent;}
+    .pill.green{background:rgba(133,180,153,.22);color:#2f6b48;}
+    .pill.amber{background:rgba(239,196,124,.28);color:#8a5a08;}
+    .pill.red{background:rgba(206,0,96,.12);color:var(--ruby);}
+    .pill.neutral{background:var(--muted);color:#4a4348;}
+    .stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:24px 0 4px;}
+    .stat{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);padding:15px;box-shadow:0 1px 2px rgba(16,10,13,.04);}
+    .stat b{display:block;font-size:24px;line-height:1;color:var(--bordeaux);}
+    .stat span{display:block;color:var(--muted-foreground);font-size:12px;margin-top:6px;}
+    .diagram{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);padding:18px;box-shadow:0 1px 2px rgba(16,10,13,.04);}
+    .tbl-wrap{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--card);box-shadow:0 1px 2px rgba(16,10,13,.04);}
+    .tbl-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border);background:#fcfbfc;}
+    .tbl-head .name{font-family:ui-monospace,Menlo,monospace;font-size:13px;font-weight:700;color:var(--bordeaux);}
+    .tbl-head .desc{color:var(--muted-foreground);font-size:12.5px;}
+    table{width:100%;border-collapse:collapse;font-size:12.5px;}
+    th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);white-space:nowrap;vertical-align:top;}
+    th{background:#fcfbfc;color:#6b6168;font-size:11px;text-transform:uppercase;letter-spacing:.03em;font-weight:600;}
+    tr:last-child td{border-bottom:0;}
+    td.mono,th.mono{font-family:ui-monospace,Menlo,monospace;}
+    td.num{text-align:right;font-variant-numeric:tabular-nums;}
+    td.wrap{white-space:normal;min-width:240px;color:#4a4348;}
+    .scroll{overflow-x:auto;}
+    /* full reference table */
+    .ref td:first-child{font-family:ui-monospace,Menlo,monospace;color:var(--bordeaux);font-weight:600;}
+    .ref td.rows{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;}
+    .ref td.cols{white-space:normal;color:var(--muted-foreground);font-size:11.5px;}
+    .ref tr.group td{background:#fbf3f7;color:var(--primary);font-weight:700;text-transform:uppercase;font-size:10.5px;letter-spacing:.04em;}
+    .ref td.pii{font-size:10.5px;font-family:ui-monospace,Menlo,monospace;white-space:normal;}
+    .ref td.pii.has{color:var(--ruby);}
+    .ref td.pii.none{color:#2f6b48;}
+    ul{margin:0;padding-left:18px;color:var(--muted-foreground);} li{margin:6px 0;} li b{color:var(--foreground);}
+    .note{border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:10px;background:rgba(146,0,77,.04);padding:16px 18px;}
+    .note.warn{border-left-color:var(--ruby);background:rgba(206,0,96,.05);}
+    .note.info{border-left-color:var(--himmel);background:rgba(110,155,170,.06);}
+    .foot{margin-top:30px;border:1px solid rgba(239,196,124,.55);border-radius:10px;background:rgba(239,196,124,.14);padding:14px 16px;color:#6b4a08;font-size:14px;}
+    .foot code{background:rgba(146,0,77,.08);color:var(--primary);border-radius:5px;padding:1px 5px;font-family:ui-monospace,Menlo,monospace;}
+    @media(max-width:1000px){.cols-5,.stat-row{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:880px){.cols-3,.cols-2{grid-template-columns:1fr 1fr;}}
+    @media(max-width:560px){.cols-3,.cols-2,.cols-5,.stat-row{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow"><span class="dot"></span> NordPension · syntetisk datagrundlag</div>
+  <h1>Fem systemer, 26 tabeller, ~120.000 rækker — alt syntetisk</h1>
+  <p class="lead">Hvor fil 4 introducerer arkitekturen, går denne side i dybden med selve datagrundlaget. NordPensions data er fordelt over <b>5 Postgres-schemaer</b> der hver simulerer et rigtigt fagsystem: medlemssystem, CRM, ERP, data warehouse og knowledge management. Alle 26 tabeller er 100% syntetiske — ingen rigtige personer, ingen rigtige diagnoser — men strukturen, tallene og fritekst-data efterligner et rigtigt selskabs drift.</p>
+
+  <div class="stat-row">
+    <div class="stat"><b>5</b><span>systemer (Postgres-schemaer)</span></div>
+    <div class="stat"><b>26</b><span>tabeller med cross-schema FK'er</span></div>
+    <div class="stat"><b>~120k</b><span>rækker i alt</span></div>
+    <div class="stat"><b>5.000</b><span>syntetiske medlemmer m. PII</span></div>
+    <div class="stat"><b>15 år</b><span>historik (2011→2026)</span></div>
+  </div>
+
+  <h2>De fem systemer</h2>
+  <p class="sub">Hvert system er et Postgres-schema i samme Supabase-projekt. PostgREST eksponerer dem alle via <code>Accept-Profile</code> header / <code>.schema('…')</code>.</p>
+  <div class="grid cols-5">
+    <div class="card accent a-syren">
+      <h3>medlem <span class="badge warn">⚠ PII</span></h3>
+      <p><b>Medlemssystem</b>. Source of truth for pensionsforhold. Indeholder navne, CPR, mails, adresser, bankkonti.</p>
+      <div class="tables">
+        <span class="tag">members</span>
+        <span class="tag">employers</span>
+        <span class="tag">contributions</span>
+        <span class="tag">pension_projections</span>
+        <span class="tag">member_events</span>
+      </div>
+    </div>
+    <div class="card accent a-red">
+      <h3>crm <span class="badge warn">⚠ PII + helbred</span></h3>
+      <p><b>Sagsbehandling og kundedialog</b>. Fritekst-narrativer, mails, særlig kategori helbredsnoter, operationelle alerts.</p>
+      <div class="tables">
+        <span class="tag">service_cases</span>
+        <span class="tag">interactions</span>
+        <span class="tag">emails</span>
+        <span class="tag">case_health_notes</span>
+        <span class="tag">synthetic_inbox_events</span>
+      </div>
+    </div>
+    <div class="card accent a-bord">
+      <h3>erp <span class="badge warn">⚠ HR</span></h3>
+      <p><b>Intern drift</b>. Org-struktur, medarbejdere, finansposter, leverandører. HR-data er let følsomt.</p>
+      <div class="tables">
+        <span class="tag">departments</span>
+        <span class="tag">employees</span>
+        <span class="tag">suppliers</span>
+        <span class="tag">general_ledger</span>
+      </div>
+    </div>
+    <div class="card accent a-himmel">
+      <h3>dwh <span class="badge ok">✓ ingen PII</span></h3>
+      <p><b>Analytisk lag</b>. Aggregeret data — KPI'er, board reports, fonde, historik, datakvalitet. Bygges af pipelines fra de øvrige systemer.</p>
+      <div class="tables">
+        <span class="tag">report_metrics</span>
+        <span class="tag">board_reports</span>
+        <span class="tag">company_history</span>
+        <span class="tag">fund_returns</span>
+        <span class="tag">investment_holdings</span>
+        <span class="tag">data_quality_issues</span>
+      </div>
+    </div>
+    <div class="card accent a-loev">
+      <h3>kms <span class="badge ok">✓ ingen PII</span></h3>
+      <p><b>Vidensbase</b>. Politikker, processer, ordbog, FAQ, IT-systemer, strategiske initiativer. Om virksomheden, ikke om medlemmer.</p>
+      <div class="tables">
+        <span class="tag">policies</span>
+        <span class="tag">processes</span>
+        <span class="tag">faqs</span>
+        <span class="tag">glossary</span>
+        <span class="tag">systems</span>
+        <span class="tag">initiatives</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>Komplet tabeloversigt</h2>
+  <p class="sub">Alle 26 tabeller med rækkeantal, nøglefelter og hvilke kolonner MCP-connectoren filtrerer væk. Felter i den "Filtreret af MCP"-kolonne er kun tilgængelige via direkte Supabase REST-adgang.</p>
+  <div class="tbl-wrap"><div class="scroll"><table class="ref">
+    <thead><tr><th>Tabel</th><th style="text-align:right">Rækker</th><th>Indhold</th><th>Nøglefelter</th><th>Filtreret af MCP</th></tr></thead>
+    <tbody>
+      <tr class="group"><td colspan="5">medlem — medlemssystem (PII)</td></tr>
+      <tr><td>medlem.members</td><td class="rows">5.000</td><td>Medlemmer m. PII, demografi, ordning</td><td class="cols">member_id, full_name, cpr_masked, email, phone, region, profession_group, annual_salary, membership_status</td><td class="pii has">full_name, cpr_masked, email, phone, address_*, bank_account_masked</td></tr>
+      <tr><td>medlem.employers</td><td class="rows">120</td><td>Bidragspligtige arbejdsgivere</td><td class="cols">employer_id, employer_name, sector, region, payment_reliability_score</td><td class="pii none">—</td></tr>
+      <tr><td>medlem.contributions</td><td class="rows">73.380</td><td>Månedsbidrag i 24 mdr m. anomalier</td><td class="cols">contribution_month, total_amount, expected_amount, contribution_status, anomaly_flag</td><td class="pii none">—</td></tr>
+      <tr><td>medlem.pension_projections</td><td class="rows">15.000</td><td>Pensionsprognose i 3 scenarier pr. medlem</td><td class="cols">scenario, expected_monthly_pension, confidence_band_low/high</td><td class="pii none">—</td></tr>
+      <tr><td>medlem.member_events</td><td class="rows">17.928</td><td>Livsforløb: jobskifte, løn, flytning, orlov, pension</td><td class="cols">event_type, event_date, old_value, new_value</td><td class="pii none">—</td></tr>
+
+      <tr class="group"><td colspan="5">crm — sagsbehandling og dialog (PII + særlig kategori)</td></tr>
+      <tr><td>crm.service_cases</td><td class="rows">1.200</td><td>CRM-sager m. assignee, SLA, narrativ</td><td class="cols">case_type, department_id, sla_hours, breached_sla, complexity_score, narrative_md</td><td class="pii has">narrative_md, internal_notes_md</td></tr>
+      <tr><td>crm.interactions</td><td class="rows">2.500</td><td>Touchpoints på tværs af kanaler</td><td class="cols">channel, duration_minutes, sentiment_score, handled_by_employee_id</td><td class="pii none">—</td></tr>
+      <tr><td>crm.emails</td><td class="rows">2.500</td><td>Fritekst medlems-mails (dansk)</td><td class="cols">subject, body, category, direction, sentiment_score</td><td class="pii has">body, subject, from_party, to_party</td></tr>
+      <tr><td>crm.case_health_notes</td><td class="rows">229</td><td>⚠️ Syntetiske helbredsnoter på invaliditetssager</td><td class="cols">diagnosis_category, health_note, work_capacity_pct, sensitivity_level</td><td class="pii has">health_note, member_id, case_id, author_employee_id</td></tr>
+      <tr><td>crm.synthetic_inbox_events</td><td class="rows">200</td><td>Operationel triage-feed (anomalier, brud, alarmer)</td><td class="cols">event_type, severity, title, numeric_impact, status</td><td class="pii none">—</td></tr>
+
+      <tr class="group"><td colspan="5">erp — intern drift (let HR-PII)</td></tr>
+      <tr><td>erp.departments</td><td class="rows">9</td><td>Afdelinger m. funktion, headcount, lokation</td><td class="cols">department_id, name, function_description, headcount, location</td><td class="pii none">—</td></tr>
+      <tr><td>erp.employees</td><td class="rows">150</td><td>Medarbejderkartotek (stikprøve af ~485 FTE)</td><td class="cols">employee_id, full_name, role_title, department_id, is_role_holder</td><td class="pii has">email, hire_date</td></tr>
+      <tr><td>erp.suppliers</td><td class="rows">15</td><td>Leverandører m. kontraktværdi og criticality</td><td class="cols">supplier_name, category, annual_value_dkk, contract_end_date, criticality</td><td class="pii none">—</td></tr>
+      <tr><td>erp.general_ledger</td><td class="rows">446</td><td>Månedlige finansposter pr. afdeling og kategori</td><td class="cols">posting_month, department_id, account_category, amount_dkk</td><td class="pii none">—</td></tr>
+
+      <tr class="group"><td colspan="5">dwh — analytisk lag (ingen PII)</td></tr>
+      <tr><td>dwh.report_metrics</td><td class="rows">240</td><td>Månedlige ledelses-KPI'er m. RAG-status</td><td class="cols">metric_name, metric_value, threshold_value, status, owner_department_id</td><td class="pii none">—</td></tr>
+      <tr><td>dwh.board_reports</td><td class="rows">110</td><td>Fritekst kvartalsrapporter (2021→2026)</td><td class="cols">period, category, executive_summary, risk_assessment, recommendation</td><td class="pii none">—</td></tr>
+      <tr><td>dwh.company_history</td><td class="rows">185</td><td>15 års månedlige selskabs-KPI'er</td><td class="cols">total_members, aum, monthly_net_return_pct, funding_ratio, cost_per_member</td><td class="pii none">—</td></tr>
+      <tr><td>dwh.fund_returns</td><td class="rows">240</td><td>Månedligt fondsafkast vs. benchmark (10 fonde)</td><td class="cols">monthly_return_pct, benchmark_return_pct, volatility_pct, esg_score, aum</td><td class="pii none">—</td></tr>
+      <tr><td>dwh.investment_holdings</td><td class="rows">132</td><td>Beholdninger pr. fond m. eksklusionsliste</td><td class="cols">instrument_type, sector, weight_pct, esg_rating, is_excluded</td><td class="pii none">—</td></tr>
+      <tr><td>dwh.data_quality_issues</td><td class="rows">150</td><td>Datakvalitetslog på tværs af kilde-systemer</td><td class="cols">source_schema, source_table, issue_type, severity, status</td><td class="pii none">—</td></tr>
+
+      <tr class="group"><td colspan="5">kms — knowledge management (ingen PII)</td></tr>
+      <tr><td>kms.policies</td><td class="rows">15</td><td>Skriftlige virksomhedspolitikker m. markdown</td><td class="cols">code, title, category, summary, body_md, owner_department_id, version</td><td class="pii none">—</td></tr>
+      <tr><td>kms.processes</td><td class="rows">12</td><td>Operationelle procesbeskrivelser</td><td class="cols">code, name, area, description_md, related_system_ids</td><td class="pii none">—</td></tr>
+      <tr><td>kms.faqs</td><td class="rows">25</td><td>Medlemsvendt FAQ</td><td class="cols">question, answer_md, category, last_reviewed</td><td class="pii none">—</td></tr>
+      <tr><td>kms.glossary</td><td class="rows">40</td><td>Dansk pensionsterminologi og forkortelser</td><td class="cols">term, definition, related_terms, category</td><td class="pii none">—</td></tr>
+      <tr><td>kms.systems</td><td class="rows">12</td><td>IT-systemer og fagsystemer</td><td class="cols">name, vendor, purpose, owner_department_id, criticality</td><td class="pii none">—</td></tr>
+      <tr><td>kms.initiatives</td><td class="rows">6</td><td>Strategiske initiativer og programmer</td><td class="cols">name, status, owner_department_id, summary, target_date</td><td class="pii none">—</td></tr>
+    </tbody>
+  </table></div></div>
+
+  <h2>Sådan hænger systemerne sammen</h2>
+  <p class="sub">Cross-schema fremmednøgler binder data på tværs. Eksempler: <code>crm.service_cases.member_id → medlem.members.member_id</code>, <code>crm.service_cases.assignee_employee_id → erp.employees.employee_id</code>, <code>dwh.report_metrics.owner_department_id → erp.departments.department_id</code>.</p>
+  <div class="diagram">
+    <pre class="mermaid">
+erDiagram
+    %% medlem (medlemssystem)
+    "medlem.employers"        ||--o{ "medlem.members"             : "arbejdsgiver for"
+    "medlem.members"          ||--o{ "medlem.contributions"       : "indbetaler"
+    "medlem.members"          ||--o{ "medlem.pension_projections" : "prognose"
+    "medlem.members"          ||--o{ "medlem.member_events"       : "livsforløb"
+
+    %% crm → medlem + erp (cross-schema FK)
+    "medlem.members"          ||--o{ "crm.service_cases"          : "FK"
+    "erp.employees"           ||--o{ "crm.service_cases"          : "assignee FK"
+    "erp.departments"         ||--o{ "crm.service_cases"          : "ejer FK"
+    "crm.service_cases"       ||--o{ "crm.interactions"           : "touchpoints"
+    "crm.service_cases"       ||--o{ "crm.emails"                 : "korrespondance"
+    "crm.service_cases"       ||--o{ "crm.case_health_notes"      : "særlig kategori"
+
+    %% erp internt
+    "erp.departments"         ||--o{ "erp.employees"              : "ansætter"
+    "erp.departments"         ||--o{ "erp.suppliers"              : "ejer"
+    "erp.departments"         ||--o{ "erp.general_ledger"         : "finansposter"
+
+    %% dwh referencer afdelinger (cross-schema FK)
+    "erp.departments"         ||--o{ "dwh.report_metrics"         : "owner FK"
+    "erp.departments"         ||--o{ "dwh.board_reports"          : "author FK"
+    "erp.departments"         ||--o{ "dwh.data_quality_issues"    : "owner FK"
+
+    %% kms referencer afdelinger
+    "erp.departments"         ||--o{ "kms.policies"               : "owner FK"
+    "erp.departments"         ||--o{ "kms.processes"              : "owner FK"
+    "erp.departments"         ||--o{ "kms.systems"                : "owner FK"
+    "erp.departments"         ||--o{ "kms.initiatives"            : "owner FK"
+    </pre>
+  </div>
+
+  <h2>Eksempler på rådata</h2>
+  <p class="sub">Et udsnit af rå rækker fra de fire mest karakteristiske tabeller. Bemærk at PII-felter (markeret med <span class="pill red">PII</span>) kun er synlige via direkte Supabase REST — gennem MCP-connectoren bliver de altid filtreret væk.</p>
+
+  <div class="grid" style="gap:18px;">
+    <div class="tbl-wrap">
+      <div class="tbl-head"><span class="name">medlem.members</span><span class="desc">demografi + PII</span></div>
+      <div class="scroll"><table>
+        <thead><tr><th class="mono">member_id</th><th>navn <span class="pill red">PII</span></th><th>cpr_masked <span class="pill red">PII</span></th><th>email <span class="pill red">PII</span></th><th>region</th><th>faggruppe</th><th class="num">løn (kr/år)</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">NP-M-000001</td><td>Klaus Christensen</td><td class="mono">160280-XXXX</td><td class="mono">klaus.christensen.1@example.dk</td><td>Syddanmark</td><td>Elder Care</td><td class="num">480.965</td></tr>
+          <tr><td class="mono">NP-M-000002</td><td>Bjarne Frederiksen</td><td class="mono">151060-XXXX</td><td class="mono">bjarne.frederiksen.2@example.dk</td><td>Nordjylland</td><td>Elder Care</td><td class="num">496.159</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="tbl-wrap">
+      <div class="tbl-head"><span class="name">crm.service_cases</span><span class="desc">narrativ + FK på tværs af systemer</span></div>
+      <div class="scroll"><table>
+        <thead><tr><th class="mono">case_id</th><th class="mono">member_id</th><th class="mono">assignee_employee_id</th><th>type</th><th>status</th><th>narrative <span class="pill red">PII</span></th></tr></thead>
+        <tbody>
+          <tr><td class="mono">NP-CASE-00010</td><td class="mono">NP-M-002568</td><td class="mono">NP-EMP-0114</td><td>beneficiary-change</td><td><span class="pill amber">in-review</span></td><td class="wrap">"Begunstigelsesopdeling mellem to børn anmodet af Laura. Identitetstjek på begge påkrævet. SLA brudt."</td></tr>
+          <tr><td class="mono">NP-CASE-00012</td><td class="mono">NP-M-001234</td><td class="mono">NP-EMP-0027</td><td>retirement</td><td><span class="pill amber">awaiting-member</span></td><td class="wrap">"Førtidig udbetaling forespurgt af Nanna Kristensen. Krav om dokumentation for ophør af arbejdsforhold modtaget."</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="tbl-wrap">
+      <div class="tbl-head"><span class="name">erp.employees</span><span class="desc">HR-data — assignee for CRM-sager</span></div>
+      <div class="scroll"><table>
+        <thead><tr><th class="mono">employee_id</th><th>navn</th><th>rolle</th><th class="mono">department_id</th><th>role holder</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">NP-EMP-0001</td><td>Sofie Madsen</td><td>Sagsbehandler</td><td class="mono">DEP-MS</td><td>—</td></tr>
+          <tr><td class="mono">NP-EMP-0002</td><td>Allan Frederiksen</td><td>Kvalitetsspecialist</td><td class="mono">DEP-MS</td><td>—</td></tr>
+          <tr><td class="mono">NP-EMP-0027</td><td>Frederik Olsen</td><td>Administrerende direktør</td><td class="mono">DEP-EX</td><td>✓</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="tbl-wrap">
+      <div class="tbl-head"><span class="name">kms.policies</span><span class="desc">virksomhedspolitikker med markdown body</span></div>
+      <div class="scroll"><table>
+        <thead><tr><th class="mono">policy_id</th><th>kode</th><th>titel</th><th>kategori</th><th>ejer</th><th>summary</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">POL-001</td><td class="mono">POL-AML-01</td><td>Politik for hvidvaskforebyggelse</td><td>compliance</td><td class="mono">DEP-RC</td><td class="wrap">Rammerne for NordPensions arbejde med at forebygge hvidvask og terrorfinansiering i overensstemmelse med hvidvaskloven.</td></tr>
+          <tr><td class="mono">POL-004</td><td class="mono">POL-ESG-01</td><td>Politik for ansvarlige investeringer</td><td>investering</td><td class="mono">DEP-INV</td><td class="wrap">Vores tilgang til ESG-integration, eksklusion, aktivt ejerskab og klimamål.</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="tbl-wrap">
+      <div class="tbl-head"><span class="name">crm.case_health_notes</span><span class="badge warn">⚠ særlig kategori · helt filtreret af MCP</span></div>
+      <div class="scroll"><table>
+        <thead><tr><th class="mono">note_id</th><th class="mono">case_id <span class="pill red">PII</span></th><th>diagnosegruppe</th><th class="num">arbejdsevne</th><th>note (syntetisk) <span class="pill red">PII</span></th></tr></thead>
+        <tbody>
+          <tr><td class="mono">NP-HN-0001</td><td class="mono">NP-CASE-00005</td><td>oncology</td><td class="num">2%</td><td class="wrap">"Medlemmet har efterforløb af kræftbehandling med betydelig træthed. Afventer speciallægeerklæring. (SYNTETISK NOTE)"</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <h2>Hvad kan deltagerne bruge det til?</h2>
+  <div class="grid cols-3">
+    <div class="card"><h3>📊 Cross-system dashboards</h3><p>Joins på tværs af medlem, crm og dwh — fx sager pr. afdeling med medlems-demografi og SLA-trends.</p></div>
+    <div class="card"><h3>🔎 Anomali-detektion</h3><p>Manglende/for store bidrag, arbejdsgivere med faldende betalingsevne, datakvalitets-issues.</p></div>
+    <div class="card"><h3>📝 Bestyrelsesrapporter</h3><p>Bestyrelsesoplæg fra dwh-KPI'er, afkast og fritekst board_reports.</p></div>
+    <div class="card"><h3>✉️ Tekst &amp; RAG</h3><p>Klassificér og opsummer crm.emails; træk indsigt ud af politikker og processer i kms.</p></div>
+    <div class="card"><h3>🛡️ Governance &amp; GDPR</h3><p>Find følsomme helbredsnoter via direkte REST; diskutér adgang, masking og MCP's filtreringsregler.</p></div>
+    <div class="card"><h3>👥 Medlem-360</h3><p>Aggregér fra medlem + crm + dwh for ét medlem — via MCP's <code>member_360</code> eller selv-kodet over REST.</p></div>
+    <div class="card"><h3>💰 Finans &amp; cost-per-member</h3><p>Brug erp.general_ledger til at beregne omkostningseffektivitet pr. afdeling.</p></div>
+    <div class="card"><h3>🏢 Leverandørstyring</h3><p>erp.suppliers + kms.initiatives → IT-driftspartnerskab 2027 og leverandør-risiko.</p></div>
+    <div class="card"><h3>📈 Forecasting</h3><p>Brug dwh.company_history (15 års månedlige data) til trends og fremskrivninger.</p></div>
+  </div>
+
+  <h2>Hvorfor det føles som et rigtigt selskab</h2>
+  <div class="note">
+    <ul>
+      <li><b>Dansk kontekst:</b> regioner, kommuner og faggrupper fra det offentlige (sundhed, ældrepleje, undervisning, socialrådgivning) — modelleret efter den danske arbejdsmarkedspensions-virkelighed.</li>
+      <li><b>Distribueret data:</b> samme medlem optræder i flere systemer (medlem.members → crm.service_cases → erp.employees som assignee) — joins er den ægte opgave.</li>
+      <li><b>Sammenhængende tal:</b> bidrag følger lønnen, pension følger bidrag og alder, finanstal følger headcount, KPI'er afspejler hvad der faktisk er sket i de underliggende systemer.</li>
+      <li><b>Både tal og tekst:</b> rå KPI'er side om side med fritekst-mails, bestyrelsesrapporter, policies og narrative case-noter — klar til både analyse og sprogopgaver.</li>
+      <li><b>Realistiske skævheder:</b> sæsonudsving, SLA-brud på ~18%, anomalier, leverandører med faldende reliability og bevidst indlagte datakvalitetsfejl.</li>
+      <li><b>15 års historik:</b> langt nok til at lave trends og fremskrivninger, ikke kun øjebliksbilleder.</li>
+    </ul>
+  </div>
+
+  <h2>Et bevidst governance-dilemma</h2>
+  <div class="note warn">
+    <p style="color:#7a0639;margin:0 0 10px;"><b>Hele <code>medlem.members</code> og <code>crm.case_health_notes</code> er bevidst eksponeret read-only via anon-key.</b> Det er ikke en fejl — det er pointen. En udvikler der queryer <code>medlem.members?select=*</code> får 5.000 rækker med navne, CPR'er, mails, telefonnumre, adresser og bankkonti tilbage. En udvikler der queryer <code>crm.case_health_notes</code> får syntetiske helbredsnoter på invaliditetssager.</p>
+    <p style="color:#7a0639;margin:0;">Pointen er at deltagerne selv <b>opdager</b> at den slags data ligger tilgængeligt på den offentlige anon-nøgle — og dermed får en konkret samtale om hvorfor MCP-connectoren findes som compliance-lag, og hvorfor "direkte adgang" i et rigtigt selskab altid følges af DPIA, DPA og audit.</p>
+  </div>
+
+  <h2>Forskellen i praksis</h2>
+  <div class="note info">
+    <p style="color:#1c4a55;margin:0 0 10px;">Samme query, to svar — illustrerer hvorfor connectoren findes:</p>
+    <ul style="color:#1c4a55;">
+      <li><b>Via MCP <code>query(medlem, members, {age: 58})</code>:</b> får member_id, age, region, profession_group, annual_salary, … men <i>aldrig</i> full_name, cpr_masked, email, phone, address, bank — selv hvis Claude eksplicit beder om dem.</li>
+      <li><b>Via direkte REST <code>GET /rest/v1/members?age=eq.58</code> med <code>Accept-Profile: medlem</code>:</b> får alle felter rå, inkl. PII. Udvikleren har ansvar for at scrubbe før data flyder ind i en LLM, et eksport-system eller et dashboard.</li>
+    </ul>
+  </div>
+
+  <div class="foot"><b>Alt data er syntetisk.</b> Ingen rigtige personer, ingen CPR-numre, ingen rigtige arbejdsgivere eller diagnoser. ID'er som <code>NP-M-000123</code>, <code>NP-CASE-00042</code>, <code>NP-EMP-0001</code> er meningsløse uden for denne sandbox og må bruges frit i øvelserne.</div>
+</main>
+<script>
+  mermaid.initialize({
+    startOnLoad:true, theme:"base",
+    themeVariables:{
+      background:"#ffffff", primaryColor:"#ffffff", primaryBorderColor:"#92004D",
+      primaryTextColor:"#0a0a0a", lineColor:"#CE0060", textColor:"#3f3a3d", fontSize:"13px"
+    }
+  });
+</script>
+</body>
+</html>

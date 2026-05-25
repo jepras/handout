@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Der er håb forude — hvad I kan opnå med Claude Enterprise</title>
+  <style>
+    :root {
+      --background: #fbfafb;
+      --foreground: #22131b;
+      --card: #ffffff;
+      --muted: #f5f1f3;
+      --muted-foreground: #6f6369;
+      --border: #d8d4d7;
+      --primary: #92004d;
+      --bordeaux: #660036;
+      --ruby: #ce0060;
+      --mint: #9edfce;
+      --lilac: #c5aed5;
+      --sky: #6e9baa;
+      --yellow: #efc47c;
+      --leaf: #85b499;
+      --beige: #e88f80;
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 78% -10%, rgba(133, 180, 153, .22), transparent 38%),
+        radial-gradient(circle at 8% 8%, rgba(206, 0, 96, .10), transparent 36%),
+        linear-gradient(180deg, rgba(245, 241, 243, .92), rgba(251, 250, 251, 0) 560px),
+        var(--background);
+      color: var(--foreground);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 36px 22px 72px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 980px;
+      margin-bottom: 16px;
+      color: var(--bordeaux);
+      font-size: clamp(36px, 5.4vw, 64px);
+      line-height: 1.02;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      color: var(--bordeaux);
+      font-size: clamp(22px, 2.6vw, 30px);
+    }
+
+    h3 { margin-bottom: 8px; font-size: 18px; }
+
+    p { margin-bottom: 12px; color: var(--muted-foreground); }
+
+    section { margin-top: 40px; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      font-weight: 760;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 10px; height: 10px;
+      border-radius: 3px;
+      background: var(--leaf);
+      box-shadow: 0 0 0 4px rgba(133, 180, 153, .22);
+    }
+
+    .lead {
+      max-width: 860px;
+      color: #4f4249;
+      font-size: 19px;
+      line-height: 1.42;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: var(--card);
+      color: var(--foreground);
+      font-size: 11px;
+      font-weight: 760;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .badge.green { border-color: rgba(133, 180, 153, .5); background: rgba(133, 180, 153, .18); color: #355e44; }
+    .badge.amber { border-color: rgba(239, 196, 124, .72); background: rgba(239, 196, 124, .24); color: #7b5518; }
+    .badge.primary { border-color: rgba(146, 0, 77, .25); background: rgba(146, 0, 77, .08); color: var(--primary); }
+
+    /* ===== Reframe banner ===== */
+    .reframe {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      padding: 22px 26px;
+      margin-top: 28px;
+      align-items: stretch;
+    }
+
+    .reframe > div {
+      padding: 4px 0;
+    }
+
+    .reframe .from {
+      border-right: 1px solid var(--border);
+      padding-right: 22px;
+    }
+
+    .reframe .kicker {
+      display: block;
+      font-size: 11px;
+      font-weight: 760;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+      margin-bottom: 6px;
+    }
+
+    .reframe .from h3 {
+      color: var(--bordeaux);
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .reframe .to h3 {
+      color: #355e44;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .reframe p {
+      margin-bottom: 0;
+      font-size: 14.5px;
+      line-height: 1.5;
+    }
+
+    /* ===== Two-column tracks ===== */
+    .horizons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      position: relative;
+    }
+
+    .horizon {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      padding: 20px 22px 22px;
+      position: relative;
+    }
+
+    .horizon.now    { border-top: 5px solid var(--leaf); }
+    .horizon.next   { border-top: 5px solid var(--primary); }
+
+    .horizon-head {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .horizon-num {
+      display: flex;
+      width: 44px; height: 44px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: rgba(133, 180, 153, .22);
+      color: #355e44;
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .horizon.next .horizon-num    { background: rgba(146, 0, 77, .10); color: var(--primary); }
+
+    .horizon h3 {
+      color: var(--bordeaux);
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .horizon-tagline {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--muted-foreground);
+      line-height: 1.4;
+    }
+
+    .use-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .use-list li {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--foreground);
+      line-height: 1.4;
+    }
+
+    .use-list .icon {
+      display: flex;
+      width: 20px; height: 20px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .horizon.now .icon    { background: rgba(133, 180, 153, .28); color: #355e44; }
+    .horizon.next .icon   { background: rgba(146, 0, 77, .14); color: var(--primary); }
+
+    .use-list strong { display: block; font-weight: 700; margin-bottom: 2px; }
+    .use-list span { color: var(--muted-foreground); font-size: 13px; }
+
+    .horizon-footer {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--bordeaux);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .horizon-footer::before {
+      content: "→";
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    /* ===== Mindset boxes ===== */
+    .mindsets {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .mindset {
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius);
+      background: var(--card);
+      padding: 18px 20px;
+    }
+
+    .mindset:nth-child(2) { border-left-color: var(--leaf); }
+    .mindset:nth-child(3) { border-left-color: var(--sky); }
+
+    .mindset h3 {
+      color: var(--bordeaux);
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .mindset p {
+      margin: 0;
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+
+    /* ===== Closing ===== */
+    .closing {
+      margin-top: 50px;
+      padding: 36px 32px;
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 90% 0%, rgba(133, 180, 153, .26), transparent 50%),
+        radial-gradient(circle at 0% 100%, rgba(146, 0, 77, .12), transparent 50%),
+        var(--card);
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .closing .kicker {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 760;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 14px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(146, 0, 77, .08);
+      border: 1px solid rgba(146, 0, 77, .22);
+    }
+
+    .closing h2 {
+      max-width: 880px;
+      font-size: clamp(28px, 3.6vw, 42px);
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+
+    .closing p {
+      max-width: 760px;
+      font-size: 17px;
+      color: #4f4249;
+      line-height: 1.5;
+    }
+
+    .closing p:last-child { margin-bottom: 0; }
+
+    @media (max-width: 960px) {
+      .reframe, .horizons, .mindsets { grid-template-columns: 1fr; }
+      .reframe .from { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; padding-bottom: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section>
+      <div class="eyebrow">Step 9 · Vejen frem</div>
+      <h1>Der er håb forude — masser af det.</h1>
+      <p class="lead">Vi har lige brugt otte sider på akser, beslutninger og bekymringer. Det er let at gå derfra med en følelse af at compliance er en stopklods. Det er den ikke. Det meste af det arbejde I gerne vil have Claude til at hjælpe med, har <strong>ingen</strong> store compliance-knaster. Resten er et spørgsmål om at lægge sporet — ikke at vente på det.</p>
+    </section>
+
+    <section>
+      <div class="reframe">
+        <div class="from">
+          <span class="kicker">Fra dette tankesæt</span>
+          <h3>"Vi må ikke endnu"</h3>
+          <p>Compliance som en port der er lukket, indtil nogen åbner den. Det fører til shadow AI på private konti, frustration hos medarbejderne og en følelse af at innovation er noget der sker andre steder.</p>
+        </div>
+        <div class="to">
+          <span class="kicker">Til dette</span>
+          <h3>"Hvor langt går vi nu, hvor langt næste kvartal?"</h3>
+          <p>Compliance som en kortlægning der viser hvilke døre der allerede står åbne, hvilke der kun mangler en nøgle, og hvilke der kræver et byggemøde først. Vi vinder på dem alle tre — bare ikke samtidig.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>To spor — hvad I konkret kan opnå</h2>
+      <p>Inddel use cases efter hvor meget afklaring de kræver. Det meste personlig produktivitet kan medarbejderne komme i gang med fra dag ét.</p>
+
+      <div class="horizons">
+        <article class="horizon now">
+          <div class="horizon-head">
+            <div class="horizon-num">1</div>
+            <h3>Hvad der er muligt nu</h3>
+            <p class="horizon-tagline">Inden for nuværende governance. Ingen nye connectors, ingen ny DPIA. Det her er værdi medarbejderne kan høste fra dag ét med en Claude Enterprise-licens.</p>
+          </div>
+          <ul class="use-list">
+            <li><span class="icon">✓</span><div><strong>Markedsresearch og branchetrends</strong><span>Tilsynsbreve, lovgivning, peer-pensionskasser</span></div></li>
+            <li><span class="icon">✓</span><div><strong>Udkast til notater og præsentationer</strong><span>Uden persondata. Mødeforberedelse, talking points.</span></div></li>
+            <li><span class="icon">✓</span><div><strong>Sparring og strategibrainstorm</strong><span>Argumentation, modspil, alternative vinkler</span></div></li>
+            <li><span class="icon">✓</span><div><strong>Forklare svære koncepter</strong><span>Oversæt aktuar, jura, IT mellem fagsprog</span></div></li>
+            <li><span class="icon">✓</span><div><strong>Code-prototyping på syntetisk data</strong><span>Workshop-modellen — fungerer også i produktion</span></div></li>
+            <li><span class="icon">✓</span><div><strong>Intern dokumentation og processer</strong><span>Skriv, opdater og strukturer videnbasen</span></div></li>
+            <li><span class="icon">✓</span><div><strong>Code review og kodeforklaring</strong><span>Forstå eksisterende systemer hurtigere</span></div></li>
+          </ul>
+          <div class="horizon-footer">Værktøjer: Chat, Cowork, Code på syntetisk data</div>
+        </article>
+
+        <article class="horizon next">
+          <div class="horizon-head">
+            <div class="horizon-num">2</div>
+            <h3>Hvad der kræver dybere analyse</h3>
+            <p class="horizon-tagline">Use cases hvor I først skal afklare klassifikation, dataadgang eller hjemmel. Værdien er stor — men det er værd at tage en runde med jura, sikkerhed og data inden I åbner.</p>
+          </div>
+          <ul class="use-list">
+            <li><span class="icon">▲</span><div><strong>Cowork med fortrolige dokumenter</strong><span>Kræver klassifikation af mapper og brugerroller</span></div></li>
+            <li><span class="icon">▲</span><div><strong>Intern videnbase via Connected Folder</strong><span>Kurateret indhold, klar klassifikation, mange brugere</span></div></li>
+            <li><span class="icon">▲</span><div><strong>Compliance-screening af leverandørkontrakter</strong><span>Cowork med klassificeret folder + checklister</span></div></li>
+            <li><span class="icon">▲</span><div><strong>Connectors mod interne systemer (SharePoint, Jira)</strong><span>Kræver klassifikation pr. kilde + adgangsstyring</span></div></li>
+            <li><span class="icon">▲</span><div><strong>Claude Code mod produktionsdata (read-only)</strong><span>Devcontainer + scoped credentials til godkendte felter</span></div></li>
+            <li><span class="icon">▲</span><div><strong>Arbejde med personhenførbare data</strong><span>Pseudonymisering eller hjemmelsvurdering pr. use case</span></div></li>
+          </ul>
+          <div class="horizon-footer">Forudsætning: klassifikation, dataadgang og hjemmel afklaret</div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Tre tankesæt der hjælper rejsen i mål</h2>
+      <div class="mindsets">
+        <div class="mindset">
+          <h3>Start hvor det er let</h3>
+          <p>De fleste use cases medarbejderne drømmer om, ligger i spor 1 — uden særlig governance. Hvis I venter på spor 2 før I starter, mister I et halvt års læring der gør spor 2 bedre at bygge.</p>
+        </div>
+        <div class="mindset">
+          <h3>Rul licenser ud bredt</h3>
+          <p>Værdien af Claude Enterprise kommer fra at mange medarbejdere bruger det dagligt på små opgaver — ikke fra at få det perfekte enkelt-use case op at køre. Bredde slår dybde i starten.</p>
+        </div>
+        <div class="mindset">
+          <h3>Mål på brug, ikke på tilladelse</h3>
+          <p>Det vigtigste compliance-signal er ikke om I har sagt "ja", men om medarbejderne bruger godkendte værktøjer i stedet for at finde private løsninger. Shadow AI er den reelle risiko.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="closing">
+        <span class="kicker">Afrunding</span>
+        <h2>Compliance er ikke en stopklods. Det er jeres tilladelse til at løbe stærkt på de rette steder.</h2>
+        <p>I har nu et beslutningstræ, et sæt akser, en gateway-arkitektur i sigte og en liste over hvad I kan gøre allerede i denne uge. Det er ikke et nul-svar. Det er en startbane.</p>
+        <p>De medarbejdere der får værktøjerne i hænderne på den rigtige måde, kommer til at opleve at deres arbejde flytter sig. Ikke alt på én gang — men nok til at de mærker forskellen i næste måned, og en hel del mere i næste kvartal. Det er den slags rejse der starter den dag I beslutter at den skal starte.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

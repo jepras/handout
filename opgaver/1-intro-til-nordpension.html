@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>04 · NordPension data sandbox</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧪</text></svg>">
+  <style>
+    :root {
+      --background: #fbfafb;
+      --foreground: #22131b;
+      --card: #ffffff;
+      --card-foreground: #22131b;
+      --muted: #f5f1f3;
+      --muted-foreground: #6f6369;
+      --border: #d8d4d7;
+      --input: #d8d4d7;
+      --primary: #92004d;
+      --primary-foreground: #ffffff;
+      --secondary: #f3edf0;
+      --secondary-foreground: #660036;
+      --accent: #f7e7ef;
+      --accent-foreground: #660036;
+      --ring: #ce0060;
+      --ruby: #ce0060;
+      --bordeaux: #660036;
+      --warm-gray: #aca39a;
+      --mint: #9edfce;
+      --lilac: #c5aed5;
+      --beige: #e88f80;
+      --sky: #6e9baa;
+      --yellow: #efc47c;
+      --leaf: #85b499;
+      --summer-gray: #d8d4d7;
+      --winter-gray: #c7c9d4;
+      --blue: var(--sky);
+      --cyan: var(--mint);
+      --green: var(--leaf);
+      --amber: var(--yellow);
+      --rose: var(--ruby);
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(180deg, rgba(245, 241, 243, .92), rgba(251, 250, 251, 0) 420px),
+        var(--background);
+      color: var(--foreground);
+      line-height: 1.5;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 56px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 920px;
+      margin-bottom: 16px;
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 1.02;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      font-size: 24px;
+      line-height: 1.15;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    p {
+      margin-bottom: 12px;
+      color: var(--muted-foreground);
+    }
+
+    code {
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--muted);
+      padding: 1px 5px;
+      color: var(--foreground);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .92em;
+    }
+
+    section { margin-top: 72px; }
+    section:first-of-type { margin-top: 0; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+      gap: 22px;
+      align-items: stretch;
+      padding: 24px 0 8px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      color: var(--muted-foreground);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 0 4px rgba(133, 180, 153, .22);
+    }
+
+    .lead {
+      max-width: 790px;
+      margin-bottom: 22px;
+      color: #4f4249;
+      font-size: 18px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 40px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 0 14px;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .button.secondary {
+      border-color: var(--border);
+      background: var(--card);
+      color: var(--foreground);
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      color: var(--card-foreground);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+    }
+
+    .card-header { padding: 18px 18px 0; }
+    .card-body { padding: 18px; }
+
+    .card-title {
+      margin-bottom: 6px;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .card-description {
+      margin-bottom: 0;
+      color: var(--muted-foreground);
+      font-size: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: fit-content;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: var(--card);
+      color: var(--foreground);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .badge.blue   { border-color: rgba(110, 155, 170, .38); background: rgba(110, 155, 170, .14); color: #375f6b; }
+    .badge.cyan   { border-color: rgba(158, 223, 206, .7);  background: rgba(158, 223, 206, .24); color: #2f6f60; }
+    .badge.green  { border-color: rgba(133, 180, 153, .5);  background: rgba(133, 180, 153, .18); color: #446e55; }
+    .badge.amber  { border-color: rgba(239, 196, 124, .7);  background: rgba(239, 196, 124, .22); color: #7b5518; }
+    .badge.rose   { border-color: rgba(206, 0, 96, .24);    background: rgba(206, 0, 96, .08);    color: #92004d; }
+    .badge.lilac  { border-color: rgba(197, 174, 213, .72); background: rgba(197, 174, 213, .28); color: #563d69; }
+
+    .grid { display: grid; gap: 16px; }
+    .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .stat {
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 12px;
+      background: #fffdfd;
+    }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      line-height: 1.3;
+    }
+
+    .diagram {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      padding: 18px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+    }
+
+    .diagram-title {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .diagram-title h2 { margin-bottom: 0; }
+
+    /* Five-system architecture grid */
+    .systems {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .system {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: var(--card);
+      min-height: 168px;
+    }
+
+    .system .name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-weight: 800;
+      color: var(--bordeaux);
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 13.5px;
+    }
+
+    .system .name .swatch {
+      width: 10px; height: 10px;
+      border-radius: 3px;
+      background: var(--primary);
+    }
+
+    .system.medlem .swatch { background: var(--primary); }
+    .system.crm    .swatch { background: var(--ruby); }
+    .system.erp    .swatch { background: var(--bordeaux); }
+    .system.dwh    .swatch { background: var(--sky); }
+    .system.kms    .swatch { background: var(--leaf); }
+
+    .system p { margin: 0 0 8px; font-size: 13px; }
+
+    .system .tables {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .system .tag {
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--muted);
+      color: #4f4249;
+      font-size: 11px;
+      padding: 2px 6px;
+      font-family: ui-monospace, Menlo, monospace;
+    }
+
+    .pii-badge {
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .pii-yes { color: var(--ruby); }
+    .pii-no { color: #446e55; }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .route {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      overflow: hidden;
+    }
+
+    .route-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px;
+      background: #fff8fb;
+    }
+
+    .route-head strong { font-size: 15px; }
+    .route-body { padding: 16px; }
+
+    .rail {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .rail-step {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .num {
+      display: flex;
+      width: 28px;
+      height: 28px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .rail-step strong {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 14px;
+    }
+
+    .rail-step span {
+      display: block;
+      color: var(--muted-foreground);
+      font-size: 13px;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .tool {
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: var(--card);
+      padding: 12px;
+    }
+
+    .tool code {
+      display: inline-block;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .tool p {
+      margin: 0;
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+
+    .codeblock {
+      margin: 12px 0 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #1a0f15;
+      padding: 14px 16px;
+      overflow-x: auto;
+      color: #f4e8ee;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12.5px;
+      line-height: 1.6;
+      white-space: pre;
+    }
+
+    .codeblock .tok-key { color: #f7a8d8; }
+    .codeblock .tok-str { color: #9be3b4; }
+    .codeblock .tok-com { color: #c4a6b6; }
+
+    .field {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 8px;
+      align-items: center;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+
+    .field .field-label {
+      color: var(--muted-foreground);
+      font-weight: 600;
+    }
+
+    .field code {
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 6px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .comparison {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      font-size: 14px;
+    }
+
+    .comparison th,
+    .comparison td {
+      border-bottom: 1px solid var(--border);
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .comparison th {
+      background: #fff8fb;
+      color: #4f4249;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .comparison tr:last-child td { border-bottom: 0; }
+
+    .callout {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: start;
+      border: 1px solid rgba(239, 196, 124, .7);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: rgba(239, 196, 124, .18);
+    }
+
+    .callout-icon {
+      display: flex;
+      width: 36px; height: 36px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: rgba(239, 196, 124, .26);
+      color: #660036;
+      font-weight: 900;
+    }
+
+    .callout p { margin-bottom: 0; color: #660036; }
+
+    .prompt-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .prompt {
+      min-height: 130px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--card);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      color: #2f1b25;
+    }
+
+    @media (max-width: 1000px) {
+      .systems, .tools-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      .hero, .two, .three, .four, .five, .route-grid, .prompt-grid, .systems, .tools-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> NordPension workshop sandbox</div>
+        <h1>Et fake pensionsselskab — spredt over fem systemer</h1>
+        <p class="lead">NordPension er et opdigtet dansk arbejdsmarkedspensionsselskab. Data ligger ikke i ét warehouse, men i <b>fem separate systemer</b> — medlemssystem, CRM, ERP, data warehouse og knowledge management — præcis som i et rigtigt selskab. Deltagerne kan tilgå data på to måder: gennem en MCP-connector der filtrerer PII automatisk, eller direkte mod Supabase REST hvor de selv har ansvar for compliance.</p>
+        <div class="button-row">
+          <span class="button">Start med connectoren</span>
+          <span class="button secondary">Byg direkte på Supabase</span>
+        </div>
+      </div>
+
+      <aside class="card">
+        <div class="card-header">
+          <span class="badge green">Klar til workshop</span>
+          <h2 style="margin-top: 12px;">Hvad er nyt</h2>
+          <p class="card-description">Data simulerer en rigtig enterprise-arkitektur, ikke ét fladt warehouse. MCP er bygget som compliance-lag.</p>
+        </div>
+        <div class="card-body">
+          <div class="stat-grid">
+            <div class="stat"><strong>5 systemer</strong><span>medlem, crm, erp, dwh, kms</span></div>
+            <div class="stat"><strong>26 tabeller</strong><span>med cross-schema FK'er</span></div>
+            <div class="stat"><strong>5 MCP-tools</strong><span>generiske, PII-filtrerede</span></div>
+            <div class="stat"><strong>2 veje</strong><span>safe via MCP, expert via REST</span></div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="diagram">
+      <div class="diagram-title">
+        <h2>De fem systemer</h2>
+        <span class="badge">Ét Supabase-projekt, fem Postgres-schemaer</span>
+      </div>
+      <p>Hver "system" er et Postgres-schema i samme Supabase-projekt. Cross-schema fremmednøgler binder dem sammen — fx peger <code>crm.service_cases.member_id</code> på <code>medlem.members.member_id</code>, og <code>crm.service_cases.assignee_employee_id</code> peger på <code>erp.employees.employee_id</code>. Det giver det realistiske "hvor ligger sandheden?"-spørgsmål rigtige enterprise-data altid har.</p>
+
+      <div class="systems">
+        <article class="system medlem">
+          <div class="name"><span class="swatch"></span>medlem</div>
+          <p><b>Medlemssystem</b> — source of truth for medlemsforhold. OLTP. Indeholder PII (navne, CPR, adresser, bank).</p>
+          <div class="tables">
+            <span class="tag">members</span>
+            <span class="tag">employers</span>
+            <span class="tag">contributions</span>
+            <span class="tag">pension_projections</span>
+            <span class="tag">member_events</span>
+          </div>
+          <div class="pii-badge pii-yes">⚠ PII</div>
+        </article>
+
+        <article class="system crm">
+          <div class="name"><span class="swatch"></span>crm</div>
+          <p><b>CRM / front office</b> — sager, interaktioner, mails, helbredsnoter, operationelle alerts. Indeholder fritekst-narrativ og særlig kategori-data.</p>
+          <div class="tables">
+            <span class="tag">service_cases</span>
+            <span class="tag">interactions</span>
+            <span class="tag">emails</span>
+            <span class="tag">case_health_notes</span>
+            <span class="tag">synthetic_inbox_events</span>
+          </div>
+          <div class="pii-badge pii-yes">⚠ PII + helbred</div>
+        </article>
+
+        <article class="system erp">
+          <div class="name"><span class="swatch"></span>erp</div>
+          <p><b>ERP / back office</b> — afdelinger, medarbejdere, finansposter, leverandører. HR-data er let følsomt.</p>
+          <div class="tables">
+            <span class="tag">departments</span>
+            <span class="tag">employees</span>
+            <span class="tag">suppliers</span>
+            <span class="tag">general_ledger</span>
+          </div>
+          <div class="pii-badge pii-yes">⚠ let HR-PII</div>
+        </article>
+
+        <article class="system dwh">
+          <div class="name"><span class="swatch"></span>dwh</div>
+          <p><b>Data warehouse</b> — aggregeret analytisk lag. Board-rapporter, KPI'er, fondsafkast, 15 års historik, datakvalitet.</p>
+          <div class="tables">
+            <span class="tag">report_metrics</span>
+            <span class="tag">board_reports</span>
+            <span class="tag">company_history</span>
+            <span class="tag">fund_returns</span>
+            <span class="tag">investment_holdings</span>
+            <span class="tag">data_quality_issues</span>
+          </div>
+          <div class="pii-badge pii-no">✓ ingen PII</div>
+        </article>
+
+        <article class="system kms">
+          <div class="name"><span class="swatch"></span>kms</div>
+          <p><b>Knowledge management</b> — politikker, processer, ordbog, FAQ, strategiske initiativer, IT-systemer. Om virksomheden, ikke om medlemmer.</p>
+          <div class="tables">
+            <span class="tag">policies</span>
+            <span class="tag">processes</span>
+            <span class="tag">faqs</span>
+            <span class="tag">glossary</span>
+            <span class="tag">systems</span>
+            <span class="tag">initiatives</span>
+          </div>
+          <div class="pii-badge pii-no">✓ ingen PII</div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="diagram-title">
+        <h2>To veje til data — bevidst opdelt efter ansvar</h2>
+        <span class="badge amber">Compliance-lag</span>
+      </div>
+      <p>MCP-connectoren er ikke en magisk wrapper — den er <b>et bevidst compliance-lag</b>. Når en deltager bruger Claude Chat/Cowork via connectoren, sikrer MCP automatisk at PII aldrig forlader databasen. Når en udvikler bygger en prototype i Claude Code direkte mod Supabase REST, får hun rå adgang — og det er hendes ansvar at scrubbe før data sendes til en LLM.</p>
+
+      <div class="route-grid">
+        <article class="route">
+          <div class="route-head">
+            <strong>Rute A: MCP-connector</strong>
+            <span class="badge cyan">Safe tier</span>
+          </div>
+          <div class="route-body">
+            <p>Til forretningsanalyse i Claude Chat/Cowork. PII filtreres automatisk. Default 50 rækker pr. kald, max 500.</p>
+            <div class="rail">
+              <div class="rail-step"><div class="num">1</div><div><strong>Tilføj connector</strong><span>I Claude: Settings → Connectors → Add custom connector. URL nedenfor. Authless og read-only.</span></div></div>
+              <div class="rail-step"><div class="num">2</div><div><strong>Spørg i almindeligt sprog</strong><span>Claude vælger blandt 5 generiske tools (list_data_model, describe_table, query, fetch_one, member_360) og henter PII-filtrerede rækker.</span></div></div>
+              <div class="rail-step"><div class="num">3</div><div><strong>Få analyse uden GDPR-bekymringer</strong><span>Claude ser aldrig navne, CPR, mails, adresser, narrativer eller helbredsnoter — uanset hvor mange værktøjskald hun laver.</span></div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="route">
+          <div class="route-head">
+            <strong>Rute B: Direkte Supabase REST</strong>
+            <span class="badge blue">Expert tier</span>
+          </div>
+          <div class="route-body">
+            <p>Til udviklere der bygger prototyper i Claude Code. Fuld adgang til alle 26 tabeller inkl. PII. Udvikleren har ansvar for at håndtere data korrekt.</p>
+            <div class="rail">
+              <div class="rail-step"><div class="num">1</div><div><strong>Fælles anon-key</strong><span>Alle får samme <code>SUPABASE_URL</code> + <code>SUPABASE_ANON_KEY</code>. Read-only via RLS.</span></div></div>
+              <div class="rail-step"><div class="num">2</div><div><strong>Query schema-qualified</strong><span>SQL, REST eller Supabase-client. Schemaerne medlem, crm, erp, dwh, kms eksponeres via <code>Accept-Profile</code> header eller <code>.schema('…')</code>.</span></div></div>
+              <div class="rail-step"><div class="num">3</div><div><strong>Byg ægte apps</strong><span>Dashboards, rådgiver-360, datakvalitets-monitor, rapportgenerator — med selv-implementeret PII-håndtering.</span></div></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="diagram-title">
+        <h2>Sådan forbinder du</h2>
+        <span class="badge green">Adgang &amp; nøgler</span>
+      </div>
+
+      <div class="route-grid">
+        <article class="route">
+          <div class="route-head">
+            <strong>Chat &amp; Cowork → MCP connector</strong>
+            <span class="badge cyan">MCP</span>
+          </div>
+          <div class="route-body">
+            <p class="step-head"><span class="num">1</span> Tilføj connectoren</p>
+            <p>I Claude: <strong>Settings → Connectors → Add custom connector</strong>. Indsæt URL'en herunder.</p>
+            <div class="field">
+              <span class="field-label">Connector URL</span>
+              <code>https://nordpension-mcp.jeprasher.workers.dev/mcp</code>
+            </div>
+            <p class="step-head" style="margin-top:14px;"><span class="num">2</span> De 5 tools du får</p>
+            <div class="tools-grid" style="grid-template-columns: 1fr;">
+              <div class="tool"><code>list_data_model</code><p>Returnerer hele datalandskabet — 5 schemaer, 26 tabeller, hvilke kolonner er filtreret.</p></div>
+              <div class="tool"><code>describe_table</code><p>Detaljeret kolonneoversigt for én tabel med PII-filtreringsregler.</p></div>
+              <div class="tool"><code>query</code><p>Generisk read med filters, select, order, limit, offset. Default 50 rækker, max 500. <code>count_only:true</code> for kun et antal.</p></div>
+              <div class="tool"><code>fetch_one</code><p>Hent én række ved primary key. Convenience for query.</p></div>
+              <div class="tool"><code>member_360</code><p>Compliant pseudonym 360°-profil for ét medlem. Aggregerer demografi, bidragsmønster, åbne sager og pensionsprognose.</p></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="route">
+          <div class="route-head">
+            <strong>Claude Code → Supabase REST</strong>
+            <span class="badge blue">REST / SQL</span>
+          </div>
+          <div class="route-body">
+            <p class="step-head"><span class="num">1</span> Brug den fælles anon-key</p>
+            <p>Samme nøgle for alle. Read-only via RLS — kan læse alle 26 tabeller på tværs af 5 schemaer, kan aldrig skrive.</p>
+            <div class="field">
+              <span class="field-label">SUPABASE_URL</span>
+              <code>https://pruvwgulvquauncykgxy.supabase.co</code>
+            </div>
+            <div class="field">
+              <span class="field-label">SUPABASE_ANON_KEY</span>
+              <code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBydXZ3Z3VsdnF1YXVuY3lrZ3h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MDc0MjcsImV4cCI6MjA5NDk4MzQyN30.CCUP2qXWUdGxgX3nyhWcFgVFdBoVEGSRFrOgK1jpuP0</code>
+            </div>
+            <p class="step-head" style="margin-top:14px;"><span class="num">2</span> Hent data — REST med schema-header</p>
+<pre class="codeblock"><span class="tok-com"># Find bidragsanomalier i medlemssystemet</span>
+curl <span class="tok-str">"$SUPABASE_URL/rest/v1/contributions?anomaly_flag=eq.true&limit=5"</span> \
+  -H <span class="tok-str">"apikey: $SUPABASE_ANON_KEY"</span> \
+  -H <span class="tok-str">"Authorization: Bearer $SUPABASE_ANON_KEY"</span> \
+  -H <span class="tok-str">"Accept-Profile: medlem"</span></pre>
+            <p class="step-head" style="margin-top:14px;"><span class="num">3</span> …eller Supabase-klienten</p>
+<pre class="codeblock"><span class="tok-key">import</span> { createClient } <span class="tok-key">from</span> <span class="tok-str">"@supabase/supabase-js"</span>;
+
+<span class="tok-key">const</span> sb = createClient(URL, ANON_KEY);
+
+<span class="tok-com">// medlemssystemet — FULD PII synlig</span>
+<span class="tok-key">const</span> { data } = <span class="tok-key">await</span> sb
+  .schema(<span class="tok-str">"medlem"</span>)
+  .from(<span class="tok-str">"members"</span>)
+  .select(<span class="tok-str">"member_id, full_name, cpr_masked, region"</span>)
+  .limit(5);</pre>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="diagram">
+      <div class="diagram-title">
+        <h2>Forskellen i praksis</h2>
+        <span class="badge amber">Samme spørgsmål, to svar</span>
+      </div>
+      <p>Hvis Claude beder om <code>full_name</code> og <code>cpr_masked</code> for et medlem, ser de to ruter sådan ud:</p>
+
+      <div class="route-grid">
+        <article class="route">
+          <div class="route-head"><strong>Via MCP <code>query</code></strong><span class="badge cyan">filtreret</span></div>
+          <div class="route-body">
+<pre class="codeblock">{
+  <span class="tok-key">"data"</span>: [
+    { <span class="tok-key">"member_id"</span>: <span class="tok-str">"NP-M-001234"</span>,
+      <span class="tok-key">"age"</span>: 58,
+      <span class="tok-key">"region"</span>: <span class="tok-str">"Hovedstaden"</span> }
+  ],
+  <span class="tok-key">"mcp_governance"</span>: {
+    <span class="tok-key">"filtered_columns"</span>: [
+      <span class="tok-str">"full_name"</span>, <span class="tok-str">"cpr_masked"</span>, <span class="tok-str">"email"</span>,
+      <span class="tok-str">"phone"</span>, <span class="tok-str">"address_*"</span>, <span class="tok-str">"bank_account_masked"</span>
+    ],
+    <span class="tok-key">"requested_filtered_columns"</span>: [
+      <span class="tok-str">"full_name"</span>, <span class="tok-str">"cpr_masked"</span>
+    ]
+  }
+}</pre>
+          </div>
+        </article>
+        <article class="route">
+          <div class="route-head"><strong>Via direkte REST</strong><span class="badge blue">rå</span></div>
+          <div class="route-body">
+<pre class="codeblock">[
+  { <span class="tok-key">"member_id"</span>: <span class="tok-str">"NP-M-001234"</span>,
+    <span class="tok-key">"full_name"</span>: <span class="tok-str">"Astrid Holm"</span>,
+    <span class="tok-key">"cpr_masked"</span>: <span class="tok-str">"160482-XXXX"</span>,
+    <span class="tok-key">"email"</span>: <span class="tok-str">"astrid.holm.1234@example.dk"</span>,
+    <span class="tok-key">"phone"</span>: <span class="tok-str">"+45 30 12 34 56"</span>,
+    <span class="tok-key">"age"</span>: 58,
+    <span class="tok-key">"region"</span>: <span class="tok-str">"Hovedstaden"</span> }
+]
+<span class="tok-com">// Udvikleren har nu ansvaret for at scrubbe
+// før dette sendes til en LLM.</span></pre>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="diagram">
+      <div class="diagram-title">
+        <h2>Hvad sker der, når Claude bruger connectoren?</h2>
+        <span class="badge amber">Fra prompt til governance til data</span>
+      </div>
+
+      <div class="rail">
+        <div class="rail-step"><div class="num">1</div><div><strong>Prompt fra deltager</strong><span>"Find de største bidragsanomalier."</span></div></div>
+        <div class="rail-step"><div class="num">2</div><div><strong>Claude vælger tool</strong><span>list_data_model → describe_table(medlem, contributions) → query(medlem, contributions, {anomaly_flag:true}, order:"contribution_month.desc")</span></div></div>
+        <div class="rail-step"><div class="num">3</div><div><strong>MCP håndhæver governance</strong><span>Validerer schema/table, dropper evt. PII-kolonner fra select, sætter limit, tilføjer Accept-Profile header, henter via PostgREST.</span></div></div>
+        <div class="rail-step"><div class="num">4</div><div><strong>Response m. envelope</strong><span>data + row_count + total_available + truncated + mcp_governance.filtered_columns. Claude ved hvad der blev filtreret væk.</span></div></div>
+        <div class="rail-step"><div class="num">5</div><div><strong>Claude forklarer</strong><span>Aggregerer mønstre, foreslår næste handling — uden at have set én eneste navn eller CPR.</span></div></div>
+      </div>
+    </section>
+
+    <section class="grid three">
+      <article class="card">
+        <div class="card-header">
+          <span class="badge cyan">Chat</span>
+          <h2 style="margin-top: 12px;">Forstå og formulér</h2>
+          <p class="card-description">MCP-connectoren gør Claude til en compliant data-assistent. Brug til hurtig analyse, dialog og første beslutningsoplæg.</p>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <span class="badge">Analyse</span>
+            <span class="badge">Anomalier</span>
+            <span class="badge">KPI-trends</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <span class="badge green">Cowork</span>
+          <h2 style="margin-top: 12px;">Overdrag større opgaver</h2>
+          <p class="card-description">Lad Claude samle data fra flere systemer via MCP, skrive rapportudkast og strukturere workshop-output i en connected folder.</p>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <span class="badge">Rapport</span>
+            <span class="badge">Research</span>
+            <span class="badge">Proceskort</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <span class="badge blue">Code</span>
+          <h2 style="margin-top: 12px;">Byg prototyper</h2>
+          <p class="card-description">Forbind direkte til Supabase med anon-nøglen og byg dashboards, rådgiver-screens, dataquality-monitors. Du har fuld adgang — og fuldt ansvar.</p>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <span class="badge">Dashboard</span>
+            <span class="badge">SQL/REST</span>
+            <span class="badge">Cross-schema joins</span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section>
+      <div class="diagram-title">
+        <h2>Hvornår bruger man hvad?</h2>
+        <span class="badge">Beslutningskort</span>
+      </div>
+
+      <table class="comparison">
+        <thead>
+          <tr>
+            <th>Situation</th>
+            <th>Brug MCP-connectoren</th>
+            <th>Brug Supabase direkte</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Jeg vil forstå en forretningsproces eller læse en politik</td>
+            <td>Ja. KMS er pass-through — fuld adgang til markdown.</td>
+            <td>Også fint, men MCP er nemmest.</td>
+          </tr>
+          <tr>
+            <td>Jeg vil finde afvigelser eller mønstre i bidrag/sager</td>
+            <td>Ja. <code>query()</code> giver dig rå rækker (uden PII) til selv-aggregering.</td>
+            <td>Ja, hvis du skal lave grafer eller dashboards.</td>
+          </tr>
+          <tr>
+            <td>Jeg vil bygge en rådgiverapp der viser medlemsdetaljer</td>
+            <td>Kun konteksten via <code>member_360</code>.</td>
+            <td>Ja. Du har brug for navn, kontaktinfo, depot — kun direkte REST giver dig det.</td>
+          </tr>
+          <tr>
+            <td>Jeg arbejder med følsomme helbredssager</td>
+            <td>Ja, men kun aggregater (antal, fordelinger). Selve noterne er filtreret.</td>
+            <td>Kun hvis du har DPIA og DPA på plads. Test-data, ikke produktion.</td>
+          </tr>
+          <tr>
+            <td>Jeg vil lave et bestyrelsesoplæg</td>
+            <td>Ja. DWH er pass-through. Hent KPI'er, board reports, fund returns frit.</td>
+            <td>Også fint, men MCP er hurtigere til research.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="diagram-title">
+        <h2>Prompts deltagerne kan prøve</h2>
+        <span class="badge green">Klar til brug</span>
+      </div>
+
+      <div class="prompt-grid">
+        <div class="prompt">Brug NordPension. Vis mig datamodellen — hvilke 5 systemer er der og hvad indeholder de?</div>
+        <div class="prompt">Find de 10 medlemmer over 60 år med højest løn i Hovedstaden. Forklar hvad jeg IKKE kan se gennem connectoren.</div>
+        <div class="prompt">Hvor mange anomale bidrag har vi de sidste 6 måneder, fordelt på arbejdsgiver? Foreslå en konkret rapport til Finance.</div>
+        <div class="prompt">Giv mig en 360-graders profil af medlem NP-M-001234 — hvilken type sager, prognose, bidragsmønster?</div>
+        <div class="prompt">Hvilke politikker handler om compliance? Sammenfat de 3 vigtigste punkter på tværs.</div>
+        <div class="prompt">Find SLA-brudte invaliditetssager og forklar typiske mønstre — men UDEN at hente helbredsnoterne.</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="callout">
+        <div class="callout-icon">!</div>
+        <div>
+          <h3>Workshop-regel</h3>
+          <p>Brug <b>MCP-connectoren</b> når I vil analysere, forstå og diskutere — den filtrerer PII automatisk, så Claude kan arbejde frit uden GDPR-bekymringer. Brug <b>Supabase direkte</b> når I bygger apps der behøver fulde data — så har I selv ansvaret for at håndtere PII korrekt. Alt data er syntetisk og må bruges frit i øvelserne.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

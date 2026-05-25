@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>5c · Code-sessionen · Byg en rigtig app</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
+  <style>
+    :root {
+      --background: #fbfafb;
+      --foreground: #22131b;
+      --card: #ffffff;
+      --muted: #f5f1f3;
+      --muted-foreground: #6f6369;
+      --border: #d8d4d7;
+      --primary: #92004d;
+      --primary-foreground: #ffffff;
+      --ruby: #ce0060;
+      --bordeaux: #660036;
+      --mint: #9edfce;
+      --lilac: #c5aed5;
+      --beige: #e88f80;
+      --sky: #6e9baa;
+      --yellow: #efc47c;
+      --leaf: #85b499;
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 14% 0%, rgba(206, 0, 96, .08), transparent 32%),
+        linear-gradient(180deg, rgba(245, 241, 243, .85), rgba(251, 250, 251, 0) 520px),
+        var(--background);
+      color: var(--foreground);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 44px 22px 96px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      margin-bottom: 18px;
+      color: var(--bordeaux);
+      font-size: clamp(34px, 4.4vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -.01em;
+    }
+    h2 {
+      margin: 0 0 6px;
+      color: var(--bordeaux);
+      font-size: 22px;
+      line-height: 1.2;
+    }
+    h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+    p { margin-bottom: 14px; color: #3f3a3d; }
+    p.lead { font-size: 19px; color: #2f1b25; line-height: 1.45; margin-bottom: 12px; }
+    p.muted { color: var(--muted-foreground); font-size: 14.5px; }
+
+    code {
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--muted);
+      padding: 1px 6px;
+      color: var(--bordeaux);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .9em;
+    }
+
+    a { color: var(--primary); text-decoration: none; border-bottom: 1px solid rgba(146,0,77,.3); }
+    a:hover { border-bottom-color: var(--primary); }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      font-weight: 760;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 10px; height: 10px;
+      border-radius: 3px;
+      background: var(--primary);
+      box-shadow: 0 0 0 4px rgba(146, 0, 77, .12);
+    }
+
+    .toc {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      padding: 14px 18px;
+      margin: 28px 0 40px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .03);
+    }
+    .toc h3 { margin-bottom: 8px; color: var(--bordeaux); font-size: 13px; letter-spacing: .04em; text-transform: uppercase; }
+    .toc ol { margin: 0; padding-left: 22px; color: var(--muted-foreground); font-size: 14.5px; }
+    .toc li { margin: 4px 0; }
+    .toc li b { color: var(--foreground); }
+
+    .phase {
+      position: relative;
+      margin: 56px 0 0;
+      padding: 28px 0 0;
+      border-top: 1px solid var(--border);
+    }
+    .phase:first-of-type { border-top: 0; padding-top: 12px; margin-top: 28px; }
+
+    .phase-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; height: 36px;
+      margin-bottom: 14px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .phase > p { font-size: 16px; }
+
+    .step {
+      margin: 22px 0;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: 0 1px 2px rgba(16, 12, 14, .03);
+    }
+    .step-label {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: rgba(146, 0, 77, .08);
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 760;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .step p { margin: 6px 0; }
+
+    .prompt {
+      margin: 10px 0;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: #1f1b1f;
+      color: #f5f1f3;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13.5px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .prompt::before {
+      content: "Prompt";
+      display: inline-block;
+      margin: -2px 8px 4px -2px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: rgba(206, 0, 96, .25);
+      color: #f5d6e3;
+      font-size: 10.5px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-weight: 700;
+      vertical-align: top;
+    }
+
+    .action {
+      margin: 10px 0;
+      padding: 11px 14px;
+      border: 1px solid rgba(110, 155, 170, .35);
+      border-radius: 7px;
+      background: rgba(110, 155, 170, .1);
+      color: #2c4d57;
+      font-size: 14.5px;
+    }
+    .action::before {
+      content: "Gør";
+      display: inline-block;
+      margin-right: 9px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: rgba(110, 155, 170, .25);
+      color: #2c4d57;
+      font-size: 10.5px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .expect {
+      margin: 10px 0;
+      padding: 11px 14px;
+      border: 1px solid rgba(133, 180, 153, .4);
+      border-radius: 7px;
+      background: rgba(133, 180, 153, .12);
+      color: #305e44;
+      font-size: 14.5px;
+    }
+    .expect::before {
+      content: "Forvent";
+      display: inline-block;
+      margin-right: 9px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: rgba(133, 180, 153, .26);
+      color: #305e44;
+      font-size: 10.5px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .insight {
+      margin: 14px 0 0;
+      padding: 12px 14px;
+      border-left: 4px solid var(--yellow);
+      background: rgba(239, 196, 124, .12);
+      border-radius: 0 7px 7px 0;
+      color: #6b4a08;
+      font-size: 14.5px;
+    }
+    .insight strong { color: #4d3406; }
+
+    .hint {
+      margin: 12px 0;
+      padding: 10px 13px;
+      border: 1px dashed var(--border);
+      border-radius: 7px;
+      background: #fefcfa;
+      color: var(--muted-foreground);
+      font-size: 13.5px;
+    }
+    .hint::before {
+      content: "💡 Hint";
+      font-weight: 700;
+      color: var(--bordeaux);
+      margin-right: 8px;
+    }
+
+    .mission {
+      margin: 28px 0 0;
+      padding: 22px 24px;
+      border: 1px solid rgba(146, 0, 77, .25);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(146, 0, 77, .07), rgba(146, 0, 77, .02));
+    }
+    .mission .label {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      font-weight: 760;
+    }
+    .mission h3 { font-size: 20px; color: var(--bordeaux); margin-bottom: 6px; }
+    .mission p { color: #3f3a3d; font-size: 15.5px; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">💻 Dag 1 · Session 3 · Claude Code</div>
+    <h1>Byg en rigtig app — og lad Claude tjekke sit eget arbejde</h1>
+    <p class="lead">Nu skifter vi værktøj. Vi går fra chat-vinduet og dokumentmappen over i <strong>terminalen</strong>, hvor Claude Code bygger en faktisk app: React-frontend, FastAPI-backend, SQLite. Samme NordPension-opgave, men nu som software der kører på din maskine — og hvor Claude selv kan inspicere det den lige har lavet.</p>
+    <p class="muted"><strong>Fase 1-4 gennemgår vi sammen på storskærm</strong> — du følger med i din egen terminal. <strong>Fra fase 5 arbejder du selv</strong>.</p>
+
+    <div class="toc">
+      <h3>Sessionens fem faser</h3>
+      <ol>
+        <li><b>Start et nyt Claude Code-projekt</b> — terminal, stack, scaffold</li>
+        <li><b>Vælg din dataadgangs-strategi</b> — MCP eller direkte Supabase</li>
+        <li><b>Byg "Min medlemsportefølje"-appen</b> — list + detail</li>
+        <li><b>Installer frontend-design skill</b> — og lad Claude redesigne</li>
+        <li><b>Playwright self-validation</b> — den agentiske loop (solo)</li>
+      </ol>
+    </div>
+
+    <!-- ───────────────────────── PHASE 1 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">1</div>
+      <h2>Start et nyt Claude Code-projekt</h2>
+      <p>Vi forlader browseren. Claude Code lever i terminalen og kan læse, skrive og køre kode direkte i en mappe på din maskine.</p>
+
+      <div class="step">
+        <span class="step-label">1.1 — Åbn terminal og start Claude</span>
+        <div class="action">Åbn en terminal og lav en ny, tom mappe — fx <code>mkdir nordpension-portal &amp;&amp; cd nordpension-portal</code>.</div>
+        <div class="action">Start Claude Code med kommandoen <code>claude</code>. Du får et prompt-felt i terminalen.</div>
+        <p class="muted">Claude Code arbejder altid relativt til den mappe du startede den i. Den kan ikke se filer udenfor.</p>
+      </div>
+
+      <div class="step">
+        <span class="step-label">1.2 — Bed Claude scaffolde projektet</span>
+        <p>Første prompt definerer hele stakken. Vi vælger noget bevidst småt og pragmatisk:</p>
+        <div class="prompt">Bootstrap et nyt projekt i denne mappe med følgende stack:
+
+- Frontend: React + Vite + TypeScript (brug yarn som package manager)
+- Backend: FastAPI (Python, brug uv som package manager)
+- Database: SQLite lokalt
+
+Lav en simpel "hello world"-version end-to-end så jeg kan se at det hele kører.
+Forklar undervejs hvad du laver, og bed mig om lov før du installerer pakker.</div>
+        <div class="expect">Claude opretter en mappestruktur (typisk <code>frontend/</code> og <code>backend/</code>), skriver scaffold-filer, kører <code>yarn</code> og <code>uv</code>-kommandoer og beder om din godkendelse undervejs.</div>
+        <div class="insight"><strong>Den agentiske forskel:</strong> I chat fik du forslag. Her gør Claude tingene. Den beder om lov, læser filer, kører kommandoer — og du holder hånden på rattet ved at sige ja eller nej.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">1.3 — Få det op at køre</span>
+        <div class="prompt">Start både backend og frontend så jeg kan åbne appen i browseren. Fortæl mig hvilken URL den kører på.</div>
+        <div class="expect">Claude starter <code>uvicorn</code> (FastAPI) og <code>yarn dev</code> (Vite) i baggrunden og giver dig en localhost-URL. Du åbner den og ser "hello world".</div>
+        <div class="hint">Hvis noget fejler, så sig <em>"Det virker ikke — fejlbeskeden er: …"</em> og lim outputtet ind. Claude læser fejlen, retter og prøver igen.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── PHASE 2 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">2</div>
+      <h2>Vælg din dataadgangs-strategi</h2>
+      <p>Før vi bygger noget rigtigt, skal vi træffe ét eksplicit valg: hvor kommer data fra? I session 1 var det givet — MCP-connectoren. Her har du to muligheder, og koden flytter ansvaret over på dig.</p>
+
+      <div class="step">
+        <span class="step-label">2.1 — De to veje</span>
+        <p><strong>Vej A — via NordPension MCP-connectoren.</strong> Samme endpoint som i session 1: <code>https://nordpension-mcp.jeprasher.workers.dev/mcp</code>. PII er filtreret væk på serversiden. Governance kommer gratis med.</p>
+        <p><strong>Vej B — direkte mod Supabase REST API.</strong> URL: <code>https://pruvwgulvquauncykgxy.supabase.co/rest/v1/</code> med en anon key. Du får alt — inklusive navne, CPR, email, adresser. Til gengæld er det dit ansvar hvad du gør med det.</p>
+        <div class="insight"><strong>Pointen:</strong> Når du bygger en app, kan du selv vælge hvor stramt governance-laget skal sidde. MCP'en filtrerer for dig. Den direkte vej gør ikke. Det er et reelt design-valg, ikke en teknisk detalje.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">2.2 — Lad Claude argumentere for begge sider</span>
+        <div class="prompt">Jeg skal vælge mellem to dataadgangs-strategier til "Min medlemsportefølje"-app:
+
+A) NordPension MCP-connector (PII-filtreret, governance indbygget)
+   Endpoint: https://nordpension-mcp.jeprasher.workers.dev/mcp
+
+B) Supabase REST direkte (anon key, fuld data inkl. PII)
+   Endpoint: https://pruvwgulvquauncykgxy.supabase.co/rest/v1/
+
+Argumentér seriøst for begge. Hvad vinder jeg, hvad mister jeg, hvad bliver mit ansvar i hver?</div>
+        <div class="expect">Claude giver dig en afvejning: MCP = sikkert default men begrænset; direkte = fuld fleksibilitet men du skal selv tænke på PII, logging, samtykke, lethal trifecta osv.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">2.3 — Træf valget og dokumentér det</span>
+        <div class="prompt">Jeg vælger [A / B]. Opret en README.md i projektets rod der dokumenterer valget, ræsonnementet og hvilke konsekvenser det har for hvordan vi håndterer data fremover.</div>
+        <div class="expect">Du har nu en README med et eksplicit governance-spor. Når en kollega — eller revisor — kigger om tre måneder, kan de se hvorfor.</div>
+        <div class="hint">Hvis du vælger MCP-vejen, så bed Claude om at tilføje connectoren til <code>.claude/settings.json</code> i projektet, så den er tilgængelig som værktøj i Claude Code.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── PHASE 3 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">3</div>
+      <h2>Byg "Min medlemsportefølje"-appen</h2>
+      <p>Nu det rigtige. Appen er bevidst lille: en liste over medlemmer og en detail-side per medlem med deres sager. Det er nok til at mærke hele loopet.</p>
+
+      <div class="step">
+        <span class="step-label">3.1 — Beskriv funktionaliteten</span>
+        <div class="prompt">Byg "Min medlemsportefølje" end-to-end:
+
+Backend (FastAPI):
+- GET /api/members → liste af medlemmer (id, age, profession_group, region, annual_salary)
+- GET /api/members/{id} → ét medlem + dets aktive sager
+- GET /api/cases?member_id={id} → sager for et medlem
+
+Data henter du via [MCP-connectoren / Supabase REST] ud fra mit valg i README.
+Brug gerne SQLite som lokal cache hvis det giver mening, ellers proxy direkte igennem.
+
+Frontend (React + Vite):
+- Forsiden: en tabel med medlemmer, klikbar
+- Detail-siden: medlemsoplysninger øverst, sager nedenunder
+
+Gør det enkelt. Ingen auth, ingen state-management bibliotek. Bare list + detail.
+Når du er færdig, start serverne og verificér at appen virker ved at hente /api/members
+og kigge på output.</div>
+        <div class="expect">Claude skriver routes, en frontend, og kører selv en <code>curl</code> mod sit eget endpoint for at tjekke at data kommer ud. Hvis noget fejler, fejlsøger den selv før den giver op.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">3.2 — Åbn den i browseren</span>
+        <div class="action">Åbn appen på localhost. Klik dig rundt. Kig på en medlemsdetalje.</div>
+        <div class="expect">Det virker — men det ser typisk meget "default" ud. Hvid baggrund, sort tekst, standard browser-fonts. Funktionelt, men kedeligt.</div>
+        <div class="insight"><strong>Det er pointen.</strong> Vi vil mærke kontrasten i næste fase, når Skills træder ind.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── PHASE 4 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">4</div>
+      <h2>Installer frontend-design skill og regenerér UI'en</h2>
+      <p>Samme trick som <code>theme-factory</code> i session 1 — bare i Code-kontekst. Skills lærer Claude konventioner og hæver kvaliteten gratis.</p>
+
+      <div class="step">
+        <span class="step-label">4.1 — Installer skillen</span>
+        <div class="prompt">Installer skillen "frontend-design" fra https://www.skills.sh/anthropics/skills/frontend-design i dette projekt. Bekræft at den er tilgængelig.</div>
+        <div class="expect">Claude henter skillen, lægger den i <code>.claude/skills/</code> og bekræfter at den nu er aktiv.</div>
+        <p class="muted">Skillen er Anthropics egen samling af principper for "ikke at lave generisk AI-look" — typografi, spacing, hierarki, farvevalg.</p>
+      </div>
+
+      <div class="step">
+        <span class="step-label">4.2 — Tag et "før"-screenshot</span>
+        <div class="action">Inden du redesigner: tag et screenshot af appen som den ser ud nu. Gem det som <code>before.png</code> i projektet.</div>
+        <div class="hint">Du kan også bede Claude om at gøre det med Playwright — så har du allerede første tråd til fase 5.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">4.3 — Redesign med skillen aktiv</span>
+        <div class="prompt">Redesign frontend'en til "Min medlemsportefølje" med frontend-design-skillen aktiv. Behold funktionaliteten, men løft kvaliteten af typografi, layout og hierarki. Brug en seriøs, dæmpet visuel tone — det er et internt værktøj, ikke en forbrugerapp.</div>
+        <div class="expect">Claude opdaterer CSS/komponenter, kører dev-serveren igen, og du ser en mærkbart mere moden UI: konsistent spacing, ordentlig type-skala, gennemtænkte farver.</div>
+        <div class="insight"><strong>Læringen, igen:</strong> Skills er det, der gør hver bruger god uden at hver bruger selv skal være designer. Det er den samme idé som i chat-sessionen — bare i kode.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── PHASE 5 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">5</div>
+      <h2>Solo: Playwright self-validation</h2>
+      <p>Her bliver det rigtigt agentisk. Du beder Claude bygge en test der åbner appen, tager et screenshot, og <em>kigger på sit eget skærmbillede</em> for at vurdere om det ligner det den troede den havde bygget.</p>
+
+      <div class="mission">
+        <span class="label">Solo-opgave</span>
+        <h3>Få Claude til at inspicere sit eget arbejde</h3>
+        <p>Vi har bygget en app. Nu skal vi lukke loopet: koden, det visuelle output, og en vurdering af om de matcher. Det er den agentiske loop i miniature — og den du skal øve dig i at have tillid til.</p>
+      </div>
+
+      <div class="step" style="margin-top: 22px;">
+        <span class="step-label">5.1 — Sæt Playwright op</span>
+        <div class="prompt">Installer Playwright i projektet. Skriv en test der:
+
+1. Starter dev-serveren (eller forventer at den allerede kører)
+2. Åbner appen på localhost
+3. Tager et screenshot af forsiden og en detail-side
+4. Gemmer screenshots i mappen ./screenshots/
+
+Kør testen og bekræft at billederne faktisk findes.</div>
+        <div class="expect">Du har en kørende test, og to PNG-filer i <code>./screenshots/</code>.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">5.2 — Lad Claude læse sit eget output</span>
+        <div class="prompt">Læs nu screenshots/forside.png og screenshots/detail.png. Beskriv hvad du ser. Stemmer det med det jeg bad dig bygge i fase 3? Er der noget der ser brudt, forkert eller "AI-genereret klodset" ud?</div>
+        <div class="expect">Claude åbner billedfilerne, beskriver konkret hvad der er på skærmen, sammenligner med specifikationen, og peger på ting den selv synes ser skævt ud.</div>
+        <div class="insight"><strong>Det her er kerneoplevelsen:</strong> Claude lukker selv loopet mellem "jeg skrev kode" og "jeg ved hvordan det ser ud". Det er meget tæt på hvordan en juniorudvikler arbejder — bare hurtigere og uden trætte øjne.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">5.3 — Stretch: Tilføj en ekstern datakilde</span>
+        <p>Hvis du har tid og lyst — udvid appen med data fra en ekstern API. Forslag:</p>
+        <ul>
+          <li><strong>Danmarks Statistik StatBank API</strong> — fx pensionsformue eller arbejdsmarkedstal som benchmark</li>
+          <li><strong>Nationalbankens statistik-API</strong> — IP-statistik eller renter</li>
+        </ul>
+        <div class="prompt">Find en relevant ekstern API (fx Danmarks Statistik) og tilføj et benchmark-tal til medlems-detailsiden, så jeg kan sammenligne et medlems opsparing mod et landsgennemsnit. Hvis API'et kræver en nøgle, så læg den i en .env-fil og sørg for at den ikke committes.</div>
+        <div class="hint">Når Claude rører ved <code>.env</code>, hemmeligheder eller eksterne kald, så sig stop og tænk en gang: hvad kan en kombination af "læser data + ekstern netværksadgang + utrusted input" føre til? Den tankerække skal vi tale om bagefter — du skal bare have plantet kimen nu.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">5.4 — Hvor langt nåede du?</span>
+        <p>Du vælger selv ambitionsniveau:</p>
+        <ul>
+          <li><strong>Minimum:</strong> Playwright + self-validation kører</li>
+          <li><strong>Mellem:</strong> Også før/efter-sammenligning af UI'en</li>
+          <li><strong>Fuld:</strong> Ekstern API med nøgle i <code>.env</code> + benchmark på detail-siden</li>
+        </ul>
+        <p class="muted">Vi samles op bagefter. Hav gerne en konkret oplevelse med — noget der overraskede dig, noget der gik galt, noget Claude foreslog du ikke selv havde tænkt på.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
