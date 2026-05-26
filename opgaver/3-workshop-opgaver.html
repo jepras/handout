@@ -11,13 +11,13 @@
       --foreground: #22131b;
       --card: #ffffff;
       --card-foreground: #22131b;
-      --muted: #f5f1f3;
+      --muted: #f3f6f6;
       --muted-foreground: #6f6369;
       --border: #d8d4d7;
-      --primary: #92004d;
+      --primary: #00646c;
       --primary-foreground: #ffffff;
-      --ruby: #ce0060;
-      --bordeaux: #660036;
+      --ruby: #67817f;
+      --bordeaux: #1f2023;
       --warm-gray: #aca39a;
       --mint: #9edfce;
       --lilac: #c5aed5;
@@ -36,7 +36,7 @@
     body {
       margin: 0;
       background:
-        radial-gradient(circle at 14% 0%, rgba(206, 0, 96, .12), transparent 32%),
+        radial-gradient(circle at 14% 0%, rgba(103, 129, 127, .12), transparent 32%),
         linear-gradient(180deg, rgba(245, 241, 243, .95), rgba(251, 250, 251, 0) 520px),
         var(--background);
       color: var(--foreground);
@@ -117,7 +117,7 @@
       height: 10px;
       border-radius: 3px;
       background: var(--primary);
-      box-shadow: 0 0 0 4px rgba(146, 0, 77, .12);
+      box-shadow: 0 0 0 4px rgba(0, 100, 108, .12);
     }
 
     .lead {
@@ -154,8 +154,8 @@
       white-space: nowrap;
     }
 
-    .badge.primary { border-color: rgba(146, 0, 77, .25); background: rgba(146, 0, 77, .08); color: var(--primary); }
-    .badge.red { border-color: rgba(206, 0, 96, .28); background: rgba(206, 0, 96, .10); color: var(--primary); }
+    .badge.primary { border-color: rgba(0, 100, 108, .25); background: rgba(0, 100, 108, .08); color: var(--primary); }
+    .badge.red { border-color: rgba(103, 129, 127, .28); background: rgba(103, 129, 127, .10); color: var(--primary); }
     .badge.blue { border-color: rgba(110, 155, 170, .38); background: rgba(110, 155, 170, .14); color: #375f6b; }
     .badge.green { border-color: rgba(133, 180, 153, .45); background: rgba(133, 180, 153, .18); color: #446e55; }
     .badge.amber { border-color: rgba(239, 196, 124, .72); background: rgba(239, 196, 124, .24); color: #7b5518; }
@@ -406,10 +406,10 @@
       display: grid;
       grid-template-columns: 44px 1fr;
       gap: 13px;
-      border: 1px solid rgba(146, 0, 77, .22);
+      border: 1px solid rgba(0, 100, 108, .22);
       border-radius: var(--radius);
       padding: 16px;
-      background: rgba(146, 0, 77, .07);
+      background: rgba(0, 100, 108, .07);
     }
 
     .callout-icon {

@@ -9,12 +9,12 @@
       --background: #fbfafb;
       --foreground: #22131b;
       --card: #ffffff;
-      --muted: #f5f1f3;
+      --muted: #f3f6f6;
       --muted-foreground: #6f6369;
       --border: #d8d4d7;
-      --primary: #92004d;
-      --bordeaux: #660036;
-      --ruby: #ce0060;
+      --primary: #00646c;
+      --bordeaux: #1f2023;
+      --ruby: #67817f;
       --mint: #9edfce;
       --lilac: #c5aed5;
       --sky: #6e9baa;
@@ -31,7 +31,7 @@
       margin: 0;
       background:
         radial-gradient(circle at 78% -10%, rgba(133, 180, 153, .22), transparent 38%),
-        radial-gradient(circle at 8% 8%, rgba(206, 0, 96, .10), transparent 36%),
+        radial-gradient(circle at 8% 8%, rgba(103, 129, 127, .10), transparent 36%),
         linear-gradient(180deg, rgba(245, 241, 243, .92), rgba(251, 250, 251, 0) 560px),
         var(--background);
       color: var(--foreground);
@@ -111,7 +111,7 @@
 
     .badge.green { border-color: rgba(133, 180, 153, .5); background: rgba(133, 180, 153, .18); color: #355e44; }
     .badge.amber { border-color: rgba(239, 196, 124, .72); background: rgba(239, 196, 124, .24); color: #7b5518; }
-    .badge.primary { border-color: rgba(146, 0, 77, .25); background: rgba(146, 0, 77, .08); color: var(--primary); }
+    .badge.primary { border-color: rgba(0, 100, 108, .25); background: rgba(0, 100, 108, .08); color: var(--primary); }
 
     /* ===== Reframe banner ===== */
     .reframe {
@@ -205,7 +205,7 @@
       font-size: 18px;
     }
 
-    .horizon.next .horizon-num    { background: rgba(146, 0, 77, .10); color: var(--primary); }
+    .horizon.next .horizon-num    { background: rgba(0, 100, 108, .10); color: var(--primary); }
 
     .horizon h3 {
       color: var(--bordeaux);
@@ -250,7 +250,7 @@
     }
 
     .horizon.now .icon    { background: rgba(133, 180, 153, .28); color: #355e44; }
-    .horizon.next .icon   { background: rgba(146, 0, 77, .14); color: var(--primary); }
+    .horizon.next .icon   { background: rgba(0, 100, 108, .14); color: var(--primary); }
 
     .use-list strong { display: block; font-weight: 700; margin-bottom: 2px; }
     .use-list span { color: var(--muted-foreground); font-size: 13px; }
@@ -310,7 +310,7 @@
       border-radius: var(--radius);
       background:
         radial-gradient(circle at 90% 0%, rgba(133, 180, 153, .26), transparent 50%),
-        radial-gradient(circle at 0% 100%, rgba(146, 0, 77, .12), transparent 50%),
+        radial-gradient(circle at 0% 100%, rgba(0, 100, 108, .12), transparent 50%),
         var(--card);
       border: 1px solid var(--border);
       text-align: left;
@@ -326,8 +326,8 @@
       margin-bottom: 14px;
       padding: 4px 10px;
       border-radius: 999px;
-      background: rgba(146, 0, 77, .08);
-      border: 1px solid rgba(146, 0, 77, .22);
+      background: rgba(0, 100, 108, .08);
+      border: 1px solid rgba(0, 100, 108, .22);
     }
 
     .closing h2 {

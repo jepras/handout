@@ -11,15 +11,15 @@
       --foreground: #22131b;
       --card: #ffffff;
       --card-foreground: #22131b;
-      --muted: #f5f1f3;
+      --muted: #f3f6f6;
       --muted-foreground: #6f6369;
       --border: #d8d4d7;
-      --primary: #92004d;
+      --primary: #00646c;
       --primary-foreground: #ffffff;
-      --secondary: #f3edf0;
-      --accent: #f7e7ef;
-      --ruby: #ce0060;
-      --bordeaux: #660036;
+      --secondary: #eaf1f1;
+      --accent: #e0ecec;
+      --ruby: #67817f;
+      --bordeaux: #1f2023;
       --warm-gray: #aca39a;
       --mint: #9edfce;
       --lilac: #c5aed5;
@@ -40,7 +40,7 @@
     body {
       margin: 0;
       background:
-        radial-gradient(circle at 14% 0%, rgba(206, 0, 96, .10), transparent 36%),
+        radial-gradient(circle at 14% 0%, rgba(103, 129, 127, .10), transparent 36%),
         linear-gradient(180deg, rgba(245, 241, 243, .92), rgba(251, 250, 251, 0) 480px),
         var(--background);
       color: var(--foreground);
@@ -102,7 +102,7 @@
       height: 10px;
       border-radius: 3px;
       background: var(--primary);
-      box-shadow: 0 0 0 4px rgba(146, 0, 77, .12);
+      box-shadow: 0 0 0 4px rgba(0, 100, 108, .12);
     }
 
     .lead {
@@ -146,7 +146,7 @@
       line-height: 1;
     }
 
-    .badge.primary { border-color: rgba(146, 0, 77, .35); background: rgba(146, 0, 77, .08); color: var(--primary); }
+    .badge.primary { border-color: rgba(0, 100, 108, .35); background: rgba(0, 100, 108, .08); color: var(--primary); }
     .badge.green { border-color: rgba(133, 180, 153, .55); background: rgba(133, 180, 153, .18); color: #446e55; }
     .badge.amber { border-color: rgba(239, 196, 124, .7); background: rgba(239, 196, 124, .22); color: #7b5518; }
     .badge.red { border-color: rgba(192, 57, 43, .35); background: rgba(192, 57, 43, .10); color: #872117; }
@@ -311,7 +311,7 @@
 
     /* Selected state — node lights up in brand red */
     .node.selected rect {
-      fill: rgba(146, 0, 77, .10);
+      fill: rgba(0, 100, 108, .10);
       stroke: var(--primary);
       stroke-width: 2.4;
     }
@@ -373,7 +373,7 @@
     }
     .recommend-hint rect {
       fill: #fff5fa;
-      stroke: rgba(146, 0, 77, .35);
+      stroke: rgba(0, 100, 108, .35);
       stroke-width: 1.2;
     }
     .recommend-hint text {
@@ -463,7 +463,7 @@
     .arche-select-trigger:focus-visible {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(146, 0, 77, .15);
+      box-shadow: 0 0 0 3px rgba(0, 100, 108, .15);
     }
     .arche-select-trigger .chev {
       flex: 0 0 auto;
@@ -513,7 +513,7 @@
       line-height: 1.3;
     }
     .arche-menu-item:hover, .arche-menu-item:focus-visible {
-      background: rgba(146, 0, 77, .08);
+      background: rgba(0, 100, 108, .08);
       outline: none;
     }
     .arche-menu-item.blocked .arche-item-result { color: var(--red); }
@@ -568,10 +568,10 @@
       align-items: center;
       gap: 6px;
       margin-top: 9px;
-      border: 1px solid rgba(146, 0, 77, .3);
+      border: 1px solid rgba(0, 100, 108, .3);
       border-radius: 999px;
       padding: 4px 10px;
-      background: rgba(146, 0, 77, .07);
+      background: rgba(0, 100, 108, .07);
       color: var(--primary);
       font-size: 12px;
       font-weight: 700;
@@ -764,7 +764,7 @@
       display: inline-block;
       padding: 2px 8px;
       border-radius: 999px;
-      background: rgba(146, 0, 77, .08);
+      background: rgba(0, 100, 108, .08);
       color: var(--primary);
       font-size: 11.5px;
       margin-right: 5px;
@@ -822,7 +822,7 @@
                 <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
               </marker>
               <marker id="arrow-primary" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-                <path d="M0,0 L10,5 L0,10 z" fill="#92004D"></path>
+                <path d="M0,0 L10,5 L0,10 z" fill="#00646c"></path>
               </marker>
             </defs>
 
@@ -838,12 +838,12 @@
           </svg>
 
           <div class="legend">
-            <span><span class="sw" style="background:#f7eef3;border-color:#660036"></span> Spørgsmål</span>
+            <span><span class="sw" style="background:#f7eef3;border-color:#1f2023"></span> Spørgsmål</span>
             <span><span class="sw" style="background:#ffffff"></span> Svar (klikbar)</span>
             <span><span class="sw" style="background:#fff7e4;border-color:#b58a3a"></span> Krav undervejs</span>
             <span><span class="sw" style="background:rgba(133,180,153,.18);border-color:#446e55"></span> OK · kør</span>
             <span><span class="sw" style="background:rgba(192,57,43,.14);border-color:#c0392b"></span> Stop · governance</span>
-            <span><span class="sw" style="background:rgba(146,0,77,.10);border-color:#92004D"></span> Din sti</span>
+            <span><span class="sw" style="background:rgba(0,100,108,.10);border-color:#00646c"></span> Din sti</span>
           </div>
         </article>
 

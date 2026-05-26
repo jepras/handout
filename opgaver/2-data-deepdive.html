@@ -12,9 +12,9 @@
       --background:#ffffff; --foreground:#0a0a0a;
       --card:#ffffff; --muted:#f5f4f5; --muted-foreground:#6b6168;
       --border:#e7e3e5; --input:#e7e3e5;
-      --primary:#92004D;
+      --primary:#00646c;
       --primary-foreground:#ffffff;
-      --ruby:#CE0060; --bordeaux:#660036;
+      --ruby:#67817f; --bordeaux:#1f2023;
       --mint:#9EDFCE; --syren:#C5AED5; --pudder:#E88F80;
       --himmel:#6E9BAA; --eng:#EFC47C; --loev:#85B499; --graa:#ACA39A;
       --radius:0.65rem;
@@ -22,7 +22,7 @@
     }
     *{box-sizing:border-box;}
     body{margin:0;background:var(--background);color:var(--foreground);line-height:1.55;
-      background-image:radial-gradient(680px 280px at 88% -8%,rgba(146,0,77,.06),transparent);}
+      background-image:radial-gradient(680px 280px at 88% -8%,rgba(0,100,108,.06),transparent);}
     main{max-width:1080px;margin:0 auto;padding:44px 22px 72px;}
     h1{font-size:clamp(30px,4.6vw,48px);line-height:1.05;letter-spacing:-.01em;margin:0 0 14px;}
     h2{font-size:21px;letter-spacing:-.01em;margin:80px 0 14px;display:flex;align-items:center;gap:10px;}
@@ -50,14 +50,14 @@
     .tag{border:1px solid var(--border);border-radius:6px;background:var(--muted);color:#4a4348;
       font-size:11.5px;padding:3px 8px;font-family:ui-monospace,Menlo,monospace;}
     .badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:600;white-space:nowrap;}
-    .badge.rows{background:rgba(146,0,77,.08);color:var(--primary);border:1px solid rgba(146,0,77,.18);}
-    .badge.warn{background:rgba(206,0,96,.1);color:var(--ruby);border:1px solid rgba(206,0,96,.25);}
+    .badge.rows{background:rgba(0,100,108,.08);color:var(--primary);border:1px solid rgba(0,100,108,.18);}
+    .badge.warn{background:rgba(103,129,127,.1);color:var(--ruby);border:1px solid rgba(103,129,127,.25);}
     .badge.ok{background:rgba(133,180,153,.18);color:#2f6b48;border:1px solid rgba(133,180,153,.45);}
     .badge.mcp{background:rgba(110,155,170,.14);color:#375f6b;border:1px solid rgba(110,155,170,.38);}
     .pill{display:inline-block;border-radius:999px;padding:2px 8px;font-size:11px;font-weight:700;border:1px solid transparent;}
     .pill.green{background:rgba(133,180,153,.22);color:#2f6b48;}
     .pill.amber{background:rgba(239,196,124,.28);color:#8a5a08;}
-    .pill.red{background:rgba(206,0,96,.12);color:var(--ruby);}
+    .pill.red{background:rgba(103,129,127,.12);color:var(--ruby);}
     .pill.neutral{background:var(--muted);color:#4a4348;}
     .stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:24px 0 4px;}
     .stat{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);padding:15px;box-shadow:0 1px 2px rgba(16,10,13,.04);}
@@ -85,11 +85,11 @@
     .ref td.pii.has{color:var(--ruby);}
     .ref td.pii.none{color:#2f6b48;}
     ul{margin:0;padding-left:18px;color:var(--muted-foreground);} li{margin:6px 0;} li b{color:var(--foreground);}
-    .note{border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:10px;background:rgba(146,0,77,.04);padding:16px 18px;}
-    .note.warn{border-left-color:var(--ruby);background:rgba(206,0,96,.05);}
+    .note{border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:10px;background:rgba(0,100,108,.04);padding:16px 18px;}
+    .note.warn{border-left-color:var(--ruby);background:rgba(103,129,127,.05);}
     .note.info{border-left-color:var(--himmel);background:rgba(110,155,170,.06);}
     .foot{margin-top:30px;border:1px solid rgba(239,196,124,.55);border-radius:10px;background:rgba(239,196,124,.14);padding:14px 16px;color:#6b4a08;font-size:14px;}
-    .foot code{background:rgba(146,0,77,.08);color:var(--primary);border-radius:5px;padding:1px 5px;font-family:ui-monospace,Menlo,monospace;}
+    .foot code{background:rgba(0,100,108,.08);color:var(--primary);border-radius:5px;padding:1px 5px;font-family:ui-monospace,Menlo,monospace;}
     @media(max-width:1000px){.cols-5,.stat-row{grid-template-columns:repeat(2,1fr);}}
     @media(max-width:880px){.cols-3,.cols-2{grid-template-columns:1fr 1fr;}}
     @media(max-width:560px){.cols-3,.cols-2,.cols-5,.stat-row{grid-template-columns:1fr;}}
@@ -356,8 +356,8 @@ erDiagram
   mermaid.initialize({
     startOnLoad:true, theme:"base",
     themeVariables:{
-      background:"#ffffff", primaryColor:"#ffffff", primaryBorderColor:"#92004D",
-      primaryTextColor:"#0a0a0a", lineColor:"#CE0060", textColor:"#3f3a3d", fontSize:"13px"
+      background:"#ffffff", primaryColor:"#ffffff", primaryBorderColor:"#00646c",
+      primaryTextColor:"#0a0a0a", lineColor:"#67817f", textColor:"#3f3a3d", fontSize:"13px"
     }
   });
 </script>

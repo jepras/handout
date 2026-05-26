@@ -11,13 +11,13 @@
       --foreground: #22131b;
       --card: #ffffff;
       --card-foreground: #22131b;
-      --muted: #f5f1f3;
+      --muted: #f3f6f6;
       --muted-foreground: #6f6369;
       --border: #d8d4d7;
-      --primary: #92004d;
+      --primary: #00646c;
       --primary-foreground: #ffffff;
-      --ruby: #ce0060;
-      --bordeaux: #660036;
+      --ruby: #67817f;
+      --bordeaux: #1f2023;
       --warm-gray: #aca39a;
       --mint: #9edfce;
       --lilac: #c5aed5;
@@ -41,7 +41,7 @@
     body {
       margin: 0;
       background:
-        radial-gradient(circle at 18% 0%, rgba(206, 0, 96, .13), transparent 32%),
+        radial-gradient(circle at 18% 0%, rgba(103, 129, 127, .13), transparent 32%),
         linear-gradient(180deg, rgba(245, 241, 243, .94), rgba(251, 250, 251, 0) 520px),
         var(--background);
       color: var(--foreground);
@@ -160,7 +160,7 @@
       height: 10px;
       border-radius: 3px;
       background: var(--primary);
-      box-shadow: 0 0 0 4px rgba(146, 0, 77, .12);
+      box-shadow: 0 0 0 4px rgba(0, 100, 108, .12);
     }
 
     .slide-number {
@@ -230,11 +230,11 @@
       white-space: nowrap;
     }
 
-    .badge.primary { border-color: rgba(146, 0, 77, .25); background: rgba(146, 0, 77, .08); color: var(--primary); }
+    .badge.primary { border-color: rgba(0, 100, 108, .25); background: rgba(0, 100, 108, .08); color: var(--primary); }
     .badge.blue { border-color: rgba(110, 155, 170, .38); background: rgba(110, 155, 170, .14); color: #375f6b; }
     .badge.green { border-color: rgba(133, 180, 153, .45); background: rgba(133, 180, 153, .18); color: #446e55; }
     .badge.amber { border-color: rgba(239, 196, 124, .72); background: rgba(239, 196, 124, .24); color: #7b5518; }
-    .badge.red { border-color: rgba(206, 0, 96, .28); background: rgba(206, 0, 96, .10); color: var(--primary); }
+    .badge.red { border-color: rgba(103, 129, 127, .28); background: rgba(103, 129, 127, .10); color: var(--primary); }
     .badge.lilac { border-color: rgba(197, 174, 213, .72); background: rgba(197, 174, 213, .28); color: #563d69; }
 
     .hero-layout {
@@ -252,7 +252,7 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       background:
-        linear-gradient(135deg, rgba(146, 0, 77, .09), rgba(158, 223, 206, .20)),
+        linear-gradient(135deg, rgba(0, 100, 108, .09), rgba(158, 223, 206, .20)),
         #fff;
     }
 
@@ -311,7 +311,7 @@
       background: var(--muted);
     }
 
-    .line:nth-child(1) { width: 78%; background: rgba(146, 0, 77, .14); }
+    .line:nth-child(1) { width: 78%; background: rgba(0, 100, 108, .14); }
     .line:nth-child(2) { width: 92%; }
     .line:nth-child(3) { width: 66%; }
     .line:nth-child(4) { width: 84%; background: rgba(110, 155, 170, .18); }
@@ -457,7 +457,7 @@
     }
 
     .note-block.emphasis {
-      border-color: rgba(206, 0, 96, .25);
+      border-color: rgba(103, 129, 127, .25);
       background: #fff8fb;
     }
 
@@ -832,7 +832,7 @@
     }
 
     .chat-risk {
-      border: 1px solid rgba(206, 0, 96, .28);
+      border: 1px solid rgba(103, 129, 127, .28);
       border-radius: var(--radius);
       padding: 12px 14px;
       background: #fff8fb;
@@ -900,7 +900,7 @@
     .svg-ui-panel { fill: #ffffff; stroke: var(--border); stroke-width: 1.2; }
     .svg-ui-blue { fill: rgba(110, 155, 170, .11); stroke: rgba(110, 155, 170, .52); stroke-width: 1.2; }
     .svg-ui-green { fill: rgba(133, 180, 153, .16); stroke: rgba(133, 180, 153, .55); stroke-width: 1.2; }
-    .svg-ui-rose { fill: #fff8fb; stroke: rgba(206, 0, 96, .28); stroke-width: 1.2; }
+    .svg-ui-rose { fill: #fff8fb; stroke: rgba(103, 129, 127, .28); stroke-width: 1.2; }
     .svg-ui-title { fill: var(--foreground); font-size: 15px; font-weight: 850; }
     .svg-ui-label { fill: var(--foreground); font-size: 12px; font-weight: 800; }
     .svg-ui-copy { fill: var(--muted-foreground); font-size: 11px; }
@@ -942,7 +942,7 @@
     }
 
     .summary-card-bg { fill: #ffffff; stroke: var(--border); stroke-width: 1.2; }
-    .summary-card-chat { fill: #fff8fb; stroke: rgba(206, 0, 96, .32); stroke-width: 1.4; }
+    .summary-card-chat { fill: #fff8fb; stroke: rgba(103, 129, 127, .32); stroke-width: 1.4; }
     .summary-card-cowork { fill: rgba(110, 155, 170, .10); stroke: rgba(110, 155, 170, .48); stroke-width: 1.4; }
     .summary-card-code { fill: rgba(133, 180, 153, .13); stroke: rgba(133, 180, 153, .56); stroke-width: 1.4; }
     .summary-title { fill: var(--foreground); font-size: 22px; font-weight: 850; }
@@ -951,7 +951,7 @@
     .summary-small { fill: var(--muted-foreground); font-size: 12px; }
     .summary-chip { fill: #ffffff; stroke: var(--border); stroke-width: 1; }
     .summary-chip-text { fill: var(--foreground); font-size: 12px; font-weight: 750; }
-    .summary-warning { fill: #fff8fb; stroke: rgba(206, 0, 96, .32); stroke-width: 1.2; }
+    .summary-warning { fill: #fff8fb; stroke: rgba(103, 129, 127, .32); stroke-width: 1.2; }
     .summary-warning-text { fill: var(--primary); font-size: 12px; font-weight: 800; }
     .summary-axis { stroke: var(--border); stroke-width: 2; fill: none; marker-end: url(#summaryArrow); }
     .summary-axis-label { fill: var(--foreground); font-size: 16px; font-weight: 850; }
@@ -1195,7 +1195,7 @@
     }
 
     .cowork-risk {
-      border: 1px solid rgba(206, 0, 96, .28);
+      border: 1px solid rgba(103, 129, 127, .28);
       border-radius: var(--radius);
       padding: 12px 14px;
       background: #fff8fb;
@@ -1289,13 +1289,13 @@
       filter: drop-shadow(0 10px 20px rgba(34, 19, 27, .10));
     }
 
-    .svg-node-top { stroke: rgba(146, 0, 77, .62); }
+    .svg-node-top { stroke: rgba(0, 100, 108, .62); }
     .svg-node-left { stroke: rgba(239, 196, 124, .88); }
     .svg-node-right { stroke: rgba(110, 155, 170, .72); }
 
     .svg-center {
       fill: #fff8fb;
-      stroke: rgba(206, 0, 96, .35);
+      stroke: rgba(103, 129, 127, .35);
       stroke-width: 1.5;
     }
 
@@ -1386,7 +1386,7 @@
       width: 178px;
       height: 80px;
       place-items: center;
-      border: 1px solid rgba(206, 0, 96, .35);
+      border: 1px solid rgba(103, 129, 127, .35);
       border-radius: 8px;
       background: #fff8fb;
       color: var(--primary);
@@ -1448,7 +1448,7 @@
     }
 
     .point-card {
-      border: 1px solid rgba(206, 0, 96, .24);
+      border: 1px solid rgba(103, 129, 127, .24);
       border-radius: var(--radius);
       padding: 14px 16px;
       background: #fff8fb;
@@ -1950,7 +1950,7 @@
               <text class="svg-ui-small" x="64" y="320">pipeline og kørselsvejledning</text>
 
               <rect class="code-terminal" x="286" y="30" width="400" height="150" rx="9"></rect>
-              <circle cx="306" cy="54" r="5" fill="#ce0060"></circle>
+              <circle cx="306" cy="54" r="5" fill="#67817f"></circle>
               <circle cx="322" cy="54" r="5" fill="#efc47c"></circle>
               <circle cx="338" cy="54" r="5" fill="#85b499"></circle>
               <text class="code-terminal-text" x="306" y="86">$ claude \"programmer rapportflowet\"</text>
@@ -2026,7 +2026,7 @@
             <rect class="summary-card-cowork" x="400" y="38" width="320" height="350" rx="10"></rect>
             <rect class="summary-card-code" x="766" y="38" width="320" height="350" rx="10"></rect>
 
-            <circle cx="76" cy="80" r="24" fill="#92004d"></circle>
+            <circle cx="76" cy="80" r="24" fill="#00646c"></circle>
             <text x="76" y="88" text-anchor="middle" fill="#fff" font-size="22" font-weight="900">C</text>
             <text class="summary-title" x="116" y="78">Claude Chat</text>
             <text class="summary-label" x="116" y="101">Sparringspartner</text>
@@ -2067,7 +2067,7 @@
             <text class="summary-title" x="848" y="78">Claude Code</text>
             <text class="summary-label" x="848" y="101">Udviklingsflow</text>
             <rect x="812" y="158" width="228" height="132" rx="9" fill="#1f1b1f"></rect>
-            <circle cx="830" cy="178" r="5" fill="#ce0060"></circle>
+            <circle cx="830" cy="178" r="5" fill="#67817f"></circle>
             <circle cx="846" cy="178" r="5" fill="#efc47c"></circle>
             <circle cx="862" cy="178" r="5" fill="#85b499"></circle>
             <text x="830" y="216" fill="#9edfce" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">$ npm test</text>

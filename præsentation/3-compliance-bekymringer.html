@@ -9,12 +9,12 @@
       --background: #fbfafb;
       --foreground: #22131b;
       --card: #ffffff;
-      --muted: #f5f1f3;
+      --muted: #f3f6f6;
       --muted-foreground: #6f6369;
       --border: #d8d4d7;
-      --primary: #92004d;
-      --bordeaux: #660036;
-      --ruby: #ce0060;
+      --primary: #00646c;
+      --bordeaux: #1f2023;
+      --ruby: #67817f;
       --mint: #9edfce;
       --lilac: #c5aed5;
       --sky: #6e9baa;
@@ -31,7 +31,7 @@
     body {
       margin: 0;
       background:
-        radial-gradient(circle at 14% 0%, rgba(206, 0, 96, .10), transparent 36%),
+        radial-gradient(circle at 14% 0%, rgba(103, 129, 127, .10), transparent 36%),
         linear-gradient(180deg, rgba(245, 241, 243, .92), rgba(251, 250, 251, 0) 480px),
         var(--background);
       color: var(--foreground);
@@ -84,7 +84,7 @@
       width: 10px; height: 10px;
       border-radius: 3px;
       background: var(--primary);
-      box-shadow: 0 0 0 4px rgba(146, 0, 77, .12);
+      box-shadow: 0 0 0 4px rgba(0, 100, 108, .12);
     }
 
     .lead {
@@ -109,7 +109,7 @@
       white-space: nowrap;
     }
 
-    .badge.primary { border-color: rgba(146, 0, 77, .25); background: rgba(146, 0, 77, .08); color: var(--primary); }
+    .badge.primary { border-color: rgba(0, 100, 108, .25); background: rgba(0, 100, 108, .08); color: var(--primary); }
     .badge.blue   { border-color: rgba(110, 155, 170, .38); background: rgba(110, 155, 170, .14); color: #375f6b; }
     .badge.green  { border-color: rgba(133, 180, 153, .5);  background: rgba(133, 180, 153, .18); color: #446e55; }
     .badge.amber  { border-color: rgba(239, 196, 124, .72); background: rgba(239, 196, 124, .24); color: #7b5518; }
@@ -253,8 +253,8 @@
       align-items: center;
       justify-content: center;
       font-size: 24px;
-      background: rgba(146, 0, 77, .10);
-      border: 1px solid rgba(146, 0, 77, .20);
+      background: rgba(0, 100, 108, .10);
+      border: 1px solid rgba(0, 100, 108, .20);
     }
 
     .persona.confidentiality .persona-avatar {
@@ -352,7 +352,7 @@
       gap: 16px;
       align-items: center;
       border-left: 4px solid var(--primary);
-      background: rgba(146, 0, 77, .04);
+      background: rgba(0, 100, 108, .04);
       border-radius: 6px;
       padding: 18px 20px;
       margin-top: 30px;
@@ -420,7 +420,7 @@
             <!-- Outer: AI Act -->
             <circle cx="180" cy="180" r="170" fill="rgba(110, 155, 170, .12)" stroke="rgba(110, 155, 170, .55)" stroke-width="1.5"/>
             <!-- Middle: GDPR -->
-            <circle cx="180" cy="180" r="120" fill="rgba(146, 0, 77, .10)" stroke="rgba(146, 0, 77, .50)" stroke-width="1.5"/>
+            <circle cx="180" cy="180" r="120" fill="rgba(0, 100, 108, .10)" stroke="rgba(0, 100, 108, .50)" stroke-width="1.5"/>
             <!-- Inner: Fortrolighed -->
             <circle cx="180" cy="180" r="68" fill="rgba(197, 174, 213, .35)" stroke="rgba(86, 61, 105, .65)" stroke-width="1.5"/>
 
@@ -428,8 +428,8 @@
             <text x="180" y="184" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="800" fill="#563d69">Fortrolighed</text>
             <text x="180" y="200" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#563d69">jer + ejere</text>
 
-            <text x="180" y="80" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="800" fill="#660036">GDPR</text>
-            <text x="180" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#660036">+ Datatilsynet</text>
+            <text x="180" y="80" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="800" fill="#1f2023">GDPR</text>
+            <text x="180" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#1f2023">+ Datatilsynet</text>
 
             <text x="180" y="28" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="800" fill="#375f6b">AI Act</text>
             <text x="180" y="44" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#375f6b">+ samfundet</text>
@@ -445,7 +445,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="swatch" style="background: rgba(146, 0, 77, .40);"></div>
+            <div class="swatch" style="background: rgba(0, 100, 108, .40);"></div>
             <div>
               <h4>Midt — GDPR</h4>
               <p>Et databrud rammer os + <strong>Datatilsynet</strong> + de registrerede medlemmer. Bøde, notifikationspligt, individuelle krav.</p>
